@@ -68,10 +68,10 @@ const UserNav: React.FC<UserNavProps> = ({ userId }) => {
                 }}
               />
               <MenuLink
-                label="Chat"
+                label="Listing"
                 onClick={() => {
                   setIsOpen(false);
-                  router.push("/chat");
+                  router.push("/DetailHome");
                 }}
               />
               {userDataAfterLogin.role === 2 ||
@@ -94,6 +94,17 @@ const UserNav: React.FC<UserNavProps> = ({ userId }) => {
                   router.push("/myfavourite");
                 }}
               />
+                {
+              userDataAfterLogin.role === 1 ? (
+              <MenuLink
+                label="Contact Messages"
+                onClick={() => {
+                  router.push(`/admindashbord`);
+                }}
+              />
+            ) : (
+              console.log("..")
+            )}
             {userDataAfterLogin.role === 3 ||
               userDataAfterLogin.role === 1 ? (
               <MenuLink

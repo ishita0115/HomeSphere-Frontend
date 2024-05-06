@@ -39,14 +39,14 @@ const Listing: React.FC<ListingProps> = ({  landlord_id , favorites}) => {
     const country = searchModal.query.country;
     const city = searchModal.query.city;
     const sale_type = searchModal.query.sale_type;
-    const numBedrooms = searchModal.query.bedrooms;
+    const bedrooms = searchModal.query.bedrooms;
     const home_type = searchModal.query.home_type;
     const address = searchModal.query.address;
     const min_price = searchModal.query.min_price;
     const max_price = searchModal.query.max_price;
 
     console.log('searchQUery:', searchModal.query);
-    console.log('numBedrooms', numBedrooms)
+    console.log('bedrooms', bedrooms)
 
     const token = useSelector((state: any) => state.auth.token.access);
     const id = useSelector((state: any) => state.auth.token.uid);
@@ -91,8 +91,8 @@ const Listing: React.FC<ListingProps> = ({  landlord_id , favorites}) => {
                         urlQuery += '&city=' + city
                     }
         
-                    if (numBedrooms) {
-                        urlQuery += '&numBedrooms=' + numBedrooms
+                    if (bedrooms) {
+                        urlQuery += '&bedrooms=' + bedrooms
                     }
         
                     if (sale_type) {
@@ -123,7 +123,6 @@ const Listing: React.FC<ListingProps> = ({  landlord_id , favorites}) => {
                 const response = await profileApiservive.get(url, token);
                 const fetchedProperties = response.data;
                  console.log(fetchedProperties)
-                // Ensure that each property has the required fields and set the is_favorite flag
                 const updatedProperties = fetchedProperties.map(property => ({
                     id: property.id,
                     title: property.title,
@@ -152,7 +151,7 @@ const Listing: React.FC<ListingProps> = ({  landlord_id , favorites}) => {
         };
     
         getProperties();
-    }, [favorites,searchModal.query, params]); // Ensure id is included in dependencies
+    }, [favorites,searchModal.query, params,]); // Ensure id is included in dependencies
     
     
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {

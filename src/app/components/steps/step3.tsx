@@ -41,7 +41,6 @@ const StepThree: React.FC<StepThreeProps> = ({ formData, handleInputChange }) =>
   const [markers, setMarkers] = useState<{ lat: number; lng: number; }[]>([]);
 
 
-
   useEffect(() => {
     // Fetch user's geolocation
     const successCallback = (position: GeolocationPosition) => {
@@ -156,11 +155,13 @@ const StepThree: React.FC<StepThreeProps> = ({ formData, handleInputChange }) =>
             name="latitude"
             value={formData.latitude}
             onChange={handleInputChange}
+            disabled
             className="border border-gray-300 rounded-md px-3 py-2 w-full mb-2"
           />
           <label className="block mb-2">Longitude:</label>
           <input
             type="text"
+            disabled
             name="longitude"
             value={formData.longitude}
             onChange={handleInputChange}

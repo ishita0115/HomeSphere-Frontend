@@ -1,91 +1,27 @@
-import React from "react";
-import "./contact.css";
-import { MdCall } from "react-icons/md";
-import { BsFillChatDotsFill } from "react-icons/bs";
-import {HiChatBubbleBottomCenter} from 'react-icons/hi2'
+import React from "react"
+import Back from "../../components/WithoutLogin/about/Back"
+import "./contact.css"
+
 const Contact = () => {
   return (
-    <div id="contact-us" className="c-wrapper">
-      <div className="paddings innerWidth flexCenter c-container">
-        {/* left side */}
-        <div className="flexColStart c-left">
-          <span className="orangeText">Our Contact Us</span>
-          <span className="primaryText">Easy to contact us</span>
-          <span className="secondaryText">
-            We always ready to help by providijng the best services for you. We
-            beleive a good blace to live can make your life better{" "}
-          </span>
-
-          <div className="flexColStart contactModes">
-            {/* first row */}
-            <div className="flexStart row">
-              <div className="flexColCenter mode">
-                <div className="flexStart">
-                  <div className="flexCenter icon">
-                    <MdCall size={25} />
-                  </div>
-                  <div className="flexColStart detail">
-                    <span className="primaryText">Call</span>
-                    <span className="secondaryText">021 123 145 14</span>
-                  </div>
-                </div>
-                <div className="flexCenter button">Call now</div>
-              </div>
-
-              <div className="flexColCenter mode">
-                <div className="flexStart">
-                  <div className="flexCenter icon">
-                    <BsFillChatDotsFill size={25} />
-                  </div>
-                  <div className="flexColStart detail">
-                    <span className="primaryText">Chat</span>
-                    <span className="secondaryText">021 123 145 14</span>
-                  </div>
-                </div>
-                <div className="flexCenter button">Chat now</div>
-              </div>
+    <>
+      <section className='contact'>
+        <Back name='Contact Us' title='Get Helps & Friendly Support' cover="/images/contsctus.jpg" />
+        <div className='container m-4 bg-blue-200'>
+          <form className='shadow'>
+            <h4>Fillup The Form</h4> <br />
+            <div>
+              <input type='text' placeholder='Name' />
+              <input type='text' placeholder='Email' />
             </div>
-
-            {/* second row */}
-            <div className="flexStart row">
-              <div className="flexColCenter mode">
-                <div className="flexStart">
-                  <div className="flexCenter icon">
-                    <BsFillChatDotsFill size={25} />
-                  </div>
-                  <div className="flexColStart detail">
-                    <span className="primaryText">Video Call</span>
-                    <span className="secondaryText">021 123 145 14</span>
-                  </div>
-                </div>
-                <div className="flexCenter button">Video Call now</div>
-              </div>
-
-              <div className="flexColCenter mode">
-                <div className="flexStart">
-                  <div className="flexCenter icon">
-                    <HiChatBubbleBottomCenter size={25} />
-                  </div>
-                  <div className="flexColStart detail">
-                    <span className="primaryText">Message</span>
-                    <span className="secondaryText">021 123 145 14</span>
-                  </div>
-                </div>
-                <div className="flexCenter button">Message now</div>
-              </div>
-            </div>
-          </div>
+            <input type='text' placeholder='Subject' />
+            <textarea cols='30' rows='10'></textarea>
+            <button>Submit Request</button>
+          </form>
         </div>
+      </section>
+    </>
+  )
+}
 
-        {/* right side */}
-        <div className="flexEnd c-right">
-          <div className="image-container">
-            <img src="./contact.jpg" alt="" />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default Contact;
+export default Contact

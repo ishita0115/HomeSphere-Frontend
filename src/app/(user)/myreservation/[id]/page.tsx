@@ -9,15 +9,15 @@ import { useSelector } from "react-redux";
 const MyBookings = () => {
   const [reservations, setReservations] = useState([]);
   const [listingData, setListingData] = useState({});
-  const token = useSelector((state) => state.auth.token.access);
-  const userId = useSelector((state) => state.auth.token.uid);
+  const token = useSelector((state:any) => state.auth.token.access);
+  const userId = useSelector((state:any) => state.auth.token.uid);
 
   useEffect(() => {
     const fetchReservations = async () => {
       try {
         const response = await fetchListingDetail(`app2/mybooking/${userId}`, token);
         setReservations(response.data);
-        setListingData(response.listing_data.reduce((acc, listing) => {
+        setListingData(response.listing_data.reduce((acc: { [x: string]: any; }, listing: { id: string | number; }) => {
           acc[listing.id] = listing;
           return acc;
         }, {}));
@@ -30,11 +30,11 @@ const MyBookings = () => {
 
   const today = new Date(); // Get current date
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string | number | Date) => {
     const date = new Date(dateString);
     return date.toDateString(); // Format date as string
   };
-  const getBackgroundColor = (date) => {
+  const getBackgroundColor = (date: string | number | Date) => {
     const visitDate = new Date(date);
     if (visitDate.toDateString() === today.toDateString()) {
       return "bg-yellow-400"; // Today's date
@@ -44,7 +44,7 @@ const MyBookings = () => {
       return "bg-yellow-400"; // Future date
     }
   };
-  const handleRemoveBooking = async (bookingId) => {
+  const handleRemoveBooking = async (bookingId: any) => {
     try {
       await removeReservation(`app2/bookingsdelete/${bookingId}`, token);
       // Update the reservations state by filtering out the removed booking
@@ -76,10 +76,10 @@ const MyBookings = () => {
               <h2 className="mb-4 text-xl">{listingData[reservation.Listing]?.title}</h2>
 
               <p className="mb-2"><strong>Visit date:</strong> {formatDate(reservation.which_date)}</p>
-              <p className="mb-2"><strong>Check out date:</strong> {reservation.end_date}</p>
+              <p className="mb-2"><strong></strong> {reservation?.end_date}</p>
 
-              <p className="mb-2"><strong>Number of nights:</strong> {reservation.number_of_nights}</p>
-              <p className="mb-2"><strong>Total price:</strong> ${reservation.total_price}</p>
+              <p className="mb-2"><strong></strong> {reservation.number_of_nights}</p>
+              <p className="mb-2"><strong></strong> {reservation.price}</p>
 
               
                 <button

@@ -34,8 +34,8 @@ console.log(isDetailHome)
                         {!isDetailHome && 
                             <>
                                 <Link className="text-sm md:text-base" href="/">Home</Link>
-                                <Link className="text-sm md:text-base" href="/DetailHome">Listings</Link>
-                                <Link className="text-sm md:text-base" href="/about">About</Link>
+                                <Link className="text-sm md:text-base" href="/contactus">Contact</Link>
+                                <Link className="text-sm md:text-base" href="/aboutus">About</Link>
                             </>
                         }
                     </div>

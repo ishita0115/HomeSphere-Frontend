@@ -2,22 +2,30 @@
 
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import apiService, { profileApiservive } from "@/app/apiService";
+import apiService, { fetchListingDetail, profileApiservive } from "@/app/apiService";
 import authMiddleware from "@/app/authMiddelware";
-import { addUserProfile } from "../redux/slice/user-list-slice";
 import { login, updateProfile } from "../redux/slice/authslice";
+import ListingItems from "../components/Listing/Listingcard";
+interface UserData {
+  first_name: string;
+  last_name: string;
+  mobileno: string;
+  email: string;
+  profilephoto: string;
+}
+
 
 const ProfileSettings = () => {
-  const [userData, setUserData] = useState(null);
-  const [profilePicture, setProfilePicture] = useState(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [error, setError] = useState(null); // State to handle errors
-  const token = useSelector((state) => state.auth.token.access);
-  const uid = useSelector((state) => state.auth.token.uid);
+  const [error, setError] = useState<string | null>(null); // State to handle errors
+  const token = useSelector((state: any) => state.auth.token.access);
+  const uid = useSelector((state: any) => state.auth.token.uid);
   const dispatch = useDispatch();
 
   const [newValue,setNewValue] = useState<boolean>(false)
-
+  const [landlord, setLandlord] = useState<any>(null);
   useEffect(() => {
     fetchUserData();
   }, [newValue]);
@@ -34,11 +42,6 @@ const ProfileSettings = () => {
       console.error("Error fetching user data:", error);
     }
   };
-
-  const handleEditProfile = () => {
-    setIsEditMode(true);
-  };
-
   const handleSaveProfile = async () => {
     setNewValue(false)
     try {
@@ -72,17 +75,40 @@ const ProfileSettings = () => {
     }
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = (e:any) => {
     const file = e.target.files[0];
     setProfilePicture(file);
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e:any) => {
     const { name, value } = e.target;
     setUserData((prevUserData) => ({ ...prevUserData, [name]: value }));
     setError(null); // Clear error when input changes
   };
+  
 
+  useEffect(() => {
+    const fetchlisting = async () => {
+      try {
+        const response = await fetchListingDetail(`app2/user-listings/${uid}`, token);
+        console.log(response)
+        if (response) {
+          setLandlord(response);
+         
+        } else {
+          console.error("No data found for landlord with ID:", uid );
+        }
+      } catch (error) {
+        console.error("Error fetching landlord details:", error);
+      }
+    };
+    fetchlisting();
+  }, [uid, token]);
+  const handleEditProfile = () => {
+    setIsEditMode(true);
+  };
+
+  
   return (
     <div className="rounded shadow-[#4689ab] bg-white mt-5 mb-5 ml-5 mr-5">
       <div className="flex m-2 flex-col lg:flex-row">
@@ -132,10 +158,10 @@ const ProfileSettings = () => {
               )}
             </div>
             <span className="font-bold mt-3 bg-blue-200 p-1 rounded ">
-              {userData ? userData.first_name : ""}
+            {userData?.first_name || ""}
             </span>
             <span className="text-gray-700 mt-2">
-              {userData ? userData.email : ""}
+            {userData?.email || ""}
             </span>
           </div>
         </div>
@@ -244,14 +270,24 @@ const ProfileSettings = () => {
               <input
                 type="text"
                 className="form-input"
-                value={userData ? userData.experience_designing : ""}
+                value={userData ? userData : ""}
                 onChange={handleInputChange}
                 disabled={!isEditMode}
               />
             </div>
           </div>
         </div>
+       
       </div>
+      <div className="col-span-1 md:col-span-3 pl-0 md:pl-6">
+          <div className="mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {landlord && landlord.map((property: any) => (
+                <ListingItems key={property.id} property={property} />
+              ))}
+            </div>
+          </div>
+        </div>
     </div>
   );
 };

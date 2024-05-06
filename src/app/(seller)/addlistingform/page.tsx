@@ -45,7 +45,7 @@ const HorizontalNonLinearStepper = () => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prevData => ({
+    setFormData((prevData: any) => ({
       ...prevData,
       [name]: value
     }));
@@ -55,7 +55,7 @@ const HorizontalNonLinearStepper = () => {
     const files = e.target.files;
     if (files && files.length > 0) {
       const file = files[0];
-      setFormData(prevData => ({
+      setFormData((prevData: any) => ({
         ...prevData,
         [fieldName]: file
       }));
@@ -64,7 +64,7 @@ const HorizontalNonLinearStepper = () => {
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev)=>{
+    setFormData((prev: any)=>{
       const newFormData = {
         ...prev
       };

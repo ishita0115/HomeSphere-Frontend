@@ -215,11 +215,29 @@
 // };
 
 // export default Footer;
-
-import React from "react";
+'use client'
+import React, { useState } from "react";
 import Link from "next/link";
+import axios from "axios";
+import apiService, { sendpodtdata } from "@/app/apiService";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const Footer = () => {
+  const [message, setMessage] = useState('');
+  const senderId = useSelector((state: any) => state.auth.token.uid);
+  const token = useSelector((state: any) => state.auth.token.access);
+  const handleMessageSubmit = async () => {
+      try {
+          const response = await sendpodtdata.post('/api/contact/', {sender: senderId, message },token);
+          if(response.data){
+            toast.success('Successfully signed up');
+          }
+          setMessage('');
+      } catch (error) {
+          console.error(error); // handle error
+      }
+  };
   return (
     <footer className="bg-white pt-8 mt-10">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-3">
@@ -232,8 +250,8 @@ const Footer = () => {
               your inbox every month.
             </p>
             <div className="input flex mt-4 mb-4">
-              <input type="text" placeholder="Email Address" className="bg-gray-200 px-4 py-2 rounded-l-md w-full lg:w-auto" />
-              <button className="bg-blue-500 text-white px-4 py-2 rounded-r-md lg:ml-4">Subscribe</button>
+            <textarea className="bg-gray-200 px-4 py-2 rounded-l-md w-full lg:w-auto"  value={message} onChange={e => setMessage(e.target.value)} />
+              <button className="bg-[#0082cc] text-white px-4 py-2 rounded-r-md lg:ml-4"  onClick={handleMessageSubmit}>Send Message</button>
             </div>
           </div>
         </div>
@@ -242,10 +260,9 @@ const Footer = () => {
           <h3 className="text-lg font-semibold mb-4">LAYOUTS</h3>
           <ul>
             <li><Link href="/">Home Page</Link></li>
-            <li><Link href="/about">About Page</Link></li>
+            <li><Link href="/aboutus">About Page</Link></li>
             <li><Link href="/services">Service Page</Link></li>
-            <li><Link href="/properties">Property Page</Link></li>
-            <li><Link href="/contact">Contact Page</Link></li>
+            <li><Link href="/contactus">Contact Page</Link></li>
             <li><Link href="/blog">Single Blog</Link></li>
           </ul>
         </div>
@@ -264,14 +281,14 @@ const Footer = () => {
         </div>
       </div>
       
-      <section className="bg-blue-600 text-white text-center py-4">
+      <section className="bg-[#0082cc] text-white text-center py-4">
         <div className="container mx-auto">
           Welcome to HomeSphere
         </div>
       </section>
 
       <div className="legal text-center py-4 bg-gray-800 text-gray-500">
-        <span>© 2021 RentUP. Designed By GorkCoder.</span>
+        <span>© 2024 HomeSphere. Designed By Ishita Chovatiya.</span>
       </div>
     </footer>
   );

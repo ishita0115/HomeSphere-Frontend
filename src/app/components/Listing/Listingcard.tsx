@@ -25,10 +25,10 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite }) => {
     window.location.href = `/sellerdetail/${property.user}`;
   };
 
-  const handleViewMap = (hotel: Hotel) => {
+  const handleViewMap = () => {
     // Navigate to MapComponent page with the hotel location
-    const queryString = `/map?lat=${property.latitude}&lng=${property.longitude}`;
-    router.push(`/map${queryString}`);
+    const queryString = `/?lat=${property.latitude}&lng=${property.longitude}`;
+    router.push(`/${queryString}`);
   };
   console.log(property.latitude);
   const cloudinaryUrl = `https://res.cloudinary.com/daajyumzx/${property.profilephoto}`;

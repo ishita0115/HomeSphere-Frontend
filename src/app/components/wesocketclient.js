@@ -3,7 +3,7 @@ import socket from './socket';
 
 const Chat = () => {
     const [messages, setMessages] = useState([]);
-    const [newMessage, setNewMessage] = useState('');
+    const [newMessage, setNewMessage] = useState([]);
 
     useEffect(() => {
         // Listen for incoming messages

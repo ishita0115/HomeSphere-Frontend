@@ -94,7 +94,7 @@ const ReservationSidebar: React.FC<ReservationSidebarProps> = ({
                         >
                             Field cleared!
                         </Alert>
-                    )}
+                    )}  
                 </div>
             </LocalizationProvider>
             <div
@@ -103,10 +103,24 @@ const ReservationSidebar: React.FC<ReservationSidebarProps> = ({
             >
                 Book
             </div>
-            <div className="mb-4 flex justify-between align-center">
-                <p>Djangobnb fee</p>
-            </div>
-            <hr />
+                {/* {bookingStatus && (
+                    <div className="mb-4 flex justify-between align-center">
+                        <p>Check Status for Visiting</p>
+                        {bookingStatus === 'pending' && (
+                            <p>Status: Pending</p>
+                        )}
+                        {bookingStatus === 'accepted' && (
+                            <p>You can come here</p>
+                        )}
+                        {bookingStatus === 'rejected' && (
+                            <p>I'm not available this date. Please select another date</p>
+                        )}
+                    </div>
+)}
+                </div>
+            )}
+
+            <hr /> */}
         </div>
     )
 }

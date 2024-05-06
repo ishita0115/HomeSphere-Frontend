@@ -6,7 +6,9 @@ import { useRouter } from "next/navigation";
 import useSignupModal from "@/app/redux/hooks/signuphook";
 import useLoginModal from "@/app/redux/hooks/loginhook";
 import CustomButton from "./CustomButton";
-// import { handleLogin } from "@/app/lib/actions";
+import {toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios, { AxiosError } from "axios";
 interface SignupModalProps {
     label: string;
 }
@@ -21,8 +23,6 @@ interface FormData {
   }
   
 const SignupModal = () => {
-    //
-    // Variables
     const [formData, setFormData] = useState<FormData>({
         first_name: '',
         last_name: '',
@@ -38,31 +38,67 @@ const SignupModal = () => {
    
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: name === 'role' ? parseInt(value) : value });  // Parse integer for role
-        // setFormData({ ...formData, [name]: value });  // Parse integer for role
-
+        setFormData({ ...formData, [name]: name === 'role' ? parseInt(value) : value });
     };
     
 
     const handleSignUp = async (e:FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        // const { email, password, mobileno } = formData;
+        // if (!email || !password || !mobileno) {
+        //   toast.error("Please fill out all required fields.");
+        //   return;
+        // }
+    
+        // // Email format validation
+        // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // if (!emailRegex.test(email)) {
+        //   toast.error("Please enter a valid email address.");
+        //   return;
+        // }
+    
+        // // Password complexity validation
+        // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        // if (!passwordRegex.test(password)) {
+        //   toast.error("Password must contain at least 1 special symbol, 1 capital letter, 1 number, and be at least 8 characters long.");
+        //   return;
+        // }
+    
+        // // Mobile number length and format validation
+        // const mobileRegex = /^[0-9]{9,10}$/;
+        // if (!mobileRegex.test(mobileno)) {
+        //   toast.error("Please enter a valid mobile number (9 or 10 digits).");
+        //   return;
+        // }
+    
         try {
-        const response = await apiService.post('/api/register/', JSON.stringify(formData));
-           if (response.success) {
-             alert('Successfully created');
-
-             // handleLogin(response.user.uid,response.access,response.refresh);
-               signupModal.close();
-               loginmodel.open();
-            } else {
-                // handle errors from the API response
-                console.error('Error registering user:', response.error);
-                // Display an appropriate error message to the user
-                alert('Error registering user: ' + response.error);
+            const response = await axios.post('http://localhost:8000/api/register/', formData);
+            if (response.success) {
+                toast.success('Successfully signed up');
+                   signupModal.close();
+                   loginmodel.open();
+             } else
+            {       console.log(';;;;;;',response.message)
+                    if (response && response.message) {
+                        // Handle 400 Bad Request errors
+                        const responseData = response.message;
+                        toast.error(responseData);
+                    
+                    } else {
+                        // Handle other types of errors (e.g., network errors)
+                        toast.error('An error occurred while processing your request');
+                        console.error('API error:', error);
+                    }
             }
-        } catch (error) {
-            console.error('Error registering user:', error);
+        } catch (error:any) {
+            if (error?.response?.data?.errors?.email[0] == 'user with this email already exists.') {
+                // userEmailAlreadyExistNotify()
+                toast.error("E bhai khudka email leke aana zandu");
+            }
+            // console.log('error',error.response.data.errors.email[0])
+            console.error('User already exist with this email')
         }
+        
     };
     
     const content = (

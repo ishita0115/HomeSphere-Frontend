@@ -3,6 +3,7 @@
 import { useSelector } from 'react-redux';
 
 const authMiddleware = (WrappedComponent) => {
+  
   const AuthComponent = (props) => {
     // Check if the user is logged in
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);

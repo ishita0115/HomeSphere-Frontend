@@ -108,6 +108,23 @@ export const sendpodtdata = {
       console.error('Error in POST request:', error);
       throw error;
     }
+  },
+  put: async function(url: string, data: data, token: string) {
+    try {
+
+      const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      };
+      const response = await axios.put(`${process.env.NEXT_PUBLIC_API_HOST}${url}`, data, {
+        headers : headers
+      });
+      console.log('response', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error in PUT request:', error);
+      throw error;
+    }
   }
   
 };
@@ -182,7 +199,7 @@ const apiService = {
       return response.data;
     } catch (error) {
       console.error('Error in POST request:', error);
-      throw error;
+      // throw error;
     }
   },
   put: async function(url: string, data: FormData, token: string) {

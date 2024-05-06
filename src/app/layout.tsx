@@ -7,7 +7,8 @@ import SignupModal from "./components/models/signupmodel";
 import Footer from "./components/footer/footer";
 import { Providers } from "./redux/providers/providers";
 import SearchModal from "./components/models/SearchModel";
-
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 const inter = Inter({ subsets: ["latin"] });
 
 // export const metadata: Metadata = {
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body className={inter.className}>
       <Providers>
           <Navbar />
+          <ToastContainer />
           <div className="pt-32">
             {children}
           </div >
