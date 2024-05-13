@@ -1,53 +1,208 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 import Back from "./Back";
 import Heading from "./Heading";
+import Image from "next/image";
+import { IoIosHome } from "react-icons/io";
 
-import "./about.css";
+const About = ({cardTitle1,
+  cardTitle2,
+  cardTitle3,
+  cardSubText1,
+  cardSubText2,
+  cardSubText3,}) => {
+  const [showFullContent, setShowFullContent] = useState(false);
 
-const About = () => {
+  const toggleContent = () => {
+    setShowFullContent(!showFullContent);
+  };
+
   return (
     <>
-      <section className="about">
+      <section className="px-4 py-8">
         <Back
           name="About Us"
           title="About Us - Who We Are?"
           cover="/images/about.jpg"
         />
-        <div className="container flex mtop">
-          <div className="left row mt-4">
+        <div className="container mx-auto flex flex-col md:flex-row justify-between mt-6">
+          <div className="md:w-1/2 md:pr-4 mt-4">
             <Heading
-              title="Our Agency Story"
-              subtitle="Check out our company story and work process"
+              title="Our Story"
+              subtitle="Experience Real Estate Innovation"
             />
 
-            <p className="">
-              Welcome to HomeSphere Founded in 2012 and acquired by REA India in
-              2017, HomeSphere.com is India’s most innovative real estate
-              advertising platform for homeowners, landlords, developers, and
-              real estate brokers. The company offers listings for new homes,
-              resale homes, rentals, plots and co-living spaces in India. Backed
-              by strong research and analytics, the company’s experts provide
-              comprehensive real estate services that cover advertising and
-              marketing, sales solutions for real estate developers,
-              personalized search, virtual viewing, AR&VR content, home loans,
-              end-to-end transaction services, and post-transaction services to
-              consumers for both buying and renting.
+            <p className={`text-justify ${showFullContent ? '' : 'truncate'}`}>
+              Welcome to HomeSphere, where innovation meets real estate. Established in 2012 and joining forces with REA India in 2017, HomeSphere.com stands as India’s pinnacle of real estate advertising platforms, catering to homeowners, landlords, developers, and brokers alike. Whether it's new homes, resale properties, rentals, plots, or co-living spaces, we've got you covered.
+              {showFullContent ? (
+                <>
+                  Dive deeper into our realm of expertise. Backed by robust research and analytics, our team of experts delivers a spectrum of real estate services spanning advertising, marketing, sales solutions, personalized search, virtual reality experiences, home loans, and comprehensive post-transaction services for both buyers and renters.
+                  <br />
+                  <br />
+                  Our vision? To redefine the Indian property landscape. Our mission? To become the preferred destination for consumers and partners alike, guiding them seamlessly through their journey of discovering, renting, buying, selling, and financing homes, all while leveraging data, design, and technology, fueled by the unwavering passion of our team, and delivering value to our stakeholders.
+                </>
+              ) : (
+                " Curious for more? Click 'More About Us' to unveil the full narrative."
+              )}
             </p>
-            <p>
-              Our vision is changing the way India experiences property. And our
-              mission is to be the first choice of our consumers and partners in
-              discovering, renting, buying, selling, financing a home, and
-              digitally enabling them throughout their journey. We do that with
-              data, design, technology, and above all, the passion of our people
-              while delivering value to our shareholders.
-            </p>
-            <button className="btn2">More About Us</button>
+            {!showFullContent ? (
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+                onClick={toggleContent}
+              >
+                More About Us
+              </button>
+            ) : (
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+                onClick={toggleContent}
+              >
+                Less About Us
+              </button>
+            )}
           </div>
-          <div className="right row mt-8">
-            <img src="/images/immio.jpg" alt="" />
+          <div className="md:w-1/2 mt-4 md:mt-0">
+            <Image
+              src="/images/immio.jpg"
+              alt="Company Office"
+              width={400}
+              height={300}
+            />
           </div>
         </div>
       </section>
+      <div id="about-container" className="relative p-4 mb-4">
+      <div className="flex justify-center items-center">
+        <button className="p-2 relative mt-24 bg-blue-500  hover:bg-blue-600 px-4 py-1 rounded-2xl text-white -500 hover:text-white h-70 w-40 font-black text-xs uppercase cursor-pointer ">
+          Our Story
+        </button>
+      </div>
+
+      <div className="relative ">
+        <div className="flex flex-col justify-center items-center mt-20">
+          <p
+            className="text-9xl sm:text-10xl text-blue-700 opacity-5 font-black text-center z-0 absolute top-0 left-0 w-full dark:text-white
+          "
+          >
+            OUR STORY
+          </p>
+          <p className="text-4xl text-blue-900 font-bold text-center z-20 relative mt-16 dark:text-gray-300">
+            We Will Find the Best Option
+          </p>
+        </div>
+      </div>
+
+      <div className="relative justify-center items-center">
+        <p className="font-medium text-base text-center mt-20  text-bluePText">
+          Real estate is &quot;property consisting of land and the buildings on
+          it, along with its natural resources such as crops,
+          <br /> minerals or water, immovable property of this nature; an
+          interest vested in this (also) an item of real property,
+          <br /> (more generally) buildings or housing in general.
+        </p>
+      </div>
+
+      <div className="flex flex-col sm:flex-row justify-center items-center mt-[50px] ml-[28px]">
+        <div className="bg-white  py-35 px-10 h-[160px] w-[350px] mr-[30px] flex flex-col justify-center items-center rounded-[10px] shadow-md mb-5 dark:bg-slate-700">
+          <p className="font-medium text-3xl leading-[50px] text-blueCardTitle capitalize dark:text-gray-100">
+            {cardTitle1}
+          </p>
+          <p className="text-sm leading-8 text-center text-blueCardSubTitle dark:text-white">
+            {cardSubText1}
+          </p>
+        </div>
+        <div className="bg-white py-35 px-10 h-[160px] w-[350px] mr-[30px] flex flex-col justify-center items-center rounded-[10px] shadow-md mb-5 dark:bg-slate-700">
+          <p className="font-medium text-3xl leading-[50px] text-blueCardTitle capitalize dark:text-gray-100">
+            {cardTitle2}
+          </p>
+          <p className="text-sm leading-8 text-center text-blueCardSubTitle dark:text-white">
+            {cardSubText2}
+          </p>
+        </div>
+        <div className="bg-white py-35 px-10 h-[160px] w-[350px] mr-[30px] flex flex-col justify-center items-center rounded-[10px] shadow-md mb-5 dark:bg-slate-700">
+          <p className="font-medium text-3xl leading-[50px] text-blueCardTitle capitalize dark:text-gray-100">
+            {cardTitle3}
+          </p>
+          <p className="text-sm leading-8 text-center text-blueCardSubTitle dark:text-white">
+            {cardSubText3}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div id="services" className="relative p-4 mb-4">
+      <div className="flex justify-center items-center">
+        <button className="relative mt-24 bg-blue-200 hover:bg-blue-600 px-4 py-1 rounded-2xl text-blue-500 hover:text-white h-8 w-28 font-black text-xs uppercase cursor-pointer ">
+          services
+        </button>
+      </div>
+      <div className="relative ">
+        <div className="flex flex-col justify-center items-center mt-20">
+          <p className=" text-8xl sm:text-10xl text-blue-700 opacity-5 font-black text-center z-0 absolute top-0 left-0 w-full uppercase  dark:text-white">
+            services
+          </p>
+          <p className="text-4xl text-blue-900 font-bold text-center z-20 relative mt-7 sm:mt-14 dark:text-gray-300">
+            Services for Maximum Efficiency
+          </p>
+        </div>
+      </div>
+
+      <div className="relative justify-center items-center">
+        <p className="font-medium text-base text-center mt-20  text-bluePText">
+          We have developed a unique space where you can work and create. We
+          thought of everything to the smallest
+          <br /> detail. You will be able to conduct your business, conduct
+          meetings, meetings
+        </p>
+      </div>
+
+      {/* 5 icons and names of services */}
+      <div className="grid grid-cols-2 sm:flex justify-center items-center mt-16 ml-[40px]">
+        <div className="flex flex-col justify-center items-center mr-[30px] sm:mr-[60px] sm:ml-[50px] hover:scale-125 ease-in duration-200">
+          <div className="bg-white h-[120px] w-[120px] mr-[30px] flex flex-col justify-center items-center rounded-[120px] shadow-xl p-[10px] gap-[10px] mb-5 dark:bg-gray-700">
+          <Image src="/aboutus/house.png" alt="house" width={44}   height={40} /> 
+            <p className="font-bold text-sm leading-6  text-center text-blueCardTitle dark:text-gray-200 ">
+              House
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col mr-[60px] hover:scale-125  ease-in duration-200">
+          <div className="bg-white h-[120px] w-[120px] mr-[30px] flex flex-col justify-center items-center rounded-[120px] shadow-xl p-[10px] gap-[10px] mb-5 dark:bg-gray-700">
+          <Image src="/aboutus/apartment.png" alt="house" width={44}   height={40} /> 
+            <p className="font-bold text-sm leading-6  text-center text-blueCardTitle dark:text-gray-200 ">
+              Apartment
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col  mr-[60px] hover:scale-125  ease-in duration-200">
+          <div className="bg-white h-[120px] w-[120px] sm:w-[166px] mr-[30px] flex flex-col justify-center items-center rounded-[120px] shadow-xl p-[10px] gap-[10px] mb-5 dark:bg-gray-700">
+          <Image src="/aboutus/office.png" alt="house" width={44}   height={40} /> 
+            <p className="font-bold text-sm leading-6  text-center text-blueCardTitle dark:text-gray-200 ">
+              Office
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col  mr-[60px] hover:scale-125  ease-in duration-200">
+          <div className="bg-white h-[120px] w-[120px] mr-[30px] flex flex-col justify-center items-center rounded-[120px] shadow-xl p-[10px] gap-[10px] mb-5 dark:bg-gray-700">
+          <Image src="/aboutus/warehouse.png" alt="house" width={44}   height={40} /> 
+            <p className="font-bold text-sm leading-6  text-center text-blueCardTitle dark:text-gray-200 ">
+              Warehouse
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col  mr-[60px] hover:scale-125  ease-in duration-200">
+          <div className="bg-white h-[120px] w-[120px] mr-[30px] flex flex-col justify-center items-center rounded-[120px] shadow-xl p-[10px] gap-[10px] mb-5 dark:bg-gray-700">
+          <Image src="/aboutus/parking.png" alt="house" width={44}   height={40} /> 
+            <p className="font-bold text-sm leading-6  text-center text-blueCardTitle dark:text-gray-200 ">
+              Parking
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
     </>
   );
 };

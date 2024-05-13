@@ -18,7 +18,6 @@ interface FormData {
 interface StepOneProps {
   formData: FormData;
   handleChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
-  setCountry: (country: string) => void;
 }
 
 const StepOne: React.FC<StepOneProps> = ({ formData, handleChange }) => {

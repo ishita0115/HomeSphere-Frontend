@@ -14,7 +14,7 @@ const ContactButton: React.FC<ContactButtonProps> = ({
     userId,
     landlordId
 }) => {
-    const token = useSelector((state) => state.auth.token.access);
+    const token = useSelector((state: any) => state.auth.token.access);
     const loginModal = useLoginModal();
     const router = useRouter();
     console.log(landlordId)
@@ -22,8 +22,8 @@ const ContactButton: React.FC<ContactButtonProps> = ({
         if (userId) {
             const conversation = await fetchListingDetail(`app3/start/${landlordId}`,token)
             if (conversation.conversation_id) {
-                // router.push(`/chat/${conversation.conversation_id}`)
-                   router.push(`/indexchat/${conversation.conversation_id}`)
+                router.push(`/chat/${conversation.conversation_id}`)
+                //    router.push(`/indexchat/${conversation.conversation_id}`)
             }
         } else {
             router.push('/')

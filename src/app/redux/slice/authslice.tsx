@@ -5,29 +5,17 @@ interface AuthState {
   isAuthenticated: boolean;
   users:any[]
   token: string;
-  
-  // first_name: string | null;
-  // email: string | null; // Add email field to store
 }
-// const storedResponse = localStorage.getItem('response');
-// const isAuthenticated = !!storedResponse; // Check if there's any data in local storage
+
 
 const initialState: AuthState = {
   isAuthenticated: false,
-  // first_name: null,
-  // email: null,
+
   users : [],
   token: ""
-  // user:{
-  //   first_name:null,
-  //   email:null
-  // } 
+
 };
-// if (storedResponse) {
-//     const parsedResponse = JSON.parse(storedResponse);
-//     initialState.first_name = parsedResponse.first_name;
-//     // You can set email here if it's available in the stored response
-//   }
+
 
 export const authSlice = createSlice({
   name: 'auth',
@@ -63,7 +51,5 @@ export const { login, logout, updateProfile } = authSlice.actions;
 
 
 export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.isAuthenticated;
-// export const selectfirst_name = (state: { auth: AuthState }) => state.auth.first_name;
-// export const selectEmail = (state: { auth: AuthState }) => state.auth.email; // Selector for email
 
 export default authSlice.reducer;

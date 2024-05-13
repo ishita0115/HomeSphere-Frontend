@@ -19,7 +19,14 @@ export default function Home() {
     <>
       <HomeProperty />
       {!uid && <GetStarted />}
-      <About />
+      <About
+          cardTitle1="15 years"
+          cardSubText1="in business"
+          cardTitle2="$1 billion"
+          cardSubText2="property brokered"
+          cardTitle3="10,000"
+          cardSubText3="transactions"
+        />
       <Value />
       <main className="max-w-[1500px] mx-auto px-6 sticky">
         {uid && <Mapall search1={search1} search2={search2}/>}

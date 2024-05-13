@@ -230,8 +230,9 @@ const Footer = () => {
   const handleMessageSubmit = async () => {
       try {
           const response = await sendpodtdata.post('/api/contact/', {sender: senderId, message },token);
+          console.log(response)
           if(response.data){
-            toast.success('Successfully signed up');
+            toast.success('Successfully send message');
           }
           setMessage('');
       } catch (error) {

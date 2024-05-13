@@ -7,6 +7,11 @@ import { fetchListingDetail, profileApiservive } from '@/app/apiService';
 import { useSelector } from 'react-redux';
 import useSearchModal from '@/app/redux/hooks/useSearchModel';
 import { useRouter } from 'next/navigation';
+import Categories from '../navbar/Categories';
+import CircularIndeterminate from '../loader/Loader';
+
+
+
 export type PropertyType = {
     bedrooms: number;
     home_type: string;
@@ -55,7 +60,7 @@ const Listing: React.FC<ListingProps> = ({  landlord_id , favorites}) => {
     const [totalPages, setTotalPages] = useState<number>(0);
     const cardsPerPage = 12;
     const router = useRouter();
-    
+    const [loading, setLoading] = useState<boolean>(true); 
     // useEffect(() => {
     //     const getProperties = async () => {import { useSearchParams } from 'next/navigation';
     //         try {
@@ -123,7 +128,7 @@ const Listing: React.FC<ListingProps> = ({  landlord_id , favorites}) => {
                 const response = await profileApiservive.get(url, token);
                 const fetchedProperties = response.data;
                  console.log(fetchedProperties)
-                const updatedProperties = fetchedProperties.map(property => ({
+                const updatedProperties = fetchedProperties.map((property: { id: any; title: any; image1: any; address: any; sale_type: any; bedrooms: any; home_type: any; country: any; bathrooms: any; city: any; profilephoto: any; user_name: any; user: any; latitude: any; longitude: any; }) => ({
                     id: property.id,
                     title: property.title,
                     image1: property.image1,
@@ -142,11 +147,13 @@ const Listing: React.FC<ListingProps> = ({  landlord_id , favorites}) => {
                     longitude:property.longitude,
                      // Set is_favorite based on favorites prop
                 }));
-    
+                
                 setProperties(updatedProperties);
                 setTotalPages(Math.ceil(updatedProperties.length / cardsPerPage));
+                setLoading(false); 
             } catch (error) {
                 console.error('Error fetching properties:', error);
+                setLoading(false); 
             }
         };
     
@@ -182,12 +189,15 @@ const Listing: React.FC<ListingProps> = ({  landlord_id , favorites}) => {
 
         setProperties(tmpProperties);
     }
-
-    
+ 
     return (
+        <>  
+        {loading ?  <CircularIndeterminate/>:
         <>
-            {renderPropertiesForPage()}
-            <Pagination count={totalPages} shape="rounded" page={page} onChange={handleChange}/>
+        {renderPropertiesForPage()}
+    <Pagination count={totalPages} shape="rounded" page={page} onChange={handleChange}/>
+        </>
+    }  
         </>
     );
 };

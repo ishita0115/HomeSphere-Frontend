@@ -5,7 +5,7 @@ import Mapall from "../components/Alllistingmap/Mapall";
 export default function DetailHome() {
   return (
     <>
-    <main className="max-w-[1500px] mx-auto px-6">
+    <main className="max-w-[1500px] mx-auto px-6 pt-10">
     <div className="mt-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
     <Listing />

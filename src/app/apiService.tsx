@@ -178,29 +178,21 @@ const apiService = {
           'Content-Type': 'application/json'
         }
       });
-      console.log('response', response.data);
       return response.data;
     } catch (error) {
       console.error('Error in GET request:', error);
-      throw error;
+      // throw error;
     }
   },
   
   post: async function(url: string, data:any) {
-    try {
-      console.log('post', url, data);
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_HOST}${url}`, data, {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         }
       });
-      console.log('response', response.data);
       return response.data;
-    } catch (error) {
-      console.error('Error in POST request:', error);
-      // throw error;
-    }
   },
   put: async function(url: string, data: FormData, token: string) {
     try {

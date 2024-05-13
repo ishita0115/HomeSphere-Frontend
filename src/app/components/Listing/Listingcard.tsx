@@ -8,30 +8,55 @@ import { GiBathtub } from "react-icons/gi";
 import { CiHeart } from "react-icons/ci";
 import FavoriteButton from "../models/Favoritebtn";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Rating from '@mui/material/Rating';
+import Stack from '@mui/material/Stack';
+
+
 interface PropertyProps {
   property: PropertyType;
   markFavorite?: (is_favorite: boolean) => void;
 }
-const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite }) => {
+const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite}) => {
+  const [averageRating, setAverageRating] = useState<number | null>(null);
   const router = useRouter();
-
   const handleClick = () => {
-    // Navigate to the property detail page when clicked on the listing item
     window.location.href = `/DetailHome/${property.id}`;
   };
   const sendtoseller = () => {
-    // Navigate to the property detail page when clicked on the listing item
     window.location.href = `/sellerdetail/${property.user}`;
   };
 
   const handleViewMap = () => {
-    // Navigate to MapComponent page with the hotel location
     const queryString = `/?lat=${property.latitude}&lng=${property.longitude}`;
     router.push(`/${queryString}`);
   };
-  console.log(property.latitude);
+
+
+  // console.log(property.latitude);
   const cloudinaryUrl = `https://res.cloudinary.com/daajyumzx/${property.profilephoto}`;
+
+  useEffect(() => {
+    const fetchRating = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/app2/listing/${property.id}/rating/`);
+        const ratings = response.data.average_rating;
+        console.log(ratings)
+        if (ratings) {
+          setAverageRating(ratings);
+        } else {
+          setAverageRating(0); // Default to 0 if no ratings available
+        }
+      } catch (error) {
+        console.error('Error fetching ratings:', error);
+      }
+    };
+
+    fetchRating();
+  }, [property.id]);
+
+
   return (
     <div className="relative mx-auto w-full">
       <div className="relative rounded-lg inline-block w-full transform transition-transform duration-300 ease-in-out hover:-translate-y-2 cursor-pointer">
@@ -103,7 +128,22 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite }) => {
               </div>
             </div>
           </div>
-          <div className="mt-8 grid grid-cols-2">
+          <div className="relative mx-auto w-full">
+            <div className="relative rounded-lg inline-block w-full">
+              {averageRating !== null ? (
+                <div className="flex items-center mt-2">
+                  <Stack spacing={1}>
+                    <Rating name="average-rating" value={averageRating} precision={0.5} readOnly />
+                  </Stack>
+                  <span className="ml-2 text-gray-600">{averageRating.toFixed(2)}</span>
+                </div>
+              ) : (
+                <p className="text-gray-600 mt-2">No ratings yet.</p>
+              )}
+            </div>
+          </div>
+          <div className="mt-6 grid grid-cols-2">
+            
             {/* Grid 1 */}
             <div className="flex items-center" onClick={sendtoseller}>
               <Image
@@ -131,46 +171,14 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite }) => {
               </div>
             </div>
           </div>
+          
         </div>
+     
       </div>
+   
     </div>
 
-    // <div
-    //     className=" bg-gray-300 cursor-pointer rounded-xl"
-    //     // onClick={() => router.push(`/properties/${property.id}`)}
-    // >
-    //     <div className="relative overflow-hidden aspect-square rounded-xl">
-    //         {/* <Image
-    //             fill
-    //             src={property.image_url}
-    //             sizes="(max-width: 768px) 768px, (max-width: 1200px): 768px, 768px"
-    //             className="hover:scale-110 object-cover transition h-full w-full"
-    //             alt="Beach house"
-    //         /> */}
-    //     <Image
-    //     fill
-    //     src='/images/new2.jpeg'
-    //     sizes="(max-width: 768px) 768px, (max-width: 1200px): 768px, 768px"
-    //     className="hover:scale-110 object-cover transition h-full w-full"
-    //     alt="Beach house" />
-    //     {/* {markFavorite && ( */}
-    //             {/* <FavoriteButton
-    //                 id={property.id}
-    //                 is_favorite={property.is_favorite}
-    //                 // markFavorite={(is_favorite) => markFavorite(is_favorite)}
-    //             />
-    //         )} */}
-    //     </div >
-    //     <div className="overflow-hidden">
-    //     <div className="mt-2 ml-3">
-    //         <p className="text-lg font-bold">villaaaa ssssssssssssssssssssssssssssssss </p>
-    //     </div>
-
-    //     <div className="mt-2 ml-3 mb-1">
-    //         <p className="text-sm text-gray-500"><strong>30000 sssssssssssssssssssssssssssssfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</strong> per month</p>
-    //     </div>
-    //     </div>
-    // </div>
+    
   );
 };
 

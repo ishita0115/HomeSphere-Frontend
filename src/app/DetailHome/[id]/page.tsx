@@ -2,191 +2,281 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react"; // Import useEffect and useState hooks
+import { SetStateAction, useEffect, useState } from "react"; // Import useEffect and useState hooks
 import { fetchListingDetail } from "@/app/apiService";
 import ReservationSidebar from "@/app/components/Listing/reservationbar";
-import { MdLocationPin, MdMeetingRoom } from "react-icons/md";
+import { MdLocationPin } from "react-icons/md";
 import Mapcompo from "@/app/components/map/map";
 import { useSelector } from "react-redux";
-import { CiHeart } from "react-icons/ci";
-import SellerDetail from "@/app/(seller)/sellerdetail/[id]/page";
 import FeedbackForm from "@/app/(user)/feedback/feedbackform";
+import { FaBed } from "react-icons/fa";
+import { FaBath } from "react-icons/fa";
+import { Stack } from "@mui/material";
+import { Rating } from "@mui/material";
 
+interface Property {
+  rental_choice: any;
+  id: any;
+  image1: string;
+  image2: string;
+  image3: string;
+  image4: string;
+  title: string;
+  price: string;
+  sale_type: string;
+  home_type: string;
+  guests: number;
+  bedrooms: number;
+  bathrooms: number;
+  address: string;
+  city: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  profilephoto: string;
+  user: string;
+  user_name: string;
+  description: string;
+  extrafacility: string;
+}
 
-const PropertyDetailPage = ({ params }) => {
+interface Params {
+  id: string;
+}
+interface Feedback {
+  rating: number;
+  message: string;
+  feedback_by: string;
+  profilephoto: string;
+  user_fname: string;
+  user_lname: string;
+}
+const PropertyDetailPage = ({ params }: { params: Params }) => {
   // Destructure the id from params
   const { id } = params;
 
   // Define state variables to store property data and loading/error status
-  const [property, setProperty] = useState(null);
+  const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<any>(null);
   const token = useSelector((state: any) => state.auth.token.access);
-  
+  const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
+  const [activeStep, setActiveStep] = useState<number>(0);
   console.log(token);
+  useEffect(() => {
+    const fetchFeedback = async () => {
+      try {
+        const response = await fetchListingDetail(
+          `app2/listingfeedback/${id}`,
+          token
+        );
+        console.log(response);
+        setFeedbacks(response);
+      } catch (error) {
+        console.error("Error fetching feedback:", error);
+      }
+    };
+
+    fetchFeedback();
+  }, [id]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Fetch property data using the id
-        const propertyData = await fetchListingDetail(`app2/detailisting/${id}`,token);
+        const propertyData = await fetchListingDetail(
+          `app2/detailisting/${id}`,
+          token
+        );
         setProperty(propertyData);
-        console.log("++++", propertyData)
-        setLoading(false); // Set loading state to false after data is fetched
+        setLoading(false);
       } catch (error) {
-        console.error("Error fetching data:", error);
-        setError(error); // Set error state if data fetching fails
-        setLoading(false); // Set loading state to false in case of error
+        setError(error);
+        setLoading(false);
       }
     };
+    fetchData();
+  }, [id, token]);
 
-    fetchData(); // Invoke the fetchData function
-  }, [id]); // Call useEffect whenever the id changes
-
+  const handleStepChange = (step: SetStateAction<number>) => {
+    setActiveStep(step);
+  };
   if (loading) {
-    return <div>Loading...</div>; // Render loading indicator while data is being fetched
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Error fetching data</div>;
   }
 
-  if (error) {
-    return <div>Error fetching data</div>; // Render error message if data fetching fails
-  }
-  const cloudinaryUrl = `https://res.cloudinary.com/daajyumzx/${property.profilephoto}`;
-  // Render property details once data is fetched successfully
+  const cloudinaryUrl1 = `https://res.cloudinary.com/daajyumzx/${property?.profilephoto}`;
+
+  const steps = [
+    property?.image1 ?? "",
+    property?.image2 ?? "",
+    property?.image3 ?? "",
+    property?.image4 ?? "",
+  ];
+
   return (
     <main className="max-w-[1500px] mx-auto px-6 pb-6">
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <div className="py-6 pr-6 col-span-3">
-          <div className="w-full h-[64vh] mb-4 overflow-hidden rounded-xl relative border-white">
+          <div className="w-full h-[64vh] mb-4 overflow-hidden rounded relative border-white border-2">
             <Image
-              src={property.image1}
+              src={steps[activeStep]}
               alt=""
               layout="fill"
               objectFit="cover"
             />
-            
-             {/* <div id="default-carousel" className="relative w-full" data-carousel="slide">
-   
-    <div className="relative h-56 overflow-hidden rounded-lg md:h-96">
-        
-        <div className="hidden duration-700 ease-in-out" data-carousel-item>
-            <Image src={property?.image3} className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" layout="fill" objectFit="cover" alt="..." />
-        </div>
-        
-        <div className="hidden duration-700 ease-in-out" data-carousel-item>
-            <Image src={property.image3} className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" layout="fill" objectFit="cover" alt="..." />
-        </div>
-       
-        <div className="hidden duration-700 ease-in-out" data-carousel-item>
-            <Image src={property.image3} className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" layout="fill" objectFit="cover" alt="..." />
-        </div>
-       
-        <div className="hidden duration-700 ease-in-out" data-carousel-item>
-            <Image src={property.image3} className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" layout="fill" objectFit="cover" alt="..." />
-        </div>
-       
-        <div className="hidden duration-700 ease-in-out" data-carousel-item>
-            <Image src={property.image3} className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" layout="fill" objectFit="cover" alt="..." />
-        </div>
-    </div>
-    <div className="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
-        <button type="button" className="w-3 h-3 rounded-full" aria-current="true" aria-label="Slide 1" data-carousel-slide-to="0"></button>
-        <button type="button" className="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 2" data-carousel-slide-to="1"></button>
-        <button type="button" className="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 3" data-carousel-slide-to="2"></button>
-        <button type="button" className="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 4" data-carousel-slide-to="3"></button>
-        <button type="button" className="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 5" data-carousel-slide-to="4"></button>
-    </div>
-   
-    <button type="button" className="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
-        <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-            <svg className="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
-            </svg>
-            <span className="sr-only">Previous</span>
-        </span>
-    </button>
-    <button type="button" className="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
-        <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-            <svg className="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-            </svg>
-            <span className="sr-only">Next</span>
-        </span>
-    </button>
-</div> */}
+          </div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            {steps.map((image, index) => (
+              <div
+                key={index}
+                onClick={() => handleStepChange(index)}
+                style={{
+                  width: 50,
+                  height: 50,
+                  backgroundImage: `url(${image})`,
+                  backgroundSize: "cover",
+                  cursor: "pointer",
+                  marginRight: 10,
+                  borderRadius: 5,
+                }}
+              />
+            ))}
           </div>
         </div>
         <div className="py-6 pr-6 col-span-2 mt-4">
-          <h1 className="mb-4 text-4xl">{property.title}</h1>
-          <h2>Total</h2> <p>
-              ₹ {property.price} {property.sale_type}
-            </p> 
-          <span className="mb-6 block text-lg text-gray-600">
-            {property.guests} guests - {property.bedrooms} bedrooms -{" "}
-            {property.bathrooms} bathrooms
-          </span>
+          <h1 className="mb-4 text-4xl font-bold text-gray-800 uppercase">
+            {property?.title} - {property?.home_type}
+          </h1>
+          <hr className="border-white" />
 
-          <div className="flexStart" style={{ gap: "1rem" }}>
-            <ul>
-           
-              <li>
-                
-              <span className="secondaryText">
-
-              <MdLocationPin size={25} /> 
-              {property?.address} {property?.city} {property?.country}
+          <div className="text-lg text-black flex items-center mt-2">
+            <h2 className="text-xl font-semibold mr-2">Total</h2>
+            <span className="bg-orange-300 p-1">
+              ₹ {property?.price} {property?.sale_type}
+              {property?.sale_type === "For Rent" &&
+                property?.rental_choice && <> - {property?.rental_choice}</>}
             </span>
-              </li>
-            </ul>
-          
-            
           </div>
-       
-          <hr />
 
-          <hr />
+          <p className="mb-6 text-lg text-black mt-2 ml-2">
+            <FaBed className="inline-block mr-2" size={20} />
+            <span className="font-bold text-xl">{property?.bedrooms}</span>{" "}
+            bedrooms -
+            <FaBath className="inline-block ml-2 mr-2" size={20} />
+            <span className="font-bold text-xl">
+              {property?.bathrooms}
+            </span>{" "}
+            bathrooms
+          </p>
 
-          <p className="mt-6 text-lg">{property.description}</p>
-          <hr />
-          <CiHeart className="mr-2 text-2xl text-red-600 hover:text-red-800" />
+          <div className="flex items-center gap-2">
+            <MdLocationPin className="text-black" size={35} />
+            <span className="text-lg text-black">
+              {property?.address} ,
+              <span className="font-bold"> {property?.city}</span> ,
+              <span className="font-bold"> {property?.country}</span>
+            </span>
+          </div>
+
+          <div className="mt-4 text-lg text-black flex items-center">
+            <p className="font-bold mr-2">Extra Facility:</p>
+            <p>{property?.extrafacility}</p>
+          </div>
+
+          <hr className="my-6 border-white" />
+          <p className="font-bold mr-2 text-lg">Description :</p>
+          <p className="mt-6 text-lg text-black">{property?.description}</p>
         </div>
       </div>
       <div className="col-span-6 lg:col-span-5">
         <div className="py-6 w-full">
-        <h2 className="text-2xl font-bold text-gray-800 dark:text-white text-center mb-3">This is Home Location</h2>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white text-center mb-3">
+            This is Home Location
+          </h2>
           <Mapcompo
-            latitude={property.latitude}
-            longitude={property.longitude}
-            address={property.address}
+            latitude={property?.latitude}
+            longitude={property?.longitude}
+            address={property?.address}
           />
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <div className="py-6 pr-6 col-span-3">
-          <p className="mt-6 text-lg">
+        <div className="mt-3 pr-6 col-span-3">
+          <p className="mt-2 text-lg">
             <Link
-              href={`/sellerdetail/${property.user}`}
-              className="py-6 flex items-center space-x-4"
+              href={`/sellerdetail/${property?.user}`}
+              className="py-6 flex items-center space-x-4 bg-slate-100 p-2 rounded-xl mb-5"
             >
-             
               <Image
-                src={property.profilephoto ? cloudinaryUrl :"/images/sellerdefaultimg.jpg" }
+                src={
+                  property?.profilephoto
+                    ? cloudinaryUrl1
+                    : "/images/sellerdefaultimg.jpg"
+                }
                 width={50}
                 height={50}
                 className="rounded-full"
                 alt="The user name"
               />
-             
-
               <p>
-                <strong>{property.user_name}</strong> is This House Owner
+                <strong>{property?.user_name}</strong> is This House Owner
               </p>
             </Link>
-            <FeedbackForm />
+            <FeedbackForm listingId={property?.id} />
           </p>
-         
         </div>
-
         <ReservationSidebar property={property} />
       </div>
+      {feedbacks.length > 0 && (
+  <div className="py-6">
+    <h2 className="text-2xl font-bold mb-4">Feedbacks</h2>
+    {feedbacks.map((feedback, index) => (
+      <div
+        key={index}
+        className="mb-4 flex items-center space-x-4 bg-slate-100 p-2 rounded"
+      >
+        <div className="flex items-center space-x-4">
+          <Image
+            src={
+              feedback?.profilephoto
+                ? `https://res.cloudinary.com/daajyumzx/${feedback?.profilephoto}`
+                : "/images/sellerdefaultimg.jpg"
+            }
+            width={50}
+            height={50}
+            className="rounded-full flex"
+            alt="User profile"
+          />
+          <p>
+            <strong>
+              {feedback.user_fname} {feedback.user_lname}
+            </strong>
+          </p>
+        </div>
+        <div>
+          <div className="flex items-center space-x-2">
+            <Stack spacing={1}>
+              <Rating
+                name="size-large"
+                defaultValue={2}
+                size="large"
+                value={feedback.rating}
+                readOnly
+              />
+            </Stack>
+          </div>
+          <p>{feedback.message}</p>
+        </div>
+      </div>
+    ))}
+
+
+        </div>
+      )}
     </main>
   );
 };

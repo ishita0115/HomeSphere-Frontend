@@ -86,7 +86,18 @@ const UserNav: React.FC<UserNavProps> = ({ userId }) => {
               ) : (
                 console.log("You are not a seller")
               )}
-
+            {userDataAfterLogin.role === 2 ||
+              userDataAfterLogin.role === 1 ? (
+                <MenuLink
+                  label="request visit home"
+                  onClick={() => {
+                    setIsOpen(false);
+                    router.push("/Bokkingrequest");
+                  }}
+                />
+              ) : (
+                console.log("You are not a seller")
+              )}
               <MenuLink
                 label="My favorites"
                 onClick={() => {
