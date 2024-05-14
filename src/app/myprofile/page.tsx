@@ -6,6 +6,8 @@ import apiService, { fetchListingDetail, profileApiservive } from "@/app/apiServ
 import authMiddleware from "@/app/authMiddelware";
 import { login, updateProfile } from "../redux/slice/authslice";
 import ListingItems from "../components/Listing/Listingcard";
+import { useRouter } from "next/navigation";
+import { CiCircleList } from "react-icons/ci";
 interface UserData {
   first_name: string;
   last_name: string;
@@ -14,8 +16,8 @@ interface UserData {
   profilephoto: string;
 }
 
-
 const ProfileSettings = () => {
+  const router = useRouter()
   const [userData, setUserData] = useState<UserData | null>(null);
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -23,9 +25,16 @@ const ProfileSettings = () => {
   const token = useSelector((state: any) => state.auth.token.access);
   const uid = useSelector((state: any) => state.auth.token.uid);
   const dispatch = useDispatch();
-
   const [newValue,setNewValue] = useState<boolean>(false)
   const [landlord, setLandlord] = useState<any>(null);
+
+
+  const handleChangePassword = () => {
+    router.push("/changepass");
+  };
+  const homeupdate = () => {
+    router.push(`/mylisting/${uid}`);
+  };
   useEffect(() => {
     fetchUserData();
   }, [newValue]);
@@ -62,11 +71,12 @@ const ProfileSettings = () => {
       );
 
       if (response) {
-        console.log(response.token);
+        console.log(response)
         dispatch(updateProfile(response));
         alert("Profile updated successfully");
         setIsEditMode(false);
         setNewValue(true)
+        setLandlord(response)
       }
     } catch (error) {
       setNewValue(false)
@@ -257,37 +267,25 @@ const ProfileSettings = () => {
           </div>
         </div>
         <div className="lg:w-1/4">
-          <div className="p-3 py-5">
-            <div className="flex justify-between items-center mb-3">
-              <span>My Listing</span>
-              <span className="border px-3 py-1 add-experience">
-                {" "}
-                <i className="fa fa-plus"></i>Click Me
-              </span>
+          <div className="p-3 py-5 pl-8">
+            <div className="flex justify-between items-center mt-6">
+              <span>Password Settings</span>
+            </div>
+            
+            <div>
+            <button className="bg-[#1E88E5] text-white hover:bg-blue-300 hover:text-black p-3 mt-4" onClick={handleChangePassword}>Change Password</button>
+            </div>
+            <div className="flex justify-between items-center mt-12">
+              <span>My Home List</span>
             </div>
             <div>
-              <label className="labels">......................</label>
-              <input
-                type="text"
-                className="form-input"
-                value={userData ? userData : ""}
-                onChange={handleInputChange}
-                disabled={!isEditMode}
-              />
+            <button className="bg-[#1E88E5] text-white hover:bg-blue-300 hover:text-black p-3 mt-4 flex"  onClick={homeupdate}>My Home List<CiCircleList className="h-6 ml-2"/></button>
             </div>
           </div>
         </div>
        
       </div>
-      <div className="col-span-1 md:col-span-3 pl-0 md:pl-6">
-          <div className="mt-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {landlord && landlord.map((property: any) => (
-                <ListingItems key={property.id} property={property} />
-              ))}
-            </div>
-          </div>
-        </div>
+     
     </div>
   );
 };

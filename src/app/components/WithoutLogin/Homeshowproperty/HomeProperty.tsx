@@ -17,8 +17,8 @@ const HomeProperty = () => {
         {/* slider */}
         {data.map((card, i) => (
           <SwiperSlide key={i}>
-            <div className="flexColStart r-card">
-              <img src={card.image} alt="home" />
+            <div className="flexColStart r-card rounded">
+              <img src={card.image} alt="home" className="rounded" />
 
               <span className=" r-price">
                 <span style={{ color: "orange" }}></span>

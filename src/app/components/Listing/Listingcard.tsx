@@ -13,7 +13,6 @@ import axios from "axios";
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 
-
 interface PropertyProps {
   property: PropertyType;
   markFavorite?: (is_favorite: boolean) => void;
@@ -21,6 +20,8 @@ interface PropertyProps {
 const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite}) => {
   const [averageRating, setAverageRating] = useState<number | null>(null);
   const router = useRouter();
+  const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
+  const isMyListingPage = pathname.includes("/mylisting/");
   const handleClick = () => {
     window.location.href = `/DetailHome/${property.id}`;
   };
@@ -32,7 +33,9 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite}) => {
     const queryString = `/?lat=${property.latitude}&lng=${property.longitude}`;
     router.push(`/${queryString}`);
   };
-
+  const handleUpdateListing = () => {
+    router.push(`/addlistingform/${property.id}`);
+  };
 
   // console.log(property.latitude);
   const cloudinaryUrl = `https://res.cloudinary.com/daajyumzx/${property.profilephoto}`;
@@ -164,14 +167,18 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite}) => {
 
             {/* Grid 2 */}
             <div className="flex items-center justify-end mr-5">
-              <div className="absolute mb-1 flex">
+              <div className="absolute mb-1 flex ">
               <button onClick={handleViewMap} style={{ backgroundColor: 'transparent', border: 'none', cursor: 'pointer' }}>
                 <FaMapMarkerAlt style={{ width: '25px', height: '25px', color: 'black' }} />
               </button>
               </div>
             </div>
           </div>
-          
+          {isMyListingPage && (
+            <div className="flex justify-center items-center h-full">
+              <button onClick={handleUpdateListing} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3 mx-auto">Update Listing</button>
+            </div>
+          )}
         </div>
      
       </div>

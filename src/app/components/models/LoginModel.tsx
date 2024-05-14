@@ -80,7 +80,7 @@ const LoginModal = () => {
                     onClick={handleSubmit}
                 />
 
-            <Link href="/forgot-password" onClick={handleForgotPasswordClick} className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 cursor-pointer">
+            <Link href="/sendpassmailreset" onClick={handleForgotPasswordClick} className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 cursor-pointer">
                 Forgot Password?
             </Link>
         </form>
