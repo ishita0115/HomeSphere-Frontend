@@ -133,7 +133,7 @@ const AdminMessages = () => {
             <th className="border border-gray-500 px-4 py-2">Sender Name</th>
             <th className="border border-gray-500 px-4 py-2">Sender Email</th>
             <th className="border border-gray-500 px-4 py-2">Message</th>
-            <th className="border border-gray-500 px-4 py-2">Created At</th>
+            <th className="border border-gray-500 px-4 py-2">Status</th>
             <th className="border border-gray-500 px-4 py-2">Action</th>
           </tr>
         </thead>
@@ -144,7 +144,7 @@ const AdminMessages = () => {
               <td className="border border-gray-500 px-4 py-2">{message.sender_first_name}</td>
               <td className="border border-gray-500 px-4 py-2">{message.sender_email}</td>
               <td className="border border-gray-500 px-4 py-2">{message.message}</td>
-              <td className="border border-gray-500 px-4 py-2">{message.created_at}</td>
+              <td className="border border-gray-500 px-4 py-2">{message.status}</td>
               <td className="border border-gray-500 px-4 py-2">
                 <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleDeleteMessage(message.id)}>Delete</button>
                 {!message.acknowledged && (

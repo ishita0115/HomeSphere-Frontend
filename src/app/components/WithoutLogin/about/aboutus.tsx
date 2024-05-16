@@ -5,6 +5,7 @@ import Heading from "./Heading";
 import Image from "next/image";
 import { IoIosHome } from "react-icons/io";
 
+
 const About = ({cardTitle1,
   cardTitle2,
   cardTitle3,
@@ -16,6 +17,7 @@ const About = ({cardTitle1,
   const toggleContent = () => {
     setShowFullContent(!showFullContent);
   };
+  
 
   return (
     <>
@@ -61,7 +63,7 @@ const About = ({cardTitle1,
               </button>
             )}
           </div>
-          <div className="md:w-1/2 mt-4 md:mt-0">
+          <div className="md:w-1/2 mt-4 md:mt-0 md:pl-2 ml-34" >
             <Image
               src="/images/immio.jpg"
               alt="Company Office"
@@ -73,20 +75,20 @@ const About = ({cardTitle1,
       </section>
       <div id="about-container" className="relative p-4 mb-4">
       <div className="flex justify-center items-center">
-        <button className="p-2 relative mt-24 bg-blue-500  hover:bg-blue-600 px-4 py-1 rounded-2xl text-white -500 hover:text-white h-70 w-40 font-black text-xs uppercase cursor-pointer ">
+      <button className="text-blue-900 text-xl capitalize shadow-lg bg-white hover:bg-orange-500 hover:text-white px-4 py-1 rounded-3xl h-14 w-36">
           Our Story
         </button>
       </div>
 
       <div className="relative ">
-        <div className="flex flex-col justify-center items-center mt-20">
+        <div className="flex flex-col justify-center items-center mt-10">
           <p
             className="text-9xl sm:text-10xl text-blue-700 opacity-5 font-black text-center z-0 absolute top-0 left-0 w-full dark:text-white
           "
           >
             OUR STORY
           </p>
-          <p className="text-4xl text-blue-900 font-bold text-center z-20 relative mt-16 dark:text-gray-300">
+          <p className="text-4xl text-blue-900 font-bold text-center z-0 relative mt-16 dark:text-gray-300">
             We Will Find the Best Option
           </p>
         </div>
@@ -131,7 +133,7 @@ const About = ({cardTitle1,
     </div>
     <div id="services" className="relative p-4 mb-4">
       <div className="flex justify-center items-center">
-        <button className="relative mt-24 bg-blue-200 hover:bg-blue-600 px-4 py-1 rounded-2xl text-blue-500 hover:text-white h-8 w-28 font-black text-xs uppercase cursor-pointer ">
+      <button className="text-blue-900 text-xl capitalize shadow-lg bg-white hover:bg-orange-500 hover:text-white px-4 py-1 rounded-3xl h-14 w-36">
           services
         </button>
       </div>
@@ -140,7 +142,7 @@ const About = ({cardTitle1,
           <p className=" text-8xl sm:text-10xl text-blue-700 opacity-5 font-black text-center z-0 absolute top-0 left-0 w-full uppercase  dark:text-white">
             services
           </p>
-          <p className="text-4xl text-blue-900 font-bold text-center z-20 relative mt-7 sm:mt-14 dark:text-gray-300">
+          <p className="text-4xl text-blue-900 font-bold text-center z-0 relative mt-7 sm:mt-14 dark:text-gray-300 ">
             Services for Maximum Efficiency
           </p>
         </div>
@@ -174,21 +176,19 @@ const About = ({cardTitle1,
             </p>
           </div>
         </div>
-
         <div className="flex flex-col  mr-[60px] hover:scale-125  ease-in duration-200">
-          <div className="bg-white h-[120px] w-[120px] sm:w-[166px] mr-[30px] flex flex-col justify-center items-center rounded-[120px] shadow-xl p-[10px] gap-[10px] mb-5 dark:bg-gray-700">
+          <div className="bg-white h-[120px] w-[120px] mr-[30px] flex flex-col justify-center items-center rounded-[120px] shadow-xl p-[10px] gap-[10px] mb-5 dark:bg-gray-700">
           <Image src="/aboutus/office.png" alt="house" width={44}   height={40} /> 
             <p className="font-bold text-sm leading-6  text-center text-blueCardTitle dark:text-gray-200 ">
-              Office
+              flat
             </p>
           </div>
         </div>
-
         <div className="flex flex-col  mr-[60px] hover:scale-125  ease-in duration-200">
           <div className="bg-white h-[120px] w-[120px] mr-[30px] flex flex-col justify-center items-center rounded-[120px] shadow-xl p-[10px] gap-[10px] mb-5 dark:bg-gray-700">
           <Image src="/aboutus/warehouse.png" alt="house" width={44}   height={40} /> 
             <p className="font-bold text-sm leading-6  text-center text-blueCardTitle dark:text-gray-200 ">
-              Warehouse
+              colonial
             </p>
           </div>
         </div>

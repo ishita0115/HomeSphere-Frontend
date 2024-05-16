@@ -127,7 +127,6 @@ const Listing: React.FC<ListingProps> = ({  landlord_id , favorites}) => {
                 }
                 const response = await profileApiservive.get(url, token);
                 const fetchedProperties = response.data;
-                 console.log(fetchedProperties)
                 const updatedProperties = fetchedProperties.map((property: { id: any; title: any; image1: any; address: any; sale_type: any; bedrooms: any; home_type: any; country: any; bathrooms: any; city: any; profilephoto: any; user_name: any; user: any; latitude: any; longitude: any; }) => ({
                     id: property.id,
                     title: property.title,
@@ -162,8 +161,9 @@ const Listing: React.FC<ListingProps> = ({  landlord_id , favorites}) => {
     
     
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-        setPage(value); // Update the page when pagination changes
+        setPage(value); 
     };
+    
     const renderPropertiesForPage = () => {
         const startIndex = (page - 1) * cardsPerPage;
         const endIndex = page * cardsPerPage;

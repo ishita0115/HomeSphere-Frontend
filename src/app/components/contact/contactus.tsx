@@ -5,19 +5,20 @@ import "./contact.css"
 const Contact = () => {
   return (
     <>
-      <section className='contact'>
-        <Back name='Contact Us' title='Get Helps & Friendly Support' cover="/images/contsctus.jpg" />
-        <div className='container m-4 bg-blue-200'>
-          <form className='shadow'>
-            <h4>Fillup The Form</h4> <br />
-            <div>
-              <input type='text' placeholder='Name' />
-              <input type='text' placeholder='Email' />
-            </div>
-            <input type='text' placeholder='Subject' />
-            <textarea cols='30' rows='10'></textarea>
-            <button>Submit Request</button>
-          </form>
+      <section className='contact bg-gray-100'>
+        <Back name='Contact Us' title='Get Help & Friendly Support' cover="/images/contsctus.jpg" />
+        <div className='container mx-auto px-4 flex flex-col items-center mt-6'>
+        <button className="text-blue-900 text-xl capitalize shadow-lg bg-white p-4 mb-8 hover:bg-blue-500 hover:text-white px-4 py-1 rounded-3xl h-14 w-36">
+        Contact us
+        </button>  
+          <img
+            src="/aboutus/1.png"
+            alt="Company Office"
+            width={700}
+            height={600}
+            className="rounded-lg shadow-lg mb-8 transform transition-transform duration-500 hover:scale-105"
+          />
+          
         </div>
       </section>
     </>

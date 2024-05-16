@@ -3,21 +3,21 @@ import { MdCancel, MdAnalytics } from "react-icons/md";
 const data = [
   {
 
-    heading: "Best interest rates on the market",
+    heading: "Advanced Search Filters",
     detail:
-      "We are always ready to help by providing the best services for you.We believe a good place to live can make your life better..",
+      "Easily narrow down your property search with advanced filters based on location, price range, property type, amenities, and more.",
   },
   {
   
-    heading: "Prevent unstable prices",
+    heading: "Property Listings with Detailed Information",
     detail:
-      "Exercitation in fugiat est ut ad ea cupidatat ut in cupidatat occaecat ut occaecat consequat est minim minim esse tempor laborum consequat esse adipisicing eu reprehenderit enim.",
+      "Explore comprehensive property listings featuring detailed information, including property specifications, high-quality images, virtual tours, and floor plans.",
   },
   {
    
-    heading: "Best price on the market",
+    heading: "Interactive Map Integration",
     detail:
-      "Exercitation in fugiat est ut ad ea cupidatat ut in cupidatat occaecat ut occaecat consequat est minim minim esse tempor laborum consequat esse adipisicing eu reprehenderit enim.",
+      "Seamlessly navigate through neighborhoods, view property proximity to schools, parks, public transportation, and other essential services, enhancing the overall user experience.",
   },
 ];
 export default data;

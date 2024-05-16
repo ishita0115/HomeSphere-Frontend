@@ -201,6 +201,7 @@ const PropertyDetailPage = ({ params }: { params: Params }) => {
             latitude={property?.latitude}
             longitude={property?.longitude}
             address={property?.address}
+            zoomdata={13}
           />
         </div>
       </div>

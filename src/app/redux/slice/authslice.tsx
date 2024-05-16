@@ -1,3 +1,4 @@
+import AdminMessages from '@/app/components/Adminmessage/Adminmesg';
 import { createSlice } from '@reduxjs/toolkit';
 import thunk from 'redux-thunk'
 
@@ -25,8 +26,6 @@ export const authSlice = createSlice({
       console.log("payload",action.payload)
       
       state.isAuthenticated = true;
-      console.log("action f name : ", action.payload);
-      console.log(action.payload)
       state.users = action.payload[0]
       state.token = action.payload[1]
       
@@ -43,11 +42,14 @@ export const authSlice = createSlice({
     },
     updateProfile:(state,{type,payload})=>{
       state.users = payload
-    }
+    },
+    adminmessage:(state,{type,payload})=>{
+      state.users = payload
+    },
   },
 });
 
-export const { login, logout, updateProfile } = authSlice.actions;
+export const { login, logout, updateProfile,adminmessage } = authSlice.actions;
 
 
 export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.isAuthenticated;

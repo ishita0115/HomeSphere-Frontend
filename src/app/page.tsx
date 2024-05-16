@@ -18,9 +18,9 @@ export default function Home() {
   const search1 = searchParams.get('lat');
   const search2 = searchParams.get('lng');
   const uid = useSelector((state:any) => state.auth.token.uid);
-  const address = "123 Main Street";
-  const phone = "555-1234";
-  const email = "example@example.com";
+  const address = "36, sardarnagar society Dhari, Amreli";
+  const phone = "9327058588";
+  const email = "ishitachovatiya15@gmail.com";
   
   const showMoreBtn = () => {
   
@@ -41,7 +41,7 @@ export default function Home() {
               Home Sphere
             </button>
             <h1 className="font-normal text-7xl text-center mt-24 text-white capitalize">
-              find real estate
+              find Your Dream Home
               <br /> that suits you
             </h1>
             {/* Icons and Text under Heading */}
@@ -80,7 +80,7 @@ export default function Home() {
                 onClick={showMoreBtn}
                 className="text-blue-900 text-xl capitalize shadow-lg bg-white hover:bg-orange-500 hover:text-white px-4 py-1 rounded-3xl h-14 w-36"
               >
-                show more
+                Home List
               </button>
             </div>
           </div>

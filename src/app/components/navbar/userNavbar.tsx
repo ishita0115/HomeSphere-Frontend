@@ -128,6 +128,16 @@ const UserNav: React.FC<UserNavProps> = ({ userId }) => {
             ) : (
               console.log("myreservation")
             )}
+            { userDataAfterLogin.role === 1 ? (
+              <MenuLink
+                label="Dashboard"
+                onClick={() => {
+                  router.push(`/dashboard`);
+                }}
+              />
+            ) : (
+              console.log("dashboard")
+            )}
             
               <LogoutButton />
             </>
