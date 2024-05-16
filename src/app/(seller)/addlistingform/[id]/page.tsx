@@ -11,6 +11,7 @@ import "leaflet/dist/leaflet.css";
 import { Icon } from "leaflet";
 import * as ELG from 'esri-leaflet-geocoder'
 import { useMapEvent } from "react-leaflet";
+import { toast } from 'react-toastify';
 
 const housingIcon = new Icon({
   iconUrl: "/images/icons8-home-64 (2).png",
@@ -131,24 +132,47 @@ const MyForm = ({ params }: { params: { id: number } }) => {
   // Function to handle form input change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    let newValue: string | number = value; // Define newValue as string | number
+  
+    if (name === 'bedrooms' || name === 'bathrooms') {
+      // Ensure the entered value is a number
+      const parsedValue = parseFloat(value);
+  
+      // Check if the value is within the specified range
+      if (parsedValue < 1 || parsedValue > 10) {
+        // Display an error message
+        toast.error(`${name.charAt(0).toUpperCase() + name.slice(1)} must be between 1 and 10`);
+        return; // Stop further processing
+      }
+      newValue = parsedValue; // Assign parsedValue to newValue
+    }
+  
+   
+  
     setFormData(prevState => ({
       ...prevState,
       [name]: value
     }));
+   // Validation for price field
+    if (name === 'price') {
+      // Ensure the entered value is a number
+      const parsedValue = parseFloat(value);
+  
+      // Check if the value is within the specified range
+      if (parsedValue < 1000 || parsedValue > 1000000000) {
+        // Display an error message
+        toast.error('Price must be between 1000 and 1000000000');
+        return; // Stop further processing
+      }
+      newValue = parsedValue; // Assign parsedValue to newValue
+    }
+   
   };
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const formDataToSend = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        // Only append the image files if they are not empty
-        if (key.startsWith("image") && value !== "") {
-          formDataToSend.append(key, value);
-        } else if (!key.startsWith("image")) {
-          formDataToSend.append(key, value);
-        }
-      });
       const config = {
         headers: {
           'content-type': 'multipart/form-data',
@@ -157,11 +181,13 @@ const MyForm = ({ params }: { params: { id: number } }) => {
         },
       };
       const response = await axios.put(`http://localhost:8000/app2/ManageListingupdatedeleteView/${params.id}/`, formDataToSend,config);
-      console.log('Listing updated:', response);
+      toast.success('Listing updated successfully');
       setIsEditing(false);
-    } catch (error) {
+    }   
+    catch (error) {
       console.error('Error updating listing:', error);
-    }
+      toast.error('Error updating listing');
+    }  
   };
   
   // Fetch listing data when component mounts
@@ -285,43 +311,6 @@ console.log(formData.image2)
     <option value="other">Other</option>
   </select>
 </div>
-
-
-    {/* Image1 */}
-    <div className="mb-4">
-      <label htmlFor="image1" className="block text-sm font-medium text-gray-700">
-        Image 1
-      </label>
-      <img src={formData.image1} alt="Image 1" className="max-w-[200px] h-auto" />
-      <input type="file"  name="image1"   id="image1" onChange={handleImageinputChange} className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2" />
-    </div>
-
-    {/* Image2 */}
-    <div className="mb-4">
-      <label htmlFor="image2" className="block text-sm font-medium text-gray-700">
-        Image 2
-      </label>
-     
-      <input type="file" name="image2"  id="image2" onChange={handleImageinputChange} className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2" />
-    </div>
-
-    {/* Image3 */}
-    <div className="mb-4">
-      <label htmlFor="image3 " className="block text-sm font-medium text-gray-700">
-        Image 3
-      </label>
-      
-      <input type="file" src={formData.image3} name="image3" id="image3" onChange={handleImageinputChange} className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2" />
-    </div>
-
-    {/* Image4 */}
-    <div className="mb-4">
-      <label htmlFor="image4" className="block text-sm font-medium text-gray-700">
-        Image 4
-      </label>
-      
-      <input type="file" name="image4" id="image4" onChange={handleImageinputChange} className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2" />
-    </div>
   </div>
   </div>
   <div className="flex mt-3 dark:bg-gray-900 items-center justify-center">
@@ -398,7 +387,6 @@ console.log(formData.image2)
   </div>
 
   <div className="mt-6">
-    <strong className="mb-2 text-xl text-center block">Images</strong>
     <div className="flex flex-wrap justify-center gap-2">
       <img src={formData.image1} alt="Image 1" className="max-w-[200px] h-auto" />
       <img src={formData.image2} alt="Image 2" className="max-w-[200px] h-auto" />

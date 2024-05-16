@@ -99,6 +99,7 @@ const StepTwo: NextPage<StepTwoProps> = ({ handleImageChange }) => {
     <section className="flex mt-3 dark:bg-gray-900 items-center justify-center">
       <div className="bg-white shadow-[#4689ab] w-3/5 h-4/5 items-center mt-1 dark:bg-gray-800 shadow-lg rounded-xl w-100 p-4">
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white text-center mb-4">Add Your Listing Photos</h2>
+        <h5 className="text-2xl font-bold text-red-800 dark:text-white text-center mb-4">Please select exactly 4 images</h5>
         <div className="flex flex-col space-y-4">
           {[1, 2, 3, 4].map(index => (
             <div key={index}>

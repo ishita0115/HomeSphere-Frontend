@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -81,9 +80,9 @@ const MyBookings = () => {
               <h2 className="mb-4 text-xl mt-3 uppercase"><strong>{listingData[reservation.Listing]?.title}</strong></h2>
 
               <p className={`${getBackgroundColor(reservation.which_date)} mb-2 p-2`}><strong>Visit date:</strong> {formatDate(reservation.which_date)}</p>
-              <p className="mb-2"><strong>Owner Name: </strong> {listingData[reservation.Listing]?.user_name}</p>
+              <p className="mb-2 p-2"><strong>Owner Name: </strong> {listingData[reservation.Listing]?.user_name}</p>
 
-              <p className="mb-2"><strong>City: </strong> {listingData[reservation.Listing]?.city}</p>
+              <p className="mb-2 p-2"><strong>City: </strong> {listingData[reservation.Listing]?.city}</p>
               <p className="mb-3 mt-3 bg-yellow-300 rounded p-2"><strong>Status:  </strong> {reservation.statusmanage}</p>
              
 

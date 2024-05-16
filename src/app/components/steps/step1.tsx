@@ -21,6 +21,7 @@ interface StepOneProps {
 }
 
 const StepOne: React.FC<StepOneProps> = ({ formData, handleChange }) => {
+  const [errors, setErrors] = useState<Partial<FormData>>({});
 
   useEffect(() => {
     localStorage.setItem('listingFormData', JSON.stringify(formData));
@@ -60,7 +61,6 @@ const StepOne: React.FC<StepOneProps> = ({ formData, handleChange }) => {
               <option value="flat">Flat</option>
               <option value="cottage">Cottage</option>
               <option value="bungalow">Bungalow</option>
-              <option value="other">Other</option>
             </select>
           </div>
           <div>
@@ -148,6 +148,7 @@ const StepOne: React.FC<StepOneProps> = ({ formData, handleChange }) => {
               onChange={handleChange}
               placeholder="Bedrooms"
             />
+            {errors.bedrooms && <p className="text-red-500 text-xs italic">{errors.bedrooms}</p>}
           </div>
           <div>
             <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" htmlFor="bathrooms">
@@ -162,6 +163,7 @@ const StepOne: React.FC<StepOneProps> = ({ formData, handleChange }) => {
               onChange={handleChange}
               placeholder="Bathrooms"
             />
+              {errors.bathrooms && <p className="text-red-500 text-xs italic">{errors.bathrooms}</p>}
           </div>
           <div>
             <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" htmlFor="sale_type">
@@ -191,6 +193,7 @@ const StepOne: React.FC<StepOneProps> = ({ formData, handleChange }) => {
               onChange={handleChange}
               placeholder="Price"
             />
+            {errors.price && <p className="text-red-500 text-xs italic">{errors.price}</p>}
           </div>
           {formData.sale_type === "For Rent" && (
             <div>

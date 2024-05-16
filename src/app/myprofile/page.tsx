@@ -8,6 +8,7 @@ import { login, updateProfile } from "../redux/slice/authslice";
 import ListingItems from "../components/Listing/Listingcard";
 import { useRouter } from "next/navigation";
 import { CiCircleList } from "react-icons/ci";
+import { toast } from "react-toastify";
 interface UserData {
   first_name: string;
   last_name: string;
@@ -69,19 +70,24 @@ const ProfileSettings = () => {
         formData,
         token
       );
-
       if (response) {
         console.log(response)
         dispatch(updateProfile(response));
-        alert("Profile updated successfully");
+        toast.success("Profile updated successfully");
         setIsEditMode(false);
         setNewValue(true)
         setLandlord(response)
       }
-    } catch (error) {
+    } catch (error:any) {
       setNewValue(false)
-      alert("Error updating profile:", error);
-      setError("Failed to update profile. Please try again.");
+      console.error('some ',error)
+      if(error?.response?.data?.mobileno[0])
+        {
+          toast.error(error.response.data.mobileno[0]);
+        }
+      else if(error?.response?.data?.profilephoto[0] == 'Ensure this filename has at most 100 characters (it has 106).'){
+          toast.error(error.response.data.profilephoto[0]);
+        }
     }
   };
 
@@ -93,6 +99,12 @@ const ProfileSettings = () => {
   const handleInputChange = (e:any) => {
     const { name, value } = e.target;
     setUserData((prevUserData) => ({ ...prevUserData, [name]: value }));
+    const mobileRegex = /^[0-9]{9,10}$/; // Regex for 9 or 10 digits
+    if (name === "mobileno" && !mobileRegex.test(value)) {
+    // Check if the input field is 'mobileno' and validate the value
+    toast.error("Please enter a valid mobile number or 10 digits.");
+    return;
+  }
     setError(null); // Clear error when input changes
   };
   

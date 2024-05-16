@@ -7,6 +7,7 @@ import { profileApiservive } from "@/app/apiService";
 
 export default function DashboardLayout() {
   const [allVisitors, setAllVisitors] = useState([]);
+  const [allBookings, setBookings] = useState([]);
   const token = useSelector((state: any) => state.auth.token.access);
   const [fetchedProperties, setFetchedProperties] = useState([]);
   useEffect(() => {
@@ -42,7 +43,22 @@ export default function DashboardLayout() {
 
     fetchData(); // Call fetchData function when component mounts or token changes
   }, [token]); 
-  bookings/
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let url = "/app2/bookings/";
+        const response = await profileApiservive.get(url, token);
+        console.log(response)
+        setBookings(response);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Handle errors, e.g., show an error message to the user
+      }
+    };
+
+    fetchData(); // Call fetchData function when component mounts or token changes
+  }, [token]); 
+
   return (
     <div className="p-8">
       <div className="grid grid-cols-4 gap-4">
@@ -77,13 +93,12 @@ export default function DashboardLayout() {
           <IoPeople className="text-2xl text-white" />
           <div className="pl-4">
             <span className="text-sm text-gray-500 font-light">
-              Total Bookings 
+              Total Bookings Till Now
             </span>
             <div className="flex items-center">
               <strong className="text-xl text-gray-700 font-semibold">
-                12313
+                {allBookings.length}
               </strong>
-              <span className="text-sm text-red-500 pl-2">-30</span>
             </div>
           </div>
         </BoxWrapper>
@@ -91,13 +106,12 @@ export default function DashboardLayout() {
           <IoCart className="text-2xl text-white" />
           <div className="pl-4">
             <span className="text-sm text-gray-500 font-light">
-              Total Orders
+              Total Sold
             </span>
             <div className="flex items-center">
               <strong className="text-xl text-gray-700 font-semibold">
                 16432
               </strong>
-              <span className="text-sm text-red-500 pl-2">-43</span>
             </div>
           </div>
         </BoxWrapper>

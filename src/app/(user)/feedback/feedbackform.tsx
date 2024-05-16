@@ -3,6 +3,8 @@ import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+
 
 function FeedbackForm({ listingId }: { listingId: string }) {
   const [rating, setRating] = useState<number>(0);
@@ -30,15 +32,12 @@ function FeedbackForm({ listingId }: { listingId: string }) {
         }
       );
   
-
-      if (!response) {
-        throw new Error('Failed to submit feedback');
+      if (response) {
+        // Feedback submitted successfully
+      toast.success('Feedback submitted successfully');
       }
-
-      // Feedback submitted successfully
-      console.log('Feedback submitted successfully');
-    } catch (err) {
-      console.error('Failed to submit feedback');
+    } catch (error) {
+      toast.error('Failed to submit feedback',error);
     } finally {
       setLoading(false);
     }

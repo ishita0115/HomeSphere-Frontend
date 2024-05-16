@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
+import DeleteButton from "../models/Deletebtn";
 
 interface PropertyProps {
   property: PropertyType;
@@ -36,7 +37,13 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite}) => {
   const handleUpdateListing = () => {
     router.push(`/addlistingform/${property.id}`);
   };
+  const handleDeleteSuccess = () => {
+    router.push('/'); // Redirect to home page or any other page
+  };
 
+  const handleDeleteError = () => {
+    // Handle delete error (e.g., show error message)
+  };
   // console.log(property.latitude);
   const cloudinaryUrl = `https://res.cloudinary.com/daajyumzx/${property.profilephoto}`;
 
@@ -179,6 +186,15 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite}) => {
               <button onClick={handleUpdateListing} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3 mx-auto">Update Listing</button>
             </div>
           )}
+           {isMyListingPage && (
+        <div className="flex justify-center items-center h-full">
+          <DeleteButton
+            listingId={property.id}
+            onSuccess={handleDeleteSuccess}
+            onError={handleDeleteError}
+          />
+        </div>
+      )}
         </div>
      
       </div>

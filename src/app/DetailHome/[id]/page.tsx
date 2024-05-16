@@ -62,7 +62,6 @@ const PropertyDetailPage = ({ params }: { params: Params }) => {
   const token = useSelector((state: any) => state.auth.token.access);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [activeStep, setActiveStep] = useState<number>(0);
-  console.log(token);
   useEffect(() => {
     const fetchFeedback = async () => {
       try {

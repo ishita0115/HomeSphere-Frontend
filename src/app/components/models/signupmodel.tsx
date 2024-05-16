@@ -73,7 +73,6 @@ const SignupModal = () => {
     
         try {
             const response = await apiService.post('/api/register/', formData);
-            console.log(response)
             if (response.success) {
                 toast.success('Successfully signed up');
                    signupModal.close();

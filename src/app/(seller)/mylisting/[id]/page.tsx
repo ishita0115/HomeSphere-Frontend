@@ -1,5 +1,4 @@
 'use client'
-'use client'
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { fetchListingDetail } from "@/app/apiService";
@@ -9,6 +8,8 @@ import { useSelector } from "react-redux";
 import { FaPhone } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import sellermiddleware from "../../sellermiddleware";
+import CircularIndeterminate from "@/app/components/loader/Loader";
+import { useRouter } from "next/navigation";
 
 const SellerDetail = ({ params }: { params: { id: string } }) => {
   const [landlord, setLandlord] = useState<any>(null);
@@ -40,6 +41,7 @@ const SellerDetail = ({ params }: { params: { id: string } }) => {
       const fetchSellerData = async () => {
         try {
           const response = await fetchListingDetail(`api/UserDetailView/${userAtIndex0.user}`, token);
+          console.log(response)
           if (response) {
             setSellerData(response);
           } else {
@@ -54,8 +56,8 @@ const SellerDetail = ({ params }: { params: { id: string } }) => {
     }
   }, [landlord, params.id, token]);
 
-  if (!landlord || !sellerData) {
-    return <div>Loading...</div>;
+  if (!landlord) {
+    return <div><CircularIndeterminate /></div>;
   }
 
   return (
@@ -63,19 +65,19 @@ const SellerDetail = ({ params }: { params: { id: string } }) => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <aside className="col-span-1 mb-4 mt-4">
           <div className="flex flex-col items-center p-6 rounded-xl border bg-white border-gray-300 shadow-xl">
-            <Image
-              src={sellerData.profilephoto ? sellerData.profilephoto : "/images/defaultuser.png"}
+          <Image
+              src={sellerData && sellerData.profilephoto ? sellerData.profilephoto : "/images/defaultuser.png"}
               width={200}
               height={200}
               alt="Landlord name"
               className="rounded-full"
             />
-            <h1 className="mt-6 text-2xl">{sellerData.first_name} {sellerData.last_name}</h1>
+            <h1 className="mt-6 text-2xl">{sellerData?.first_name} {sellerData?.last_name}</h1>
             <div className="flex items-center font-medium text-gray-800 mt-2">
-              <MdEmail className="mr-2" />{sellerData.email}
+              <MdEmail className="mr-2" />{sellerData?.email}
             </div>
             <div className="flex items-center font-medium text-gray-800 mt-1">
-              <FaPhone className="mr-2" />{sellerData.mobileno}
+              <FaPhone className="mr-2" />{sellerData?.mobileno}
             </div>
           </div>
         </aside>

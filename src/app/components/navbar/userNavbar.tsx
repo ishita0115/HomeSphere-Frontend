@@ -86,6 +86,18 @@ const UserNav: React.FC<UserNavProps> = ({ userId }) => {
               ) : (
                 console.log("You are not a seller")
               )}
+              {userDataAfterLogin.role === 2 ||
+              userDataAfterLogin.role === 1 ? (
+                <MenuLink
+                  label="Trash Listing"
+                  onClick={() => {
+                    setIsOpen(false);
+                    router.push("/Trash");
+                  }}
+                />
+              ) : (
+                console.log("You are not a seller")
+              )}
             {userDataAfterLogin.role === 2 ||
               userDataAfterLogin.role === 1 ? (
                 <MenuLink
@@ -120,7 +132,7 @@ const UserNav: React.FC<UserNavProps> = ({ userId }) => {
             {userDataAfterLogin.role === 3 ||
               userDataAfterLogin.role === 1 ? (
               <MenuLink
-                label="My reservations"
+                label="My Bookings"
                 onClick={() => {
                   router.push(`/myreservation/${uid}`);
                 }}

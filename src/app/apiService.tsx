@@ -149,7 +149,7 @@ export const profileApiservive={
   },
 
   post: async function(url:string, formData:FormData, token:string) {
-    try {
+    
       console.log('post', url, [...formData.entries()]);
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_HOST}${url}`, formData, {
         headers: {
@@ -159,10 +159,7 @@ export const profileApiservive={
       });
       console.log('response', response.data);
       return response.data;
-    } catch (error) {
-      console.error('Error in POST request:', error);
-      throw error;
-    }
+    
   }
 };
 
@@ -195,27 +192,16 @@ const apiService = {
       return response.data;
   },
   put: async function(url: string, data: FormData, token: string) {
-    try {
       console.log('put', url, [...data.entries()]);
-
       const headers = {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'multipart/form-data'
       };
       console.log('Headers:', headers); // Log headers
       const response = await axios.put(`${process.env.NEXT_PUBLIC_API_HOST}${url}`, data, {
-        // headers: {
-        //   'Authorization': `Bearer ${token}`,
-        //   'Content-Type': 'multipart/form-data'
-        // }
         headers : headers
       });
-      console.log('response', response.data);
       return response.data;
-    } catch (error) {
-      console.error('Error in PUT request:', error);
-      throw error;
-    }
   }
 };
 

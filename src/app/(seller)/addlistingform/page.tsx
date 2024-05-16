@@ -13,6 +13,7 @@ import { profileApiservive } from '@/app/apiService';
 import { useSelector ,useDispatch} from "react-redux";
 import { RootState } from '../../redux/store/store';
 import sellermiddleware from '../sellermiddleware'; // Import the middleware
+import { toast } from 'react-toastify';
 const steps = ['Listing detail', 'Images Upload', 'Location Add'];
 
 const HorizontalNonLinearStepper = () => {
@@ -20,6 +21,7 @@ const HorizontalNonLinearStepper = () => {
   // const userRole = useSelector((state: RootState) => state.auth.user.role); 
   const [activeStep, setActiveStep] = useState(0);
   const dispatch = useDispatch(); 
+  const [errors, setErrors] = useState<Partial<FormData>>({});
   const [completed, setCompleted] = useState<{ [k: number]: boolean }>({});
   const [formData, setFormData] = useState<any>({
     title: '',
@@ -42,14 +44,65 @@ const HorizontalNonLinearStepper = () => {
     longitude: 0,
   });
 
-
+  const validateFields = () => {
+    const errors: Partial<FormData> = {};
+  
+    if (formData.bedrooms === undefined || formData.bedrooms < 1 || formData.bedrooms > 10) {
+      errors.bedrooms = "Bedrooms must be between 1 and 10";
+    }
+  
+    if (formData.bathrooms === undefined || formData.bathrooms < 1 || formData.bathrooms > 10) {
+      errors.bathrooms = "Bathrooms must be between 1 and 10";
+    }
+  
+    if (formData.price === undefined || formData.price < 1000 || formData.price > 1000000000) {
+      errors.price = "Price must be between 1000 and 1000000000";
+    }
+  
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+  
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    let newValue: string | number = value; // Define newValue as string | number
+  
+    if (name === 'bedrooms' || name === 'bathrooms') {
+      // Ensure the entered value is a number
+      const parsedValue = parseFloat(value);
+  
+      // Check if the value is within the specified range
+      if (parsedValue < 1 || parsedValue > 10) {
+        // Display an error message
+        toast.error(`${name.charAt(0).toUpperCase() + name.slice(1)} must be between 1 and 10`);
+        return; // Stop further processing
+      }
+      newValue = parsedValue; // Assign parsedValue to newValue
+    }
+  
+   
+  
     setFormData((prevData: any) => ({
       ...prevData,
-      [name]: value
+      [name]: newValue
     }));
+   // Validation for price field
+    if (name === 'price') {
+      // Ensure the entered value is a number
+      const parsedValue = parseFloat(value);
+  
+      // Check if the value is within the specified range
+      if (parsedValue < 1000 || parsedValue > 1000000000) {
+        // Display an error message
+        toast.error('Price must be between 1000 and 1000000000');
+        return; // Stop further processing
+      }
+      newValue = parsedValue; // Assign parsedValue to newValue
+    }
+    validateFields();
   };
+  
+  
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>, fieldName: keyof FormData) => {
     const files = e.target.files;
@@ -126,11 +179,25 @@ const HorizontalNonLinearStepper = () => {
     try {
       const response = await profileApiservive.post('/app2/ManageListingView/', formDataToSend, token);
       console.log(response.data);
+      if(response.data)
+        {
+          toast.success('successfully created');
+          
+        }
+    } catch (error:any) {
+      console.error('Error updating:', error);
       
-      // Handle success response
-    } catch (error) {
-      console.error('Error sending data to profile API:', error);
       // Handle error response
+      if (error?.response?.data) {
+        const responseData: Record<string, string[]> = error.response.data;
+          const errorMessages = Object.entries(responseData)
+            .map(([key, value]: [string, string[]]) => `${key}: ${value.join(', ')}`)
+            .join('\n');
+          toast.error(errorMessages);
+        } else {
+          // Handle other errors
+          toast.error('An error occurred while processing your request.');
+        }
     }
   };
 
@@ -155,10 +222,12 @@ const HorizontalNonLinearStepper = () => {
           <React.Fragment>
             <Typography sx={{ mt: 2, mb: 1 }}>
             </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              <Box sx={{ flex: '1 1 auto' }} />
-              <Button onClick={handleReset}>Reset</Button>
-            </Box>
+          
+    <div className="flex items-center justify-center h-full mt-13">
+  <Button onClick={handleReset} className='bg-sky-800 text-white p-2 '>Reset</Button>
+</div>
+
+    
           </React.Fragment>
         ) : (
           <React.Fragment>
