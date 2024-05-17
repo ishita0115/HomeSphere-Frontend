@@ -2,7 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import apiService, { fetchListingDetail, profileApiservive } from "@/app/apiService";
+import apiService, {
+  fetchListingDetail,
+  profileApiservive,
+} from "@/app/apiService";
 import authMiddleware from "@/app/authMiddelware";
 import { login, updateProfile } from "../redux/slice/authslice";
 import ListingItems from "../components/Listing/Listingcard";
@@ -18,17 +21,16 @@ interface UserData {
 }
 
 const ProfileSettings = () => {
-  const router = useRouter()
+  const router = useRouter();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [error, setError] = useState<string | null>(null); // State to handle errors
+  const [error, setError] = useState<string | null>(null);
   const token = useSelector((state: any) => state.auth.token.access);
   const uid = useSelector((state: any) => state.auth.token.uid);
   const dispatch = useDispatch();
-  const [newValue,setNewValue] = useState<boolean>(false)
+  const [newValue, setNewValue] = useState<boolean>(false);
   const [landlord, setLandlord] = useState<any>(null);
-
 
   const handleChangePassword = () => {
     router.push("/changepass");
@@ -47,20 +49,18 @@ const ProfileSettings = () => {
         token
       );
       setUserData(userDataResponse);
-      // dispatch(addUserProfile(userData))
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
   };
   const handleSaveProfile = async () => {
-    setNewValue(false)
+    // setNewValue(false);
     try {
       const formData = new FormData();
-      formData.append("first_name", userData.first_name);
-      formData.append("last_name", userData.last_name);
-      formData.append("mobileno", userData.mobileno);
-      formData.append("email", userData.email);
-      console.log(profilePicture);
+      formData.append("first_name", userData?.first_name ?? "");
+      formData.append("last_name", userData?.last_name ?? "");
+      formData.append("mobileno", userData?.mobileno ?? "");
+      formData.append("email", userData?.email ?? "");
       if (profilePicture) {
         formData.append("profilephoto", profilePicture);
       }
@@ -71,54 +71,64 @@ const ProfileSettings = () => {
         token
       );
       if (response) {
-        console.log(response)
         dispatch(updateProfile(response));
         toast.success("Profile updated successfully");
         setIsEditMode(false);
-        setNewValue(true)
-        setLandlord(response)
+        setNewValue(true);
+        setLandlord(response);
       }
-    } catch (error:any) {
-      setNewValue(false)
-      console.error('some ',error)
-      if(error?.response?.data?.mobileno[0])
-        {
-          toast.error(error.response.data.mobileno[0]);
-        }
-      else if(error?.response?.data?.profilephoto[0] == 'Ensure this filename has at most 100 characters (it has 106).'){
-          toast.error(error.response.data.profilephoto[0]);
-        }
+    } catch (error: any) {
+      setNewValue(false);
+      console.error("some ", error);
+      if (error?.response?.data?.mobileno[0]) {
+        toast.error(error.response.data.mobileno[0]);
+      } else if (
+        error?.response?.data?.profilephoto[0] ==
+        "Ensure this filename has at most 100 characters (it has 106)."
+      ) {
+        toast.error(error.response.data.profilephoto[0]);
+      }
     }
   };
 
-  const handleImageChange = (e:any) => {
+  const handleImageChange = (e: any) => {
     const file = e.target.files[0];
     setProfilePicture(file);
   };
 
-  const handleInputChange = (e:any) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setUserData((prevUserData) => ({ ...prevUserData, [name]: value }));
-    const mobileRegex = /^[0-9]{9,10}$/; // Regex for 9 or 10 digits
+    setUserData((prevUserData) => ({
+      ...prevUserData,
+
+      first_name: prevUserData?.first_name || "",
+      last_name: prevUserData?.last_name || "",
+      mobileno: prevUserData?.mobileno || "",
+      email: prevUserData?.email || "",
+      profilephoto: prevUserData?.profilephoto || "",
+
+      [name]: value,
+    }));
+    const mobileRegex = /^[0-9]{9,10}$/;
     if (name === "mobileno" && !mobileRegex.test(value)) {
-    // Check if the input field is 'mobileno' and validate the value
-    toast.error("Please enter a valid mobile number or 10 digits.");
-    return;
-  }
-    setError(null); // Clear error when input changes
+      toast.error("Please enter a valid mobile number or 10 digits.");
+      return;
+    }
+    setError(null);
   };
-  
 
   useEffect(() => {
     const fetchlisting = async () => {
       try {
-        const response = await fetchListingDetail(`app2/user-listings/${uid}`, token);
-        console.log(response)
+        const response = await fetchListingDetail(
+          `app2/user-listings/${uid}`,
+          token
+        );
+        console.log(response);
         if (response) {
           setLandlord(response);
-         
         } else {
-          console.error("No data found for landlord with ID:", uid );
+          console.error("No data found for landlord with ID:", uid);
         }
       } catch (error) {
         console.error("Error fetching landlord details:", error);
@@ -130,7 +140,6 @@ const ProfileSettings = () => {
     setIsEditMode(true);
   };
 
-  
   return (
     <div className="rounded shadow-[#4689ab] bg-white mt-5 mb-5 ml-5 mr-5">
       <div className="flex m-2 flex-col lg:flex-row">
@@ -180,11 +189,9 @@ const ProfileSettings = () => {
               )}
             </div>
             <span className="font-bold mt-3 bg-blue-200 p-1 rounded ">
-            {userData?.first_name || ""}
+              {userData?.first_name || ""}
             </span>
-            <span className="text-gray-700 mt-2">
-            {userData?.email || ""}
-            </span>
+            <span className="text-gray-700 mt-2">{userData?.email || ""}</span>
           </div>
         </div>
         <div className="lg:w-3/5 border-r border-gray-200">
@@ -283,21 +290,30 @@ const ProfileSettings = () => {
             <div className="flex justify-between items-center mt-6">
               <span>Password Settings</span>
             </div>
-            
+
             <div>
-            <button className="bg-[#1E88E5] text-white hover:bg-blue-300 hover:text-black p-3 mt-4" onClick={handleChangePassword}>Change Password</button>
+              <button
+                className="bg-[#1E88E5] text-white hover:bg-blue-300 hover:text-black p-3 mt-4"
+                onClick={handleChangePassword}
+              >
+                Change Password
+              </button>
             </div>
             <div className="flex justify-between items-center mt-12">
               <span>My Home List</span>
             </div>
             <div>
-            <button className="bg-[#1E88E5] text-white hover:bg-blue-300 hover:text-black p-3 mt-4 flex"  onClick={homeupdate}>My Home List<CiCircleList className="h-6 ml-2"/></button>
+              <button
+                className="bg-[#1E88E5] text-white hover:bg-blue-300 hover:text-black p-3 mt-4 flex"
+                onClick={homeupdate}
+              >
+                My Home List
+                <CiCircleList className="h-6 ml-2" />
+              </button>
             </div>
           </div>
         </div>
-       
       </div>
-     
     </div>
   );
 };

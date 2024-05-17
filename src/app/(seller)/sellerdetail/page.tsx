@@ -3,7 +3,7 @@ import React from 'react'
 function Seller() {
   return (
     <div>
-      hii am seller
+      Hii am seller
     </div>
   )
 }

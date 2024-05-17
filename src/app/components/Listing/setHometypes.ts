@@ -1,5 +1,3 @@
-// utils/homeTypes.ts
-
 export enum HomeType {
     ROWHOUSE = 'rowhouse',
     COLONIAL = 'colonial',

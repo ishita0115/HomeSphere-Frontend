@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { fetchListingDetail } from "@/app/apiService";
@@ -7,6 +7,7 @@ import ListingItems from "@/app/components/Listing/Listingcard";
 import { useSelector } from "react-redux";
 import { FaPhone } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
+import CircularIndeterminate from "@/app/components/loader/Loader";
 const SellerDetail = ({ params }: { params: { id: string } }) => {
   const [landlord, setLandlord] = useState<any>(null);
   const [sellerData, setSellerData] = useState<any>(null);
@@ -15,10 +16,12 @@ const SellerDetail = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     const fetchLandlordData = async () => {
       try {
-        const response = await fetchListingDetail(`app2/user-listings/${params.id}`, token);
+        const response = await fetchListingDetail(
+          `app2/user-listings/${params.id}`,
+          token
+        );
         if (response) {
           setLandlord(response);
-         
         } else {
           console.error("No data found for landlord with ID:", params.id);
         }
@@ -29,7 +32,10 @@ const SellerDetail = ({ params }: { params: { id: string } }) => {
 
     const fetchSellerData = async () => {
       try {
-        const response = await fetchListingDetail(`api/UserDetailView/${params.id}`, token);
+        const response = await fetchListingDetail(
+          `api/UserDetailView/${params.id}`,
+          token
+        );
         if (response) {
           setSellerData(response);
         } else {
@@ -45,42 +51,55 @@ const SellerDetail = ({ params }: { params: { id: string } }) => {
   }, [params.id, token]);
 
   if (!sellerData) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        {" "}
+        <CircularIndeterminate />
+      </div>
+    );
   }
- 
+
   return (
     <main className="max-w-[1500px] mx-auto px-6 pb-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <aside className="col-span-1 mb-4 mt-4">
           <div className="flex flex-col items-center p-6 rounded-xl border bg-white border-gray-300 shadow-xl">
             <Image
-              src={sellerData.profilephoto? sellerData.profilephoto : "/images/defaultuser.png"}
+              src={
+                sellerData.profilephoto
+                  ? sellerData.profilephoto
+                  : "/images/defaultuser.png"
+              }
               width={200}
               height={200}
               alt="Landlord name"
               className="rounded-full"
             />
-            <h1 className="mt-6 text-2xl">{sellerData.first_name} {sellerData.last_name}</h1>
-            
+            <h1 className="mt-6 text-2xl">
+              {sellerData.first_name} {sellerData.last_name}
+            </h1>
+
             <div className="flex items-center font-medium text-gray-800 mt-2">
-                 
-            <MdEmail className="mr-2" />{ sellerData.email}
-                  </div>
-                  <div className="flex items-center font-medium text-gray-800 mt-1">
-                 
-                  <FaPhone className="mr-2"/> {sellerData.mobileno}
-                      </div>
-            
-            {params.id && <ContactButton landlordId={sellerData.uid} userId={uid} />}
+              <MdEmail className="mr-2" />
+              {sellerData.email}
+            </div>
+            <div className="flex items-center font-medium text-gray-800 mt-1">
+              <FaPhone className="mr-2" /> {sellerData.mobileno}
+            </div>
+
+            {params.id && (
+              <ContactButton landlordId={sellerData.uid} userId={uid} />
+            )}
           </div>
         </aside>
 
         <div className="col-span-1 md:col-span-3 pl-0 md:pl-6">
           <div className="mt-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {landlord && landlord.map((property: any) => (
-                <ListingItems key={property.id} property={property} />
-              ))}
+              {landlord &&
+                landlord.map((property: any) => (
+                  <ListingItems key={property.id} property={property} />
+                ))}
             </div>
           </div>
         </div>

@@ -12,7 +12,7 @@ import {
     PURGE,
     REGISTER,
 } from 'redux-persist'
-//  import userprofileSlice from '../slice/user-list-slice';
+
 
 const persistConfig = {
   key: 'root',
@@ -24,7 +24,6 @@ const persistedReducer = persistReducer(persistConfig, authReducer)
 export const store = configureStore({
   reducer: {
     auth: persistedReducer,
-    // userListingData : userprofileSlice, 
     // other reducers...
   },  
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({

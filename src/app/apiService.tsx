@@ -1,62 +1,10 @@
 
-// const apiService = {
-//     get: async function (url: string): Promise<any> {
-//         console.log('get', url);
-        
-//         return new Promise((resolve, reject) => 
-//         { 
-//             fetch(`${process.env.NEXT_PUBLIC_API_HOST}${url}`, {
-//                 method: 'GET',
-//                 headers: {
-//                     'Accept': 'application/json',
-//                     'Content-Type': 'application/json' 
-//                 }
-//             })
-//             .then(response => response.json())
-//             .then(json => {
-//                 console.log('response', json);
-//                 resolve(json);
-//             })
-//             .catch(error => {
-//                 reject(error); 
-//             });
-//         });
-//     },
-    
-//     post: async function(url: string,data:any): Promise<any>{
-//         console.log('post',url,data);
-//         return new Promise((resolve, reject) => { 
-//             // fetch(`${process.env.NEXT_PUBLIC_API_HOST}${url}`, {
-//             fetch(`${process.env.NEXT_PUBLIC_API_HOST}${url}`, {
-//                 method: 'POST',
-//                 body:data,
-//                 headers: {
-                    
-//                     'Accept': 'application/json',
-//                     'Content-Type': 'application/json'
-//                 }
-//             })
-//             .then(response => response.json())
-//             .then(json => {
-//                 console.log('response', json);
-//                 resolve(json);
-//             })
-//             .catch(error => {
-//                 reject(error); 
-//             });
-//         });
-//     },
-
-    
-// }
-
 import axios from 'axios';
 
-export const removeReservation = async (url, token) => {
+export const removeReservation = async (url: string, token: any) => {
   try {
     // Send DELETE request to delete the reservation
     const deleteUrl = `${process.env.NEXT_PUBLIC_API_HOST}/${url}`;
-    console.log('DELETE', deleteUrl);
     const deleteResponse = await axios.delete(deleteUrl, {
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -71,9 +19,8 @@ export const removeReservation = async (url, token) => {
   }
 };
 
-export const fetchListingDetail = async (url,token) => {
+export const fetchListingDetail = async (url: string,token: any) => {
   const url2 = `${process.env.NEXT_PUBLIC_API_HOST}/${url}/`;
-  console.log(url2)
   try {
     console.log('GET', url2);
     const response = await axios.get(url2, {
@@ -93,7 +40,7 @@ export const fetchListingDetail = async (url,token) => {
 };
 
 export const sendpodtdata = {
-  post: async function(url:string, data:data, token:string) {
+  post: async function(url:string, data:any, token:string) {
     try {
    
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_HOST}${url}`, data, {
@@ -109,7 +56,7 @@ export const sendpodtdata = {
       throw error;
     }
   },
-  put: async function(url: string, data: data, token: string) {
+  put: async function(url: string, data: any, token: string) {
     try {
 
       const headers = {
@@ -133,24 +80,21 @@ export const profileApiservive={
 
   get: async function (url:string, token:string) {
     try {
-      console.log('get', url);
       const response = await axios.get(`${process.env.NEXT_PUBLIC_API_HOST}${url}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
         }
       });
-      console.log('response', response.data);
       return response.data;
     } catch (error) {
-      console.error('Error in GET request:', error);
       throw error;
     }
   },
 
   post: async function(url:string, formData:FormData, token:string) {
     
-      console.log('post', url, [...formData.entries()]);
+      // console.log('post', url, [...formData.entries()]);
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_HOST}${url}`, formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -192,7 +136,7 @@ const apiService = {
       return response.data;
   },
   put: async function(url: string, data: FormData, token: string) {
-      console.log('put', url, [...data.entries()]);
+      // console.log('put', url, [...data.entries()]);
       const headers = {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'multipart/form-data'

@@ -1,14 +1,23 @@
  'use client'
- 
-import React, { useState, useEffect } from 'react';
+ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
-const BookingTable = () => {
-  const [bookings, setBookings] = useState([]);
-  const [buyerData, setBuyerData] = useState([]);
-  const token = useSelector((state) => state.auth.token.access);
-  const [listingData, setListingData] = useState({});
+interface BookingType {
+  id: number;
+  Listing: string; 
+  which_date: string; 
+  booked_by: string; 
+  statusmanage: string; 
+}
+
+const BookingTable: React.FC = () => {
+  const [bookings, setBookings] = useState<BookingType[]>([]);
+  const [buyerData, setBuyerData] = useState<any[]>([]);
+  const token = useSelector((state: any) => state.auth.token.access);
+  const [listingData, setListingData] = useState<{ [key: string]: any }>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   useEffect(() => {
     fetchBookings();
   }, []);
@@ -21,9 +30,9 @@ const BookingTable = () => {
         }
       });
       if (response.data && Array.isArray(response.data.data)) {
+        setLoading(false);
         setBookings(response.data.data);
-        console.log(response.data)
-        setListingData(response.data.listing_data.reduce((acc: { [x: string]: any; }, listing: { id: string | number; }) => {
+        setListingData(response.data.listing_data.reduce((acc: { [x: string]: any }, listing: { id: string | number }) => {
           acc[listing.id] = listing;
           return acc;
         }, {}));
@@ -41,7 +50,7 @@ const BookingTable = () => {
       let url = `http://localhost:8000/app2/seller-bookings/${bookingId}/${action}/`;
       if (action === 'reject') {
         const message = prompt('Enter rejection message:');
-        if (message === null) return; // User canceled, do nothing
+        if (message === null) return;
         await axios.post(url, { message }, {
           headers: {
             Authorization: `Bearer ${token}`
@@ -54,13 +63,13 @@ const BookingTable = () => {
           }
         });
       }
-      // Refresh bookings after action
       fetchBookings();
     } catch (error) {
       console.error(`Error ${action}ing booking ${bookingId}:`, error);
     }
   };
-  console.log(buyerData)
+  if (loading) return <div>No bookings done by any buyer.</div>;
+  if (error) return <div>{error}</div>;
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-4">Booking List</h1>
@@ -77,35 +86,38 @@ const BookingTable = () => {
           </tr>
         </thead>
         <tbody>
-          {bookings.map((booking) => (
+          {bookings.map((booking: BookingType) => (
             <tr key={booking.id} className="border-b border-gray-300">
               <td className="p-3">{booking.id}</td>
-              <td className="p-3"> <div className="flex items-center">
+              <td className="p-3"> 
+                <div className="flex items-center">
                   <div className="w-10 h-10 overflow-hidden rounded-full mr-3">
-                        <img
-                          src={listingData[booking.Listing]?.image1}
-                          alt="Listing Image"
-                          className="object-cover w-full h-full"
-                        />
+                    <img
+                      src={listingData[booking.Listing]?.image1}
+                      alt="Listing Image"
+                      className="object-cover w-full h-full"
+                    />
                   </div>
                   <div>
-                        <p className="font-semibold">{listingData[booking.Listing]?.title}</p>
-                        <p className="text-sm text-gray-500">{listingData[booking.Listing]?.city}</p>
-                      </div>
+                    <p className="font-semibold">{listingData[booking.Listing]?.title}</p>
+                    <p className="text-sm text-gray-500">{listingData[booking.Listing]?.city}</p>
                   </div>
+                </div>
               </td>
               <td className="p-3">{booking.which_date}</td>
-              <td className="p-3">{buyerData.find(buyer => buyer.buyer_id === booking.booked_by)?.buyer_fname} {buyerData.find(buyer => buyer.buyer_id === booking.booked_by)?.buyer_lname}</td>
+              <td className="p-3">
+                {`${buyerData.find(buyer => buyer.buyer_id === booking.booked_by)?.buyer_fname} ${buyerData.find(buyer => buyer.buyer_id === booking.booked_by)?.buyer_lname}`}
+              </td>
               <td className="p-3">
                 {buyerData.find(buyer => buyer.buyer_id === booking.booked_by)?.buyer_email} 
               </td>
               <td className="p-3">{booking.statusmanage}</td>
               <td className="p-4">
                 {booking.statusmanage && (
-                 <>
-                 <button className="mr-2 bg-green-900 text-white p-2 rounded flex" onClick={() => handleAction(booking.id, 'accept')}>Done</button>
-                 <button className='bg-yellow-700 text-white p-2 mt-3 rounded' onClick={() => handleAction(booking.id, 'reject')}>Reject</button>
-               </>
+                  <>
+                    <button className="mr-2 bg-green-900 text-white p-2 rounded flex" onClick={() => handleAction(booking.id, 'accept')}>Done</button>
+                    <button className='bg-yellow-700 text-white p-2 mt-3 rounded' onClick={() => handleAction(booking.id, 'reject')}>Reject</button>
+                  </>
                 )}
               </td>
             </tr>

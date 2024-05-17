@@ -2,33 +2,30 @@
 import { IoBagHandle, IoPieChart, IoPeople, IoCart } from "react-icons/io5";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import axios from "axios";
 import { profileApiservive } from "@/app/apiService";
-
-export default function DashboardLayout() {
+import AdminMiddleware from "../AdminMiddleware";
+function DashboardLayout() {
   const [allVisitors, setAllVisitors] = useState([]);
   const [allBookings, setBookings] = useState([]);
   const token = useSelector((state: any) => state.auth.token.access);
+  const uid = useSelector((state: any) => state.auth.token.uid);
   const [fetchedProperties, setFetchedProperties] = useState([]);
+  const [deletehome, setdeletehome] = useState([]);
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8000/api/userslist/",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setAllVisitors(response.data);
+        let url = "/api/userslist/";
+        const response = await profileApiservive.get(url, token);
+        setAllVisitors(response);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
 
     fetchUserData();
-  }, [token]);
+  }, [uid]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,32 +34,67 @@ export default function DashboardLayout() {
         setFetchedProperties(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
-        // Handle errors, e.g., show an error message to the user
       }
     };
+    fetchData();
+  }, [uid]);
 
-    fetchData(); // Call fetchData function when component mounts or token changes
-  }, [token]); 
   useEffect(() => {
     const fetchData = async () => {
       try {
         let url = "/app2/bookings/";
         const response = await profileApiservive.get(url, token);
-        console.log(response)
         setBookings(response);
       } catch (error) {
         console.error("Error fetching data:", error);
-        // Handle errors, e.g., show an error message to the user
       }
     };
 
-    fetchData(); // Call fetchData function when component mounts or token changes
-  }, [token]); 
+    fetchData();
+  }, [uid]);
+
+  useEffect(() => {
+    const fetchDeletedListings = async () => {
+      try {
+        let url = "/app2/AllTrashdata/";
+        const response = await profileApiservive.get(url, token);
+        setdeletehome(response);
+      } catch (error) {
+        console.error("Error fetching deleted listings:", error);
+      }
+    };
+
+    fetchDeletedListings();
+  }, [uid]);
 
   return (
     <div className="p-8">
       <div className="grid grid-cols-4 gap-4">
-        <BoxWrapper color="bg-sky-500">
+        <BoxWrapper color="bg-orange-600">
+          <IoPieChart className="text-2xl text-white" />
+          <div className="pl-4">
+            <span className="text-sm text-gray-700 font-light">Total Home</span>
+            <div className="flex items-center">
+              <strong className="text-xl text-gray-700 font-semibold">
+                {fetchedProperties.length}
+              </strong>
+            </div>
+          </div>
+        </BoxWrapper>
+        <BoxWrapper color="bg-yellow-400">
+          <IoPeople className="text-2xl text-white" />
+          <div className="pl-4">
+            <span className="text-sm text-gray-500 font-light">
+              Current Bookings
+            </span>
+            <div className="flex items-center">
+              <strong className="text-xl text-gray-700 font-semibold">
+                {allBookings.length}
+              </strong>
+            </div>
+          </div>
+        </BoxWrapper>
+        <BoxWrapper color="bg-yellow-400">
           <IoBagHandle className="text-2xl text-white" />
           <div className="pl-4">
             <span className="text-sm text-gray-700 font-light">
@@ -72,33 +104,9 @@ export default function DashboardLayout() {
               <strong className="text-xl text-gray-700 font-semibold">
                 {allVisitors.length - 1}
               </strong>
-              <span className="text-sm text-green-500 pl-2">Buyer and Seller</span>
-            </div>
-          </div>
-        </BoxWrapper>
-        <BoxWrapper color="bg-orange-600">
-          <IoPieChart className="text-2xl text-white" />
-          <div className="pl-4">
-            <span className="text-sm text-gray-700 font-light">
-              Total Home
-            </span>
-            <div className="flex items-center">
-              <strong className="text-xl text-gray-700 font-semibold">
-           {fetchedProperties.length}
-              </strong>
-            </div>
-          </div>
-        </BoxWrapper>
-        <BoxWrapper color="bg-yellow-400">
-          <IoPeople className="text-2xl text-white" />
-          <div className="pl-4">
-            <span className="text-sm text-gray-500 font-light">
-              Total Bookings Till Now
-            </span>
-            <div className="flex items-center">
-              <strong className="text-xl text-gray-700 font-semibold">
-                {allBookings.length}
-              </strong>
+              <span className="text-sm text-green-500 pl-2">
+                Buyer and Seller
+              </span>
             </div>
           </div>
         </BoxWrapper>
@@ -106,11 +114,11 @@ export default function DashboardLayout() {
           <IoCart className="text-2xl text-white" />
           <div className="pl-4">
             <span className="text-sm text-gray-500 font-light">
-              Total Sold
+              Total Trash Home
             </span>
             <div className="flex items-center">
               <strong className="text-xl text-gray-700 font-semibold">
-                16432
+                {deletehome.length}
               </strong>
             </div>
           </div>
@@ -203,3 +211,5 @@ function UserTable({ title, role, data }: UserTableProps) {
     </div>
   );
 }
+
+export default AdminMiddleware(DashboardLayout);

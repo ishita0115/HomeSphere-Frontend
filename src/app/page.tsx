@@ -1,30 +1,28 @@
-"use client"
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { useSelector } from 'react-redux';
-import HomeProperty from './components/WithoutLogin/Homeshowproperty/HomeProperty';
-import GetStarted from './components/WithoutLogin/Getstart/getstart';
-import Mapall from './components/Alllistingmap/Mapall';
-import Value from './components/WithoutLogin/OurValue/detail';
-import About from './components/WithoutLogin/about/aboutus';
-import Image from 'next/image'; 
-import heroBg from '/public/aboutus/heroBackground.jpg';
-import arrowIcon from '/public/aboutus/arrow.png';
-import phoneIcon from '/public/aboutus/contact.png';
-import mailIcon from '/public/aboutus/mail.png';
+"use client";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useSelector } from "react-redux";
+import HomeProperty from "./components/WithoutLogin/Homeshowproperty/HomeProperty";
+import GetStarted from "./components/WithoutLogin/Getstart/getstart";
+import Mapall from "./components/Alllistingmap/Mapall";
+import Value from "./components/WithoutLogin/OurValue/detail";
+import About from "./components/WithoutLogin/about/aboutus";
+import Image from "next/image";
+import heroBg from "/public/aboutus/heroBackground.jpg";
+import arrowIcon from "/public/aboutus/arrow.png";
+import phoneIcon from "/public/aboutus/contact.png";
+import mailIcon from "/public/aboutus/mail.png";
 
 export default function Home() {
   const searchParams = useSearchParams();
-  const search1 = searchParams.get('lat');
-  const search2 = searchParams.get('lng');
-  const uid = useSelector((state:any) => state.auth.token.uid);
+  const search1 = searchParams.get("lat");
+  const search2 = searchParams.get("lng");
+  const uid = useSelector((state: any) => state.auth.token.uid);
   const address = "36, sardarnagar society Dhari, Amreli";
   const phone = "9327058588";
   const email = "ishitachovatiya15@gmail.com";
-  
-  const showMoreBtn = () => {
-  
-  };  
+
+  const showMoreBtn = () => {};
 
   return (
     <>
@@ -53,7 +51,6 @@ export default function Home() {
                   className="w-5 h-5 mx-9 self-center"
                 />
                 <p className="text-white text-xl py-2">{address}</p>
-
               </div>
 
               <div className="flex ml-20 mr-20">
@@ -89,7 +86,7 @@ export default function Home() {
 
       <HomeProperty />
       {!uid && <GetStarted />}
-      
+
       <About
         cardTitle1="15 years"
         cardSubText1="in business"

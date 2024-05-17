@@ -113,8 +113,8 @@ const StepThree: React.FC<StepThreeProps> = ({ formData, handleInputChange }) =>
       <h2 className="text-2xl font-bold text-gray-800 dark:text-white text-center mb-4">Set Your Location</h2>
         <div className="relative z-0" style={{ width: "100%", height: "50vh" }}>
           <MapContainer
-            center={[20.5937, 78.9629]}
-            zoom={9}
+            center={[formData.latitude,formData.longitude]}
+            zoom={2}
             scrollWheelZoom={false}
             style={{
               width: "100%",

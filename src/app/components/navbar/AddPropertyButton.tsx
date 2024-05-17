@@ -1,8 +1,6 @@
 'use client';
-
-import useLoginModal from "@/app/components/models/LoginModel";
 import useAddPropertyModal from "@/app/redux/hooks/addPropertyModel";
-import LoginModal from "@/app/components/models/LoginModel";
+import useLoginModal from "@/app/redux/hooks/loginhook";
 import { useSelector } from "react-redux";
 interface AddPropertyButtonProps {
     userId?: string | null;
@@ -19,7 +17,7 @@ const AddPropertyButton: React.FC<AddPropertyButtonProps> = ({
     const HomeSphere = () => {
         if (userId) {
             addPropertyModal.open()
-            console.log(userId)
+
         } else {
             loginModal.open();
         }

@@ -22,8 +22,7 @@ const ContactButton: React.FC<ContactButtonProps> = ({
         if (userId) {
             const conversation = await fetchListingDetail(`app3/start/${landlordId}`,token)
             if (conversation.conversation_id) {
-                router.push(`/chat/${conversation.conversation_id}`)
-                //    router.push(`/indexchat/${conversation.conversation_id}`)
+                router.push(`/indexchat/${conversation.conversation_id}`)
             }
         } else {
             router.push('/')

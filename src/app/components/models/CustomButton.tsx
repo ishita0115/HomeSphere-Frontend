@@ -1,7 +1,9 @@
+import React from 'react';
+
 interface CustomButtonProps {
     label: string;
     className?: string;
-    onClick: () => void;
+    onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({

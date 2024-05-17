@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { SetStateAction, useEffect, useState } from "react"; // Import useEffect and useState hooks
+import { SetStateAction, useEffect, useState } from "react"; 
 import { fetchListingDetail } from "@/app/apiService";
 import ReservationSidebar from "@/app/components/Listing/reservationbar";
 import { MdLocationPin } from "react-icons/md";
@@ -52,10 +52,8 @@ interface Feedback {
   user_lname: string;
 }
 const PropertyDetailPage = ({ params }: { params: Params }) => {
-  // Destructure the id from params
+  
   const { id } = params;
-
-  // Define state variables to store property data and loading/error status
   const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<any>(null);
@@ -232,49 +230,47 @@ const PropertyDetailPage = ({ params }: { params: Params }) => {
         <ReservationSidebar property={property} />
       </div>
       {feedbacks.length > 0 && (
-  <div className="py-6">
-    <h2 className="text-2xl font-bold mb-4">Feedbacks</h2>
-    {feedbacks.map((feedback, index) => (
-      <div
-        key={index}
-        className="mb-4 flex items-center space-x-4 bg-slate-100 p-2 rounded"
-      >
-        <div className="flex items-center space-x-4">
-          <Image
-            src={
-              feedback?.profilephoto
-                ? `https://res.cloudinary.com/daajyumzx/${feedback?.profilephoto}`
-                : "/images/sellerdefaultimg.jpg"
-            }
-            width={50}
-            height={50}
-            className="rounded-full flex"
-            alt="User profile"
-          />
-          <p>
-            <strong>
-              {feedback.user_fname} {feedback.user_lname}
-            </strong>
-          </p>
-        </div>
-        <div>
-          <div className="flex items-center space-x-2">
-            <Stack spacing={1}>
-              <Rating
-                name="size-large"
-                defaultValue={2}
-                size="large"
-                value={feedback.rating}
-                readOnly
-              />
-            </Stack>
-          </div>
-          <p>{feedback.message}</p>
-        </div>
-      </div>
-    ))}
-
-
+        <div className="py-6">
+          <h2 className="text-2xl font-bold mb-4">Feedbacks</h2>
+          {feedbacks.map((feedback, index) => (
+            <div
+              key={index}
+              className="mb-4 flex items-center space-x-4 bg-slate-100 p-2 rounded"
+            >
+              <div className="flex items-center space-x-4">
+                <Image
+                  src={
+                    feedback?.profilephoto
+                      ? `https://res.cloudinary.com/daajyumzx/${feedback?.profilephoto}`
+                      : "/images/sellerdefaultimg.jpg"
+                  }
+                  width={50}
+                  height={50}
+                  className="rounded-full flex"
+                  alt="User profile"
+                />
+                <p>
+                  <strong>
+                    {feedback.user_fname} {feedback.user_lname}
+                  </strong>
+                </p>
+              </div>
+              <div>
+                <div className="flex items-center space-x-2">
+                  <Stack spacing={1}>
+                    <Rating
+                      name="size-large"
+                      defaultValue={2}
+                      size="large"
+                      value={feedback.rating}
+                      readOnly
+                    />
+                  </Stack>
+                </div>
+                <p>{feedback.message}</p>
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </main>

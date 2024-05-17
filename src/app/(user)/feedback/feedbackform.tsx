@@ -1,14 +1,13 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
-import Rating from '@mui/material/Rating';
-import Stack from '@mui/material/Stack';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-
-
+import React, { useState, ChangeEvent, FormEvent } from "react";
+import Rating from "@mui/material/Rating";
+import Stack from "@mui/material/Stack";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { toast } from "react-toastify";
+import Usermiddleware from "../usermiddleware";
 function FeedbackForm({ listingId }: { listingId: string }) {
   const [rating, setRating] = useState<number>(0);
-  const [message, setMessage] = useState<string>('');
+  const [message, setMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const userId = useSelector((state: any) => state.auth.token.uid);
   const token = useSelector((state: any) => state.auth.token.access);
@@ -18,7 +17,7 @@ function FeedbackForm({ listingId }: { listingId: string }) {
 
     try {
       const response = await axios.post(
-        'http://localhost:8000/app2/submitfeedback/',
+        "http://localhost:8000/app2/submitfeedback/",
         {
           listing_id: listingId,
           rating,
@@ -27,17 +26,16 @@ function FeedbackForm({ listingId }: { listingId: string }) {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            Authorization: `Bearer ${token}`,
           },
         }
       );
-  
+
       if (response) {
-        // Feedback submitted successfully
-      toast.success('Feedback submitted successfully');
+        toast.success("Feedback submitted successfully");
       }
-    } catch (error) {
-      toast.error('Failed to submit feedback',error);
+    } catch (error: any) {
+      toast.error("Failed to submit feedback", error);
     } finally {
       setLoading(false);
     }
@@ -61,18 +59,37 @@ function FeedbackForm({ listingId }: { listingId: string }) {
           <label className="block mb-1">Rating</label>
           <div className="flex items-center space-x-2">
             <Stack spacing={1}>
-              <Rating name="size-large" defaultValue={2} size="large" value={rating} onChange={handleRatingChange} />
+              <Rating
+                name="size-large"
+                defaultValue={2}
+                size="large"
+                value={rating}
+                onChange={handleRatingChange}
+              />
             </Stack>
           </div>
         </div>
         <div className="mb-4">
-          <label htmlFor="message" className="block mb-1">Message</label>
-          <textarea id="message" value={message} onChange={handleMessageChange} className="w-full py-2 px-4 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+          <label htmlFor="message" className="block mb-1">
+            Message
+          </label>
+          <textarea
+            id="message"
+            value={message}
+            onChange={handleMessageChange}
+            className="w-full py-2 px-4 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          ></textarea>
         </div>
-        <button type="submit" disabled={loading} className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">{loading ? 'loading' : 'Submit'}</button>
+        <button
+          type="submit"
+          disabled={loading}
+          className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          {loading ? "loading" : "Submit"}
+        </button>
       </form>
     </div>
   );
 }
 
-export default FeedbackForm;
+export default Usermiddleware(FeedbackForm);

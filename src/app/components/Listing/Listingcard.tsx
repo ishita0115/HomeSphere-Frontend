@@ -3,15 +3,13 @@ import Image from "next/image";
 import { PropertyType } from "./Listing";
 import { redirect, useRouter } from "next/navigation";
 import { MdHome } from "react-icons/md";
-import { FaBed, FaCamera, FaMapMarkerAlt } from "react-icons/fa";
+import { FaBed, FaMapMarkerAlt } from "react-icons/fa";
 import { GiBathtub } from "react-icons/gi";
-import { CiHeart } from "react-icons/ci";
 import FavoriteButton from "../models/Favoritebtn";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Rating from '@mui/material/Rating';
-import Stack from '@mui/material/Stack';
+import Rating from "@mui/material/Rating";
+import Stack from "@mui/material/Stack";
 import DeleteButton from "../models/Deletebtn";
 import Permenentdeletebtn from "../models/Permenentdeletebtn";
 
@@ -19,10 +17,11 @@ interface PropertyProps {
   property: PropertyType;
   markFavorite?: (is_favorite: boolean) => void;
 }
-const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite}) => {
+const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite }) => {
   const [averageRating, setAverageRating] = useState<number | null>(null);
   const router = useRouter();
-  const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
+  const pathname =
+    typeof window !== "undefined" ? window.location.pathname : "";
   const isMyListingPage = pathname.includes("/mylisting/");
   const isTrashPage = pathname.includes("/Trash");
   const handleClick = () => {
@@ -40,34 +39,35 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite}) => {
     router.push(`/addlistingform/${property.id}`);
   };
   const handleDeleteSuccess = () => {
-    router.push('/'); // Redirect to home page or any other page
+    router.push("/");
   };
 
   const handleDeleteError = () => {
     // Handle delete error (e.g., show error message)
   };
-  // console.log(property.latitude);
+
   const cloudinaryUrl = `https://res.cloudinary.com/daajyumzx/${property.profilephoto}`;
 
   useEffect(() => {
     const fetchRating = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/app2/listing/${property.id}/rating/`);
+        const response = await axios.get(
+          `http://localhost:8000/app2/listing/${property.id}/rating/`
+        );
         const ratings = response.data.average_rating;
-        console.log(ratings)
+        console.log(ratings);
         if (ratings) {
           setAverageRating(ratings);
         } else {
-          setAverageRating(0); // Default to 0 if no ratings available
+          setAverageRating(0);
         }
       } catch (error) {
-        console.error('Error fetching ratings:', error);
+        console.error("Error fetching ratings:", error);
       }
     };
 
     fetchRating();
   }, [property.id]);
-
 
   return (
     <div className="relative mx-auto w-full">
@@ -145,9 +145,16 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite}) => {
               {averageRating !== null ? (
                 <div className="flex items-center mt-2">
                   <Stack spacing={1}>
-                    <Rating name="average-rating" value={averageRating} precision={0.5} readOnly />
+                    <Rating
+                      name="average-rating"
+                      value={averageRating}
+                      precision={0.5}
+                      readOnly
+                    />
                   </Stack>
-                  <span className="ml-2 text-gray-600">{averageRating.toFixed(2)}</span>
+                  <span className="ml-2 text-gray-600">
+                    {averageRating.toFixed(2)}
+                  </span>
                 </div>
               ) : (
                 <p className="text-gray-600 mt-2">No ratings yet.</p>
@@ -155,7 +162,6 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite}) => {
             </div>
           </div>
           <div className="mt-6 grid grid-cols-2">
-            
             {/* Grid 1 */}
             <div className="flex items-center" onClick={sendtoseller}>
               <Image
@@ -177,40 +183,52 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite}) => {
             {/* Grid 2 */}
             <div className="flex items-center justify-end mr-5">
               <div className="absolute mb-1 flex ">
-              <button onClick={handleViewMap} style={{ backgroundColor: 'transparent', border: 'none', cursor: 'pointer' }}>
-                <FaMapMarkerAlt style={{ width: '25px', height: '25px', color: 'black' }} />
-              </button>
+                <button
+                  onClick={handleViewMap}
+                  style={{
+                    backgroundColor: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  <FaMapMarkerAlt
+                    style={{ width: "25px", height: "25px", color: "black" }}
+                  />
+                </button>
               </div>
             </div>
           </div>
           {isMyListingPage && (
             <div className="flex justify-center items-center h-full">
-              <button onClick={handleUpdateListing} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3 mx-auto">Update Listing</button>
+              <button
+                onClick={handleUpdateListing}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3 mx-auto"
+              >
+                Update Listing
+              </button>
             </div>
           )}
-           {isMyListingPage && (
-        <div className="flex justify-center items-center h-full">
-          <DeleteButton
-            listingId={property.id}
-            onSuccess={handleDeleteSuccess}
-            onError={handleDeleteError}
-          />
+          {isMyListingPage && (
+            <div className="flex justify-center items-center h-full">
+              <DeleteButton
+                listingId={property.id}
+                onSuccess={handleDeleteSuccess}
+                onError={handleDeleteError}
+              />
+            </div>
+          )}
+          {isTrashPage && (
+            <div className="flex justify-center items-center h-full">
+              <Permenentdeletebtn
+                listingId={property.id}
+                onSuccess={handleDeleteSuccess}
+                onError={handleDeleteError}
+              />
+            </div>
+          )}
         </div>
-      )}
-      {isTrashPage && ( <div className="flex justify-center items-center h-full">
-          <Permenentdeletebtn
-            listingId={property.id}
-            onSuccess={handleDeleteSuccess}
-            onError={handleDeleteError}
-          />
-        </div>)}
-        </div>
-     
       </div>
-   
     </div>
-
-    
   );
 };
 

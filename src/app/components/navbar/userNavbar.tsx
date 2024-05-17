@@ -1,16 +1,12 @@
 "use client";
-
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import MenuLink from "./MenuLink";
-// import LogoutButton from "../LogoutButton";
 import LogoutButton from "../models/logoutmodel";
 import useLoginModal from "@/app/redux/hooks/loginhook";
 import useSignupModal from "@/app/redux/hooks/signuphook";
 import { useSelector } from "react-redux";
 import { FaUserCircle } from "react-icons/fa";
-import { RootState } from "@/app/redux/store/store";
-import { profileApiservive } from "@/app/apiService";
 interface UserNavProps {
   userId?: string | null;
 }
@@ -25,7 +21,9 @@ const UserNav: React.FC<UserNavProps> = ({ userId }) => {
   const userauthenticate = useSelector((state: any) => state.auth);
   const uid = useSelector((state: any) => state.auth.token.uid);
   const token = useSelector((state: any) => state.auth.token.access);
-  const userprofile = useSelector((state: any) => state.auth.users.profilephoto);
+  const userprofile = useSelector(
+    (state: any) => state.auth.users.profilephoto
+  );
   return (
     <div className="p-2 relative hover:bg-[#0082cc] inline-block border rounded-full">
       <button onClick={() => setIsOpen(!isOpen)} className="flex items-center">
@@ -68,16 +66,15 @@ const UserNav: React.FC<UserNavProps> = ({ userId }) => {
                 }}
               />
               <MenuLink
-                label="Listing"
+                label="Home List"
                 onClick={() => {
                   setIsOpen(false);
                   router.push("/DetailHome");
                 }}
               />
-              {userDataAfterLogin.role === 2 ||
-              userDataAfterLogin.role === 1 ? (
+              {userDataAfterLogin.role === 2 ? (
                 <MenuLink
-                  label="Add Listing"
+                  label="Add Home"
                   onClick={() => {
                     setIsOpen(false);
                     router.push("/addlistingform");
@@ -86,10 +83,9 @@ const UserNav: React.FC<UserNavProps> = ({ userId }) => {
               ) : (
                 console.log("You are not a seller")
               )}
-              {userDataAfterLogin.role === 2 ||
-              userDataAfterLogin.role === 1 ? (
+              {userDataAfterLogin.role === 2 ? (
                 <MenuLink
-                  label="Trash Listing"
+                  label="Trash HomeFile"
                   onClick={() => {
                     setIsOpen(false);
                     router.push("/Trash");
@@ -98,59 +94,56 @@ const UserNav: React.FC<UserNavProps> = ({ userId }) => {
               ) : (
                 console.log("You are not a seller")
               )}
-            {userDataAfterLogin.role === 2 ||
-              userDataAfterLogin.role === 1 ? (
+              {userDataAfterLogin.role === 2 ? (
                 <MenuLink
-                  label="request visit home"
+                  label="Booking Requests"
                   onClick={() => {
                     setIsOpen(false);
                     router.push("/Bokkingrequest");
                   }}
                 />
-                
               ) : (
                 console.log("You are not a seller")
               )}
+
               <MenuLink
-                label="My favorites"
+                label="Add To Cart"
                 onClick={() => {
                   setIsOpen(false);
                   router.push("/myfavourite");
                 }}
               />
-                {
-              userDataAfterLogin.role === 1 ? (
-              <MenuLink
-                label="Contact Messages"
-                onClick={() => {
-                  router.push(`/admindashbord`);
-                }}
-              />
-            ) : (
-              console.log("..")
-            )}
-            {userDataAfterLogin.role === 3 ||
-              userDataAfterLogin.role === 1 ? (
-              <MenuLink
-                label="My Bookings"
-                onClick={() => {
-                  router.push(`/myreservation/${uid}`);
-                }}
-              />
-            ) : (
-              console.log("myreservation")
-            )}
-            { userDataAfterLogin.role === 1 ? (
-              <MenuLink
-                label="Dashboard"
-                onClick={() => {
-                  router.push(`/dashboard`);
-                }}
-              />
-            ) : (
-              console.log("dashboard")
-            )}
-            
+              {userDataAfterLogin.role === 1 ? (
+                <MenuLink
+                  label="Contact Messages"
+                  onClick={() => {
+                    router.push(`/admindashbord`);
+                  }}
+                />
+              ) : (
+                console.log("..")
+              )}
+              {userDataAfterLogin.role === 3 ? (
+                <MenuLink
+                  label="My Bookings"
+                  onClick={() => {
+                    router.push(`/myreservation/${uid}`);
+                  }}
+                />
+              ) : (
+                console.log("myreservation")
+              )}
+              {userDataAfterLogin.role === 1 ? (
+                <MenuLink
+                  label="Dashboard"
+                  onClick={() => {
+                    router.push(`/dashboard`);
+                  }}
+                />
+              ) : (
+                console.log("dashboard")
+              )}
+
               <LogoutButton />
             </>
           ) : (
