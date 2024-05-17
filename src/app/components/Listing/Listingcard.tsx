@@ -17,6 +17,7 @@ interface PropertyProps {
   property: PropertyType;
   markFavorite?: (is_favorite: boolean) => void;
 }
+
 const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite }) => {
   const [averageRating, setAverageRating] = useState<number | null>(null);
   const router = useRouter();
@@ -55,7 +56,7 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite }) => {
           `http://localhost:8000/app2/listing/${property.id}/rating/`
         );
         const ratings = response.data.average_rating;
-        console.log(ratings);
+       
         if (ratings) {
           setAverageRating(ratings);
         } else {
@@ -104,23 +105,23 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite }) => {
                   </div>
                 </div>
               </div>
-              <span className="absolute top-0 right-2 z-10 mt-3 ml-3 inline-flex select-none rounded-sm bg-[#0082cc] px-2 py-1 text-sm font-semibold text-white">
+              <span className="absolute mt-5 top-0 right-2 z-10ml-3 inline-flex select-none rounded-sm bg-[#0082cc] px-2 py-1 text-sm font-semibold text-white">
                 {property.sale_type}{" "}
               </span>
             </div>
-
-            <div className="mt-4">
+            <div className="mt-3">₹ {property.price}</div> 
+            <div className="text-primary mt-2 inline-block whitespace-nowrap rounded-xl font-semibold leading-tight">
+                <span className="text-sm uppercase"> {property.title} </span>
+                - {property.home_type}
+              </div>
+              
+            <div className="mt-2">
               <h2
-                className="line-clamp-1 text-2xl font-medium text-gray-800 md:text-lg"
+                className="line-clamp-1 text-xl font-medium text-gray-800 md:text-lg"
                 title="banglow"
               >
                 {property.address}
               </h2>
-
-              <div className="text-primary mt-2 inline-block whitespace-nowrap rounded-xl font-semibold leading-tight">
-                <span className="text-sm uppercase"> {property.title} </span>
-                {property.home_type}
-              </div>
             </div>
             <div className="justify-center">
               <div className="mt-4 flex space-x-3 overflow-hidden rounded-lg px-1 py-1">

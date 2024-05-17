@@ -31,7 +31,7 @@ const ProfileSettings = () => {
   const dispatch = useDispatch();
   const [newValue, setNewValue] = useState<boolean>(false);
   const [landlord, setLandlord] = useState<any>(null);
-
+  const userRole = useSelector((state:any) => state.auth.users.role);
   const handleChangePassword = () => {
     router.push("/changepass");
   };
@@ -299,6 +299,8 @@ const ProfileSettings = () => {
                 Change Password
               </button>
             </div>
+            {userRole == 2 ? (
+              <>
             <div className="flex justify-between items-center mt-12">
               <span>My Home List</span>
             </div>
@@ -311,6 +313,8 @@ const ProfileSettings = () => {
                 <CiCircleList className="h-6 ml-2" />
               </button>
             </div>
+            </>) : <img src="/icons/homeprofilepage.jpg" className="h-40 w-50"/>}
+            
           </div>
         </div>
       </div>

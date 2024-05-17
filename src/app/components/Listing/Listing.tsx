@@ -9,11 +9,12 @@ import useSearchModal from "@/app/redux/hooks/useSearchModel";
 import { useRouter } from "next/navigation";
 import Categories from "../navbar/Categories";
 import CircularIndeterminate from "../loader/Loader";
+import { toast } from "react-toastify";
 
 export type PropertyType = {
   bedrooms: number;
   home_type: string;
-  id: string;
+  id: number;
   title: string;
   image1: string;
   address: string;
@@ -27,6 +28,7 @@ export type PropertyType = {
   user: number;
   latitude: number;
   longitude: number;
+  price:number;
 };
 
 interface ListingProps {
@@ -37,7 +39,6 @@ interface ListingProps {
 const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
   const params = useSearchParams();
   const searchModal = useSearchModal();
-
   const country = searchModal.query.country;
   const city = searchModal.query.city;
   const sale_type = searchModal.query.sale_type;
@@ -46,10 +47,6 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
   const address = searchModal.query.address;
   const min_price = searchModal.query.min_price;
   const max_price = searchModal.query.max_price;
-
-  console.log("searchQUery:", searchModal.query);
-  console.log("bedrooms", bedrooms);
-
   const token = useSelector((state: any) => state.auth.token.access);
   const id = useSelector((state: any) => state.auth.token.uid);
   const [properties, setProperties] = useState<PropertyType[]>([]);
@@ -107,21 +104,22 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
         const fetchedProperties = response.data;
         const updatedProperties = fetchedProperties.map(
           (property: {
-            id: any;
-            title: any;
+            id: number;
+            title: string;
             image1: any;
-            address: any;
+            address: string;
             sale_type: any;
             bedrooms: any;
             home_type: any;
-            country: any;
-            bathrooms: any;
-            city: any;
+            country: string;
+            bathrooms: string;
+            city: string;
             profilephoto: any;
             user_name: any;
             user: any;
             latitude: any;
             longitude: any;
+            price:number;
           }) => ({
             id: property.id,
             title: property.title,
@@ -139,6 +137,7 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
             user: property.user,
             latitude: property.latitude,
             longitude: property.longitude,
+            price:property.price,
          
           })
         );
@@ -175,15 +174,15 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
       ));
   };
 
-  const markFavorite = (id: string, is_favorite: boolean) => {
+  const markFavorite = (id: number, is_favorite: boolean) => {
     const tmpProperties = properties.map((property: PropertyType) => {
       if (property.id == id) {
         property.is_favorite = is_favorite;
 
         if (is_favorite) {
-          console.log("added to list of favorited propreties");
+          toast.success("correctly add the list")
         } else {
-          console.log("removed from list");
+          toast.info("removed from list");
         }
       }
 

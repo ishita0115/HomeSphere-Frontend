@@ -11,10 +11,7 @@ import Categories from './Categories';
 const Navbar = () => {
     const pathname = usePathname()
     const isDetailHome = pathname === '/DetailHome';
-console.log(isDetailHome)
     const userId = useSelector((state :any)=>state.auth.token.uid)
-    console.log('userId:', userId);
-
     return (
         <>
         <nav className="w-full fixed top-0 left-0 py-6 border-b bg-white z-10">
@@ -54,7 +51,6 @@ console.log(isDetailHome)
                 </div>
             </div>
         </nav>
-        {isDetailHome && <Categories />}
          </>
     )
 }

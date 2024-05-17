@@ -10,6 +10,8 @@ import Alert from "@mui/material/Alert";
 import dayjs from "dayjs";
 import { profileApiservive } from "@/app/apiService";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import Usermiddleware from "@/app/(user)/usermiddleware";
 
 export type Property = {
   id: string;
@@ -63,17 +65,10 @@ const ReservationSidebar: React.FC<ReservationSidebarProps> = ({
         formData,
         token
       );
-
-      console.log(response.status === 200);
-      if (response) {
         alert("Booking successful");
-        console.log(response);
         setSelectedDate(null);
-      } else {
-        console.error("Booking failed");
-      }
-    } catch (error) {
-      console.error("Error booking:", error);
+    } catch (error:any) {
+      toast.error(error.response.data.detail);
     }
   };
 
@@ -124,4 +119,4 @@ const ReservationSidebar: React.FC<ReservationSidebarProps> = ({
   );
 };
 
-export default ReservationSidebar;
+export default Usermiddleware(ReservationSidebar);

@@ -83,7 +83,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="col-span-1 md:col-span-1 text-center">
-            <h3 className="text-2xl font-bold mb-4 text-gray-900">Explore</h3>
+            <h3 className="text-2xl font-bold mb-4 text-gray-900 mt-3">Explore</h3>
             <ul className="space-y-4 md:text-sm sm:text-sm">
               <li>
                 <Link
@@ -99,14 +99,6 @@ const Footer = () => {
                   className="text-lg font-medium text-gray-700 hover:text-indigo-600 transition-colors duration-300"
                 >
                   🏢 About Page
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services"
-                  className="text-lg font-medium text-gray-700 hover:text-indigo-600 transition-colors duration-300"
-                >
-                  🛠 Service Page
                 </Link>
               </li>
               <li>
@@ -129,7 +121,7 @@ const Footer = () => {
           </div>
 
           <div className="col-span-1 md:col-span-1 text-center ">
-            <h3 className="text-2xl font-bold mb-4 text-gray-900">Company</h3>
+            <h3 className="text-2xl font-bold mb-4 text-gray-900 mt-3">Company</h3>
             <ul className="space-y-4 md:text-sm sm:text-sm">
               <li>
                 <Link
@@ -153,14 +145,6 @@ const Footer = () => {
                   className="text-lg font-medium text-gray-700 hover:text-indigo-600 transition-colors duration-300"
                 >
                   💰 Pricing
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/affiliate"
-                  className="text-lg font-medium text-gray-700 hover:text-indigo-600 transition-colors duration-300"
-                >
-                  🤝 Affiliate
                 </Link>
               </li>
               <li>

@@ -6,23 +6,23 @@ import {fetchListingDetail} from "@/app/apiService";
 import { useSelector } from "react-redux";
 
 interface ContactButtonProps {
-    userId: string | null;
+    useremail: string;
     landlordId: string;
 }
 
 const ContactButton: React.FC<ContactButtonProps> = ({
-    userId,
+    useremail,
     landlordId
 }) => {
     const token = useSelector((state: any) => state.auth.token.access);
     const loginModal = useLoginModal();
     const router = useRouter();
-    console.log(landlordId)
+    console.log()
     const startConversation = async () => {
-        if (userId) {
+        if (useremail) {
             const conversation = await fetchListingDetail(`app3/start/${landlordId}`,token)
             if (conversation.conversation_id) {
-                router.push(`/indexchat/${conversation.conversation_id}`)
+                window.location.href = `mailto:${useremail}`;
             }
         } else {
             router.push('/')

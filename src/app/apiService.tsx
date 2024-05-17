@@ -11,7 +11,6 @@ export const removeReservation = async (url: string, token: any) => {
         'Content-Type': 'application/json'
       }
     });
-    console.log('Delete Response:', deleteResponse.data);
     return deleteResponse.data;
   } catch (error) {
     console.error('Error in delete request:', error);
@@ -30,7 +29,6 @@ export const fetchListingDetail = async (url: string,token: any) => {
       }
       
     });
-    console.log('Response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error in GET request:', error);
@@ -49,7 +47,6 @@ export const sendpodtdata = {
           'Content-Type': 'application/json'
         }
       });
-      console.log('response', response.data);
       return response.data;
     } catch (error) {
       console.error('Error in POST request:', error);
@@ -66,7 +63,6 @@ export const sendpodtdata = {
       const response = await axios.put(`${process.env.NEXT_PUBLIC_API_HOST}${url}`, data, {
         headers : headers
       });
-      console.log('response', response.data);
       return response.data;
     } catch (error) {
       console.error('Error in PUT request:', error);
@@ -101,9 +97,7 @@ export const profileApiservive={
           'Content-Type': 'multipart/form-data'
         }
       });
-      console.log('response', response.data);
       return response.data;
-    
   }
 };
 
@@ -141,7 +135,6 @@ const apiService = {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'multipart/form-data'
       };
-      console.log('Headers:', headers); // Log headers
       const response = await axios.put(`${process.env.NEXT_PUBLIC_API_HOST}${url}`, data, {
         headers : headers
       });

@@ -58,6 +58,7 @@ const PropertyDetailPage = ({ params }: { params: Params }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<any>(null);
   const token = useSelector((state: any) => state.auth.token.access);
+  const userRole = useSelector((state:any) => state.auth.users.role);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [activeStep, setActiveStep] = useState<number>(0);
   useEffect(() => {
@@ -67,7 +68,6 @@ const PropertyDetailPage = ({ params }: { params: Params }) => {
           `app2/listingfeedback/${id}`,
           token
         );
-        console.log(response);
         setFeedbacks(response);
       } catch (error) {
         console.error("Error fetching feedback:", error);
@@ -224,10 +224,10 @@ const PropertyDetailPage = ({ params }: { params: Params }) => {
                 <strong>{property?.user_name}</strong> is This House Owner
               </p>
             </Link>
-            <FeedbackForm listingId={property?.id} />
+            {userRole == 3 ? <FeedbackForm listingId={property?.id} /> : ''}
           </p>
         </div>
-        <ReservationSidebar property={property} />
+        {userRole == 3 ? <ReservationSidebar property={property} /> : ''}
       </div>
       {feedbacks.length > 0 && (
         <div className="py-6">

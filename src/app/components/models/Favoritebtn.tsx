@@ -3,7 +3,7 @@ import  { sendpodtdata } from "@/app/apiService";
 import { useSelector } from "react-redux";
 
 interface FavoriteButtonProps {
-    id: string;
+    id: number;
     is_favorite: boolean;
     markFavorite: (is_favorite: boolean) => void;
 }
@@ -17,7 +17,6 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
     const toggleFavorite = async (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
         try {
-            console.log("llllllllll")
             const response = await sendpodtdata.post(`/app2/favorite/${id}/`,{},token);
             console.log('Response from toggleFavorite:', response);
             markFavorite(response.is_favorite);

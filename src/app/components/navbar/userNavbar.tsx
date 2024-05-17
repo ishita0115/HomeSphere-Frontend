@@ -17,7 +17,6 @@ const UserNav: React.FC<UserNavProps> = ({ userId }) => {
   const signupModal = useSignupModal();
   const [isOpen, setIsOpen] = useState(false);
   const userDataAfterLogin = useSelector((state: any) => state.auth.users);
-  console.log("user after login ", userDataAfterLogin.first_name);
   const userauthenticate = useSelector((state: any) => state.auth);
   const uid = useSelector((state: any) => state.auth.token.uid);
   const token = useSelector((state: any) => state.auth.token.access);
