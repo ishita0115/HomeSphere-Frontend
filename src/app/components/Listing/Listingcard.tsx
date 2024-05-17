@@ -13,6 +13,7 @@ import axios from "axios";
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import DeleteButton from "../models/Deletebtn";
+import Permenentdeletebtn from "../models/Permenentdeletebtn";
 
 interface PropertyProps {
   property: PropertyType;
@@ -23,6 +24,7 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite}) => {
   const router = useRouter();
   const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
   const isMyListingPage = pathname.includes("/mylisting/");
+  const isTrashPage = pathname.includes("/Trash");
   const handleClick = () => {
     window.location.href = `/DetailHome/${property.id}`;
   };
@@ -195,6 +197,13 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite}) => {
           />
         </div>
       )}
+      {isTrashPage && ( <div className="flex justify-center items-center h-full">
+          <Permenentdeletebtn
+            listingId={property.id}
+            onSuccess={handleDeleteSuccess}
+            onError={handleDeleteError}
+          />
+        </div>)}
         </div>
      
       </div>

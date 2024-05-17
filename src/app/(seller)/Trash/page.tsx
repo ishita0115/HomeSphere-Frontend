@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import ListingItems from '@/app/components/Listing/Listingcard';
 
 function Trash() {
   const [deletedListings, setDeletedListings] = useState([]);
@@ -26,16 +27,17 @@ function Trash() {
 
   return (
     <div>
-      <h1>Deleted Listings</h1>
-      <ul>
-        {deletedListings.map((listing) => (
-          <li key={listing.id}>
-            <div>{listing.title}</div>
-            <div>{listing.description}</div>
-            {/* Add other listing details as needed */}
-          </li>
+      <h1 className='p-3 bg-yellow-600 text-center text-2xl'>Deleted Listings</h1>
+      
+      <div className="col-span-1 md:col-span-3 pl-0 md:pl-2">
+          <div className="mt-4 m-3">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {deletedListings.map((property) => (
+            <ListingItems key={property.id} property={property} />
         ))}
-      </ul>
+    </div>
+    </div>
+    </div>
     </div>
   );
 }
