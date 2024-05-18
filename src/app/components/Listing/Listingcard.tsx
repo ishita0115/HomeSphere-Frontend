@@ -199,6 +199,7 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite }) => {
               </div>
             </div>
           </div>
+          <div className="flex">
           {isMyListingPage && (
             <div className="flex justify-center items-center h-full">
               <button
@@ -210,7 +211,7 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite }) => {
             </div>
           )}
           {isMyListingPage && (
-            <div className="flex justify-center items-center h-full">
+            <div className="flex justify-center items-center h-full pl-4">
               <DeleteButton
                 listingId={property.id}
                 onSuccess={handleDeleteSuccess}
@@ -218,6 +219,7 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite }) => {
               />
             </div>
           )}
+          </div>
           {isTrashPage && (
             <div className="flex justify-center items-center h-full">
               <Permenentdeletebtn

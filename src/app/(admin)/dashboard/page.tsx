@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { profileApiservive } from "@/app/apiService";
 import AdminMiddleware from "../AdminMiddleware";
+import Horizontalchart from "../Horizontalchart";
+
 function DashboardLayout() {
   const [allVisitors, setAllVisitors] = useState([]);
   const [allBookings, setBookings] = useState([]);
@@ -31,7 +33,7 @@ function DashboardLayout() {
       try {
         let url = "/app2/ManageListingView/";
         const response = await profileApiservive.get(url, token);
-        setFetchedProperties(response.data);
+        setFetchedProperties(response.results.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -42,7 +44,7 @@ function DashboardLayout() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let url = "/app2/bookings/";
+        let url = "/app2/bookingsget/";
         const response = await profileApiservive.get(url, token);
         setBookings(response);
       } catch (error) {
@@ -208,7 +210,9 @@ function UserTable({ title, role, data }: UserTableProps) {
           </tbody>
         </table>
       </div>
+      <Horizontalchart />
     </div>
+    
   );
 }
 

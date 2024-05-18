@@ -18,7 +18,7 @@ export default function Home() {
   const search1 = searchParams.get("lat");
   const search2 = searchParams.get("lng");
   const uid = useSelector((state: any) => state.auth.token.uid);
-  const address = "36, sardarnagar society Dhari, Amreli";
+  const address = "36, sardarnagar society  Amreli";
   const phone = "9327058588";
   const email = "ishitachovatiya15@gmail.com";
 
@@ -38,10 +38,10 @@ export default function Home() {
             <button className="hidden p-2 lg:block bg-orange-600 hover:bg-orange-500 px-2 py-1 rounded-2xl text-white h-10 w-38 font-black text-xs uppercase cursor-pointer">
               Home Sphere
             </button>
-            <h1 className="font-normal text-7xl text-center mt-24 text-white capitalize">
-              find Your Dream Home
+            <h2 className="font-normal text-7xl text-center mt-24 text-white capitalize">
+              Find Your Dream Home
               <br /> that suits you
-            </h1>
+            </h2>
             {/* Icons and Text under Heading */}
             <div className="hidden sm:flex mt-24 justify-center items-center">
               <div className="flex mr-11">
@@ -99,6 +99,7 @@ export default function Home() {
       <main className="max-w-[1500px] mx-auto px-6 sticky">
         {uid && <Mapall />}
       </main>
+    
     </>
   );
 }

@@ -5,19 +5,28 @@ import Heading from "./Heading";
 import Image from "next/image";
 import { IoIosHome } from "react-icons/io";
 
+interface AboutProps {
+  cardTitle1: string;
+  cardTitle2: string;
+  cardTitle3: string;
+  cardSubText1: string;
+  cardSubText2: string;
+  cardSubText3: string;
+}
 
-const About = ({cardTitle1,
+const About: React.FC<AboutProps> = ({
+  cardTitle1,
   cardTitle2,
   cardTitle3,
   cardSubText1,
   cardSubText2,
-  cardSubText3,}) => {
+  cardSubText3,
+}) => {
   const [showFullContent, setShowFullContent] = useState(false);
 
   const toggleContent = () => {
     setShowFullContent(!showFullContent);
   };
-  
 
   return (
     <>
@@ -193,14 +202,7 @@ const About = ({cardTitle1,
           </div>
         </div>
 
-        <div className="flex flex-col  mr-[60px] hover:scale-125  ease-in duration-200">
-          <div className="bg-white h-[120px] w-[120px] mr-[30px] flex flex-col justify-center items-center rounded-[120px] shadow-xl p-[10px] gap-[10px] mb-5 dark:bg-gray-700">
-          <Image src="/aboutus/parking.png" alt="house" width={44}   height={40} /> 
-            <p className="font-bold text-sm leading-6  text-center text-blueCardTitle dark:text-gray-200 ">
-              Parking
-            </p>
-          </div>
-        </div>
+       
       </div>
     </div>
     </>

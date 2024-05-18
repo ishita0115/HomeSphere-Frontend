@@ -3,7 +3,7 @@ import Pagination from "@mui/material/Pagination";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import ListingItems from "./Listingcard";
-import { fetchListingDetail, profileApiservive } from "@/app/apiService";
+import { fetchListingDetail, paginationdatafetch, profileApiservive } from "@/app/apiService";
 import { useSelector } from "react-redux";
 import useSearchModal from "@/app/redux/hooks/useSearchModel";
 import { useRouter } from "next/navigation";
@@ -52,7 +52,7 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
   const [properties, setProperties] = useState<PropertyType[]>([]);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const cardsPerPage = 12;
+  const cardsPerPage = 8;
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
@@ -93,15 +93,18 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
           }
 
           if (urlQuery.length) {
-            console.log("Query:", urlQuery);
-
             urlQuery = "?" + urlQuery.substring(1);
-
             url += urlQuery;
           }
         }
-        const response = await profileApiservive.get(url, token);
-        const fetchedProperties = response.data;
+        const response = await paginationdatafetch.get(url, token, {
+          ...Object.fromEntries(params),
+          page,
+          limit: cardsPerPage,
+        });
+        const count = response.count
+        const next = response.next
+        const fetchedProperties = response.results.data;
         const updatedProperties = fetchedProperties.map(
           (property: {
             id: number;
@@ -143,7 +146,7 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
         );
 
         setProperties(updatedProperties);
-        setTotalPages(Math.ceil(updatedProperties.length / cardsPerPage));
+        setTotalPages(Math.ceil(count / cardsPerPage));
         setLoading(false);
       } catch (error) {
         console.error("Error fetching properties:", error);

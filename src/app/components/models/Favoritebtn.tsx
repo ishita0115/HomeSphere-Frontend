@@ -34,7 +34,7 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
                   <div className="flex items-center font-medium text-gray-200 mr-1 shadow-sm">
                  
                     <div className=" mr-2 text-sm ml-1 text-gray-300 hover:text-white">
-                    Add Cart
+                    {is_favorite ? 'remove cart':'Add Cart'}
                     </div>
                   </div>
                 </div>

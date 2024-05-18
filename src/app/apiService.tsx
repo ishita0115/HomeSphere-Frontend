@@ -71,6 +71,23 @@ export const sendpodtdata = {
   }
   
 };
+export const paginationdatafetch={
+  get: async function (url: string, token: string, params?: object) {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+        params, 
+      };
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_HOST}${url}`, config);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+}
 
 export const profileApiservive={
 

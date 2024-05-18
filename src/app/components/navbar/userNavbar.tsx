@@ -106,7 +106,7 @@ const UserNav: React.FC<UserNavProps> = ({ userId }) => {
               )}
 
               <MenuLink
-                label="Add To Cart"
+                label=" Cart "
                 onClick={() => {
                   setIsOpen(false);
                   router.push("/myfavourite");
