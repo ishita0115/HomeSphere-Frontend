@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
@@ -10,46 +12,28 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { profileApiservive } from '../apiService';
 import axios from 'axios';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const options = {
-  indexAxis: 'y',
-  elements: {
-    bar: {
-      borderWidth: 2,
-    },
-  },
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'right',
-    },
-    title: {
-      display: true,
-      text: 'Chart.js Horizontal Bar Chart',
-    },
-  },
-};
-
 const HorizontalChart: React.FC = () => {
   const token = useSelector((state: any) => state.auth.token.access);
-  const [data, setData] = useState({
-    labels: ['  ', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+  const [data, setData] = useState<{
+    labels: string[];
+    datasets: {
+      label: string;
+      data: number[];
+      borderColor: string;
+      backgroundColor: string;
+    }[];
+  }>({
+    labels: ['Bungalow', 'Colonial', 'Flat', 'Cottage', 'Rowhouse'], 
     datasets: [
       {
-        label: 'Dataset 1',
+        label: 'Number of Properties',
         data: [],
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(25, 90, 13, 0.5)',
-      },
-      {
-        label: 'Dataset 2',
-        data: [],
-        borderColor: 'rgb(53, 162, 235)',
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        borderColor: 'rgb(70, 130, 180)', 
+        backgroundColor: 'rgba(70, 130, 180, 0.5)', 
       },
     ],
   });
@@ -59,28 +43,28 @@ const HorizontalChart: React.FC = () => {
       let url = "http://localhost:8000/app2/ManageListingView/";
       try {
         const response = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
-        const dataSet1: any[] = [];
-        const dataSet2: any[] = [];
-        console.log(response)
-        console.log(response.data)
+        const counts: Record<string, number> = {
+          bungalow: 0,
+          colonial: 0,
+          flat: 0,
+          cottage: 0,
+          rowhouse: 0,
+        };
+
         for (const val of response.data.results.data) {
-          dataSet1.push(val.id);
-          dataSet2.push(val.country);
+          counts[val.home_type.toLowerCase()]++;
         }
+
+        const dataValues = Object.values(counts);
+
         setData({
-          labels: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+          labels: ['Bungalow', 'Colonial', 'Flat', 'Cottage', 'Rowhouse'], 
           datasets: [
             {
-              label: 'Dataset ID',
-              data: dataSet1,
-              borderColor: 'rgb(255, 99, 132)',
-              backgroundColor: 'rgba(99, 132, 0.5)',
-            },
-            {
-              label: 'Dataset ID2',
-              data: dataSet2,
-              borderColor: 'rgb(53, 162, 235)',
-              backgroundColor: 'rgba(53, 235, 0.5)',
+              label: 'Number of Properties',
+              data: dataValues,
+              borderColor: 'rgb(70, 130, 180)', 
+              backgroundColor: 'rgba(70, 130, 180, 0.5)', 
             },
           ],
         });
@@ -93,8 +77,28 @@ const HorizontalChart: React.FC = () => {
   }, [token]);
 
   return (
-    <div style={{ width: '80%', height: '50%' }}>
-      <Bar data={data} options={options} />
+    <div style={{ width: '100%', height: '400px' }} className='flex justify-center mt-8'> 
+      <Bar 
+        data={data} 
+        options={{
+          indexAxis: 'x',
+          elements: {
+            bar: {
+              borderWidth: 2,
+            },
+          },
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'right',
+            },
+            title: {
+              display: true,
+              text: 'Number of Properties by Type',
+            },
+          },
+        }} 
+      />
     </div>
   );
 };

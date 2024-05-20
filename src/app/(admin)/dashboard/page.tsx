@@ -11,8 +11,8 @@ function DashboardLayout() {
   const [allBookings, setBookings] = useState([]);
   const token = useSelector((state: any) => state.auth.token.access);
   const uid = useSelector((state: any) => state.auth.token.uid);
-  const [fetchedProperties, setFetchedProperties] = useState([]);
-  const [deletehome, setdeletehome] = useState([]);
+  const [fetchedProperties, setFetchedProperties] = useState<any[]>([]);
+  const [deletehome, setDeleteHome] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -33,6 +33,7 @@ function DashboardLayout() {
       try {
         let url = "/app2/ManageListingView/";
         const response = await profileApiservive.get(url, token);
+        console.log(response.results.data)
         setFetchedProperties(response.results.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -60,7 +61,7 @@ function DashboardLayout() {
       try {
         let url = "/app2/AllTrashdata/";
         const response = await profileApiservive.get(url, token);
-        setdeletehome(response);
+        setDeleteHome(response);
       } catch (error) {
         console.error("Error fetching deleted listings:", error);
       }
@@ -132,6 +133,85 @@ function DashboardLayout() {
           <UserTable title="All Buyers" role={3} data={allVisitors} />
         </div>
       </div>
+      <Horizontalchart/>
+      <div>
+      <h2 className="text-lg font-semibold mb-4">Home List</h2>
+      <div className="max-h-80 overflow-y-auto rounded-lg">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50 sticky top-0">
+            <tr>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Profile
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Name
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Country
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                City
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                price
+              </th>
+              
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+              Sale Type
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Owner Name
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {fetchedProperties.map((Home, index) => (
+              <tr key={index}>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {" "}
+                  <img
+                    className="rounded-full mt-5 w-14 h-14 object-cover"
+                    src={
+                      Home.image1
+                    }
+                    alt="Profile Picture"
+                  />
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {Home.title}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">{Home.country}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{Home.city}</td>
+                <td className="px-6 py-4 whitespace-nowrap">₹ {Home.price}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{Home.sale_type}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{Home.user_name}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
     </div>
   );
 }
@@ -210,7 +290,6 @@ function UserTable({ title, role, data }: UserTableProps) {
           </tbody>
         </table>
       </div>
-      <Horizontalchart />
     </div>
     
   );

@@ -194,7 +194,7 @@ const PropertyDetailPage = ({ params }: { params: Params }) => {
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white text-center mb-3">
             This is Home Location
           </h2>
-          <Mapcompo
+          <Mapcompo 
             latitude={property?.latitude}
             longitude={property?.longitude}
             address={property?.address}

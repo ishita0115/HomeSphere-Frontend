@@ -1,5 +1,4 @@
-"use client";
-
+"use client"
 import { useEffect, useState } from "react";
 import { fetchListingDetail, profileApiservive } from "../../apiService";
 import { useSelector } from "react-redux";

@@ -13,7 +13,8 @@ const SellerDetail = ({ params }: { params: { id: string } }) => {
   const [landlord, setLandlord] = useState<any>(null);
   const [sellerData, setSellerData] = useState<any>(null);
   const token = useSelector((state: any) => state.auth.token.access);
-
+  const userRole = useSelector((state: any) => state.auth.users.role);
+  if(userRole === 1){console.log(userRole)}
   useEffect(() => {
     const fetchLandlordData = async () => {
       try {

@@ -56,7 +56,6 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite }) => {
           `http://localhost:8000/app2/listing/${property.id}/rating/`
         );
         const ratings = response.data.average_rating;
-       
         if (ratings) {
           setAverageRating(ratings);
         } else {
