@@ -39,7 +39,6 @@ const ResetPassword = ( { params }: { params: { slug: string[] } }) => {
 
       setServerMsg(response.data);
       setServerError({});
-      // document.getElementById('password-reset-form')?.reset();
       setTimeout(() => {
         router.push("/login");
       }, 3000);

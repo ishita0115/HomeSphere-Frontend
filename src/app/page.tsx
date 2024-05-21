@@ -12,6 +12,7 @@ import heroBg from "/public/aboutus/heroBackground.jpg";
 import arrowIcon from "/public/aboutus/arrow.png";
 import phoneIcon from "/public/aboutus/contact.png";
 import mailIcon from "/public/aboutus/mail.png";
+import Footer from "./components/footer/footer";
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -99,6 +100,7 @@ export default function Home() {
       <main className="max-w-[1500px] mx-auto px-6 sticky">
         {uid && <Mapall />}
       </main>
+      <Footer />
     
     </>
   );

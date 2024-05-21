@@ -8,7 +8,7 @@ import { Icon } from "leaflet";
 import { useSearchParams } from "next/navigation";
 
 const housingIcon = new Icon({
-  iconUrl: "/images/icons8-home-64 (2).png",
+  iconUrl: "/images/icons8-home.png",
   iconSize: [30, 30], 
 });
 const Mapall: React.FC = () => {

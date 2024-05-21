@@ -1,10 +1,9 @@
 'use client'
-import Image from "next/image";
-import Listing from "../../app/components/Listing/Listing";
-import Mapall from "../components/Alllistingmap/Mapall";
-import Categories from "../components/navbar/Categories";
+import Listing from "../../components/Listing/Listing";
+import Categories from "../../components/navbar/Categories";
 import { useState } from "react";
 import { FaFilter } from "react-icons/fa";
+import Footer from "../../components/footer/footer";
 export default function DetailHome() {
   const [showCategories, setShowCategories] = useState(true);
 
@@ -20,6 +19,7 @@ export default function DetailHome() {
           {showCategories &&<Listing />}
         </div>
     </main >
+    <Footer />
     </>
   );
 }

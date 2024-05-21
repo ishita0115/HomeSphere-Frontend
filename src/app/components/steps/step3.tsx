@@ -6,7 +6,7 @@ import "leaflet/dist/leaflet.css";
 import { Icon } from "leaflet";
 
 const housingIcon = new Icon({
-  iconUrl: "/images/icons8-home-64 (2).png",
+  iconUrl: "/images/icons8-home.png",
   iconSize: [30, 30], // size of the icon
 });
 
@@ -63,7 +63,6 @@ const StepThree: React.FC<StepThreeProps> = ({ formData, handleInputChange }) =>
 
     navigator.geolocation.getCurrentPosition(successCallback);
 
-    // Fly to user's geolocation if available
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;

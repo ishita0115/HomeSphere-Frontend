@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { BiCheck } from "react-icons/bi";
+import sellermiddleware from "../sellermiddleware";
 interface BookingType {
   id: number;
   Listing: string;
@@ -171,4 +172,4 @@ const BookingTable: React.FC = () => {
   );
 };
 
-export default BookingTable;
+export default sellermiddleware(BookingTable);

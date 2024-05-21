@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import sellermiddleware from "../../sellermiddleware";
 
 const housingIcon = new Icon({
-  iconUrl: "/images/icons8-home-64 (2).png",
+  iconUrl: "/images/icons8-home.png",
   iconSize: [30, 30],
 });
 
@@ -91,20 +91,6 @@ const MyForm = ({ params }: { params: { id: number } }) => {
   };
   const animateRef = useRef(false);
   const [markers, setMarkers] = useState<{ lat: number; lng: number }[]>([]);
-
-  const handleImageChange = (
-    e: ChangeEvent<HTMLInputElement>,
-    fieldName: keyof FormData
-  ) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      const file = files[0];
-      setFormData((prevData: any) => ({
-        ...prevData,
-        [fieldName]: file,
-      }));
-    }
-  };
 
   useEffect(() => {
     if (markers.length > 0) {

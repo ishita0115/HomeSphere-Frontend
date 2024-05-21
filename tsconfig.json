@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/(seller)/addlistingform","src/types/esri-leaflet-geocoder.d.ts", "src/app/HomeDetail/[id].tsx", "src/app/(seller)/sellermiddleware.js", "src/app/components/WithoutLogin/OurValue/detail.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/(seller)/addlistingform","src/types/esri-leaflet-geocoder.d.ts", "src/app/HomeDetail/[id].tsx", "src/app/(seller)/sellermiddleware.jsx", "src/app/components/WithoutLogin/OurValue/detail.jsx"],
   "exclude": ["node_modules"]
 }

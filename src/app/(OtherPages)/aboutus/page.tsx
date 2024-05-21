@@ -1,5 +1,6 @@
 import React from 'react'
-import About from '../components/WithoutLogin/about/aboutus'
+import About from '../../components/WithoutLogin/about/aboutus'
+import Footer from '../../components/footer/footer'
 
 function AboutUs() {
   return (
@@ -12,6 +13,7 @@ function AboutUs() {
         cardTitle3="10,000"
         cardSubText3="transactions"
       />
+      <Footer />
     </div>
   )
 }

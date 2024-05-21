@@ -6,7 +6,6 @@ import SearchFilters from './SearchFilters';
 import UserNav from './userNavbar';
 import { usePathname } from 'next/navigation'
 import AddPropertyButton from './AddPropertyButton';
-import Categories from './Categories';
 
 const Navbar = () => {
     const pathname = usePathname()

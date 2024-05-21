@@ -6,7 +6,13 @@ const sellermiddleware = (WrappedComponent) => {
     const userRole = useSelector((state) => state.auth.users.role);
     console.log(userRole)
     if (!isAuthenticated || ![2].includes(userRole)) {
-      return <div>You need to log in as a seller to access this page</div>;
+      return (
+      <>
+      <div className='text-center text-xl p-5'>You need to log in as a seller to access this page</div>
+      <div className='flex justify-center'>
+      <img src='/icons/notallouderrorpage.png' style={{ height: '400px', width: 'auto' }} className='rounded-lg' />
+      </div>
+      </>)
     }
     return <WrappedComponent {...props} />;
   };

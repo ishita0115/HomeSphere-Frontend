@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import apiService, {
@@ -7,11 +6,11 @@ import apiService, {
   profileApiservive,
 } from "@/app/apiService";
 import authMiddleware from "@/app/authMiddelware";
-import { login, updateProfile } from "../redux/slice/authslice";
-import ListingItems from "../components/Listing/Listingcard";
+import { updateProfile } from "../../redux/slice/authslice";
 import { useRouter } from "next/navigation";
 import { CiCircleList } from "react-icons/ci";
 import { toast } from "react-toastify";
+import Footer from "../../components/footer/footer";
 interface UserData {
   first_name: string;
   last_name: string;
@@ -141,6 +140,7 @@ const ProfileSettings = () => {
   };
 
   return (
+    <>
     <div className="rounded shadow-[#4689ab] bg-white mt-5 mb-5 ml-5 mr-5">
       <div className="flex m-2 flex-col lg:flex-row">
         <div className="lg:w-1/4 border-r border-gray-200">
@@ -318,7 +318,10 @@ const ProfileSettings = () => {
           </div>
         </div>
       </div>
+      
     </div>
+    <Footer />
+    </>
   );
 };
 
