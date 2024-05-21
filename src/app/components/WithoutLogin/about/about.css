@@ -46,14 +46,17 @@
   
   .container22 span {
     font-size: 30px;
-    background-color: azure;
+    text-shadow: 2px 2px 4px rgb(71, 108, 114); /* Text shadow with 50% opacity */
+    background-color: rgba(236, 239, 241, 0.5);
     padding: 2px;
   }
   
-  .container22 h1 {
+  .container22 h2 {
     font-size: 52px;
     margin-top: 10px;
-    background-color: azure;
+    text-shadow: 2px 2px 4px rgb(94, 119, 148); /* Text shadow with 50% opacity */
+    background-color: rgba(236, 239, 241, 0.5); /* Background color with 50% opacity */
     padding: 2px;
-  }
+}
+
   

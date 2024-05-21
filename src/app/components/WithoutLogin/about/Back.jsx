@@ -11,7 +11,7 @@ const Back = ({ name, title, cover }) => {
       <div className="container22">
     
         <span>{name}</span>
-        <h1>{title}</h1>
+        <h2>{title}</h2>
       </div>
     </div>
     </div>

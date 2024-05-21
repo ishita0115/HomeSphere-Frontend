@@ -20,10 +20,7 @@ const ContactButton: React.FC<ContactButtonProps> = ({
     console.log()
     const startConversation = async () => {
         if (useremail) {
-            const conversation = await fetchListingDetail(`app3/start/${landlordId}`,token)
-            if (conversation.conversation_id) {
                 window.location.href = `/Videocall/${landlordId}`;
-            }
         } else {
             router.push('/')
         }

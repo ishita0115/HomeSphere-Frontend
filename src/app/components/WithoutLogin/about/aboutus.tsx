@@ -36,21 +36,19 @@ const About: React.FC<AboutProps> = ({
           title="About Us - Who We Are?"
           cover="/images/about.jpg"
         />
-        <div className="container mx-auto flex flex-col md:flex-row justify-between mt-6">
-          <div className="md:w-1/2 md:pr-4 mt-4">
+        <div className="container mx-auto flex flex-col md:flex-row justify-between mt-8 ml-20">
+          <div className="md:w-1/2 md:pr-4 mt-20">
             <Heading
               title="Our Story"
-              subtitle="Experience Real Estate Innovation"
+              subtitle="Experience Home Sphere Innovation"
             />
 
             <p className={`text-justify ${showFullContent ? '' : 'truncate'}`}>
-              Welcome to HomeSphere, where innovation meets real estate. Established in 2012 and joining forces with REA India in 2017, HomeSphere.com stands as India’s pinnacle of real estate advertising platforms, catering to homeowners, landlords, developers, and brokers alike. Whether it's new homes, resale properties, rentals, plots, or co-living spaces, we've got you covered.
+              Welcome to HomeSphere, where innovation meets Home Sphere.HomeSphere.com stands. platforms to homeowners, landlords, developers. Whether it's new homes, resale properties, rentals, plots, or co-living spaces, we've got you covered.
               {showFullContent ? (
                 <>
-                  Dive deeper into our realm of expertise. Backed by robust research and analytics, our team of experts delivers a spectrum of real estate services spanning advertising, marketing, sales solutions, personalized search, virtual reality experiences, home loans, and comprehensive post-transaction services for both buyers and renters.
-                  <br />
-                  <br />
-                  Our vision? To redefine the Indian property landscape. Our mission? To become the preferred destination for consumers and partners alike, guiding them seamlessly through their journey of discovering, renting, buying, selling, and financing homes, all while leveraging data, design, and technology, fueled by the unwavering passion of our team, and delivering value to our stakeholders.
+                 delivers services advertising, marketing, sales solutions, personalized search, virtual reality experiences, and comprehensive post-transaction services for both buyers and renters.
+                  Our vision? To redefine the Indian property landscape. Our mission? To become the preferred destination for consumers and partners alike, guiding them journey of discovering, renting, buying, selling, and financing homes, all while leveraging data, design, and technology.
                 </>
               ) : (
                 " Curious for more? Click 'More About Us' to unveil the full narrative."
@@ -72,11 +70,11 @@ const About: React.FC<AboutProps> = ({
               </button>
             )}
           </div>
-          <div className="md:w-1/2 mt-4 md:mt-0 md:pl-2 ml-34" >
-            <Image
+          <div className="md:w-1/2 mt-8 md:pl-2 ml-34 mr-0 ml-8" >
+            <img
               src="/images/immio.jpg"
               alt="Company Office"
-              width={400}
+              width={450}
               height={300}
             />
           </div>
@@ -114,7 +112,7 @@ const About: React.FC<AboutProps> = ({
       </div>
 
       <div className="flex flex-col sm:flex-row justify-center items-center mt-[50px] ml-[28px]">
-        <div className="bg-white  py-35 px-10 h-[160px] w-[350px] mr-[30px] flex flex-col justify-center items-center rounded-[10px] shadow-md mb-5 dark:bg-slate-700">
+        <div className="bg-white  py-35 px-10 h-[160px] w-[350px] mr-[30px] flex flex-col justify-center items-center rounded-[10px] shadow-md mb-5 hover:bg-orange-500 hover:text-white ">
           <p className="font-medium text-3xl leading-[50px] text-blueCardTitle capitalize dark:text-gray-100">
             {cardTitle1}
           </p>
@@ -122,7 +120,7 @@ const About: React.FC<AboutProps> = ({
             {cardSubText1}
           </p>
         </div>
-        <div className="bg-white py-35 px-10 h-[160px] w-[350px] mr-[30px] flex flex-col justify-center items-center rounded-[10px] shadow-md mb-5 dark:bg-slate-700">
+        <div className="bg-white py-35 px-10 h-[160px] w-[350px] mr-[30px] flex flex-col justify-center items-center rounded-[10px] shadow-md mb-5 dark:bg-slate-700 hover:bg-orange-500 hover:text-white">
           <p className="font-medium text-3xl leading-[50px] text-blueCardTitle capitalize dark:text-gray-100">
             {cardTitle2}
           </p>
@@ -130,7 +128,7 @@ const About: React.FC<AboutProps> = ({
             {cardSubText2}
           </p>
         </div>
-        <div className="bg-white py-35 px-10 h-[160px] w-[350px] mr-[30px] flex flex-col justify-center items-center rounded-[10px] shadow-md mb-5 dark:bg-slate-700">
+        <div className="bg-white py-35 px-10 h-[160px] w-[350px] mr-[30px] flex flex-col justify-center items-center rounded-[10px] shadow-md mb-5 dark:bg-slate-700 hover:bg-orange-500 hover:text-white">
           <p className="font-medium text-3xl leading-[50px] text-blueCardTitle capitalize dark:text-gray-100">
             {cardTitle3}
           </p>

@@ -154,20 +154,25 @@ const HorizontalNonLinearStepper = () => {
       if (response.data) {
         toast.success("successfully created");
       }
-    } catch (error: any) {
-      console.error("Error updating:", error);
+    }catch (error: any) {
       if (error?.response?.data) {
-        const responseData: Record<string, string[]> = error.response.data;
+        const responseData: Record<string, string[]> = error.response.data.error;
         const errorMessages = Object.entries(responseData)
-          .map(
-            ([key, value]: [string, string[]]) => `${key}: ${value.join(", ")}`
-          )
+          .map(([key, value]: [string, string[] | string]) => {
+            if (Array.isArray(value)) {
+              return `${key}: ${value.join(", ")}`;
+            } else {
+              return `${key}: ${value}`;
+            }
+          })
           .join("\n");
         toast.error(errorMessages);
       } else {
         toast.error("An error occurred while processing your request.");
       }
     }
+    
+    
   };
 
   const handleReset = () => {

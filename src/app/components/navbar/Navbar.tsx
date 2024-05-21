@@ -31,9 +31,9 @@ const Navbar = () => {
                     {isDetailHome && <SearchFilters />}
                         {!isDetailHome && 
                             <>
-                                <Link className="text-sm md:text-base" href="/">Home</Link>
-                                <Link className="text-sm md:text-base" href="/contactus">Contact</Link>
-                                <Link className="text-sm md:text-base" href="/aboutus">About</Link>
+                                <Link className="text-sm md:text-base hover:text-blue-800 " href="/">Home</Link>
+                                <Link className="text-sm md:text-base hover:text-blue-800 " href="/contactus">Contact</Link>
+                                <Link className="text-sm md:text-base hover:text-blue-800 " href="/aboutus">About</Link>
                             </>
                         }
                     </div>

@@ -7,7 +7,6 @@ import { fetchListingDetail, paginationdatafetch, profileApiservive } from "@/ap
 import { useSelector } from "react-redux";
 import useSearchModal from "@/app/redux/hooks/useSearchModel";
 import { useRouter } from "next/navigation";
-import Categories from "../navbar/Categories";
 import CircularIndeterminate from "../loader/Loader";
 import { toast } from "react-toastify";
 
@@ -51,7 +50,7 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
   const id = useSelector((state: any) => state.auth.token.uid);
   const [properties, setProperties] = useState<PropertyType[]>([]);
   const [page, setPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const cardsPerPage = 8;
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
@@ -97,11 +96,13 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
             url += urlQuery;
           }
         }
+        console.log('how page is....')
         const response = await paginationdatafetch.get(url, token, {
           ...Object.fromEntries(params),
           page,
           limit: cardsPerPage,
         });
+        console.log(response)
         const count = response.count
         const next = response.next
         const fetchedProperties = response.results.data;
@@ -147,6 +148,7 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
 
         setProperties(updatedProperties);
         setTotalPages(Math.ceil(count / cardsPerPage));
+        console.log(Math.ceil(count / cardsPerPage))
         setLoading(false);
       } catch (error) {
         console.error("Error fetching properties:", error);
@@ -154,18 +156,16 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
       }
     };
 
-    getProperties();
-  }, [favorites, searchModal.query, params]); 
+    getProperties();  
+  }, [favorites, searchModal.query, params,page]); 
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
+  
 
   const renderPropertiesForPage = () => {
-    const startIndex = (page - 1) * cardsPerPage;
-    const endIndex = page * cardsPerPage;
     return properties
-      .slice(startIndex, endIndex)
       .map((property) => (
         <ListingItems
           key={property.id}
@@ -201,15 +201,19 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
         <CircularIndeterminate />
       ) : (
         <>
+         <main className="max-w-[1500px] mx-auto px-6 pt-10">
+         <div className="mt-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {renderPropertiesForPage()}
-          <Pagination
+          </div>
+          </main>
+        </>
+      )}
+      <Pagination
             count={totalPages}
             shape="rounded"
             page={page}
             onChange={handleChange}
           />
-        </>
-      )}
     </>
   );
 };

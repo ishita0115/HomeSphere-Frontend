@@ -19,8 +19,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) 
 {
-  // const router = useRouter();
-  // const pathname = "";
   const pathname = usePathname()
   const isMyListingPage = pathname.includes("/Videocall/");
   return (

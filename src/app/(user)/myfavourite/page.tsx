@@ -13,14 +13,13 @@ const MyFavoritesPage = () => {
       </main>
     );
   }
-
   return (
     <main className="max-w-[1500px] max-auto px-6 pb-12">
-      <h1 className="my-6 text-2xl">My Add To Cart Page</h1>
+      <h1 className="my-6 text-2xl text-center">My Cart Page</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6"> */}
         <Listing favorites={true} />
-      </div>
+      {/* </div> */}
     </main>
   );
 };
