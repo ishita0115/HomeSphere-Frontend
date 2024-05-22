@@ -63,10 +63,6 @@ const MyForm = ({ params }: { params: { id: number } }) => {
     sale_type: "",
     home_type: "",
     country: "",
-    image1: "",
-    image2: "",
-    image3: "",
-    image4: "",
     latitude: 0,
     longitude: 0,
   });
@@ -130,7 +126,7 @@ const MyForm = ({ params }: { params: { id: number } }) => {
     if (name === "sale_type" && value === "For Rent") {
       setFormData((prevState) => ({
         ...prevState,
-        rental_choice: "per month", // Default rental choice for "For Rent"
+        rental_choice: "per month", 
       }));
     }
 
@@ -152,6 +148,9 @@ const MyForm = ({ params }: { params: { id: number } }) => {
     e.preventDefault();
     try {
       const formDataToSend = new FormData();
+      for (const key in formData) {
+        formDataToSend.append(key, formData[key]);
+      }
       const config = {
         headers: {
           "content-type": "multipart/form-data",

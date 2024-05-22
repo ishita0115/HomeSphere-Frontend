@@ -2,7 +2,6 @@
 
 import useLoginModal from "./LoginModel";
 import { useRouter } from "next/navigation";
-import {fetchListingDetail} from "@/app/apiService";
 import { useSelector } from "react-redux";
 
 interface ContactButtonProps {
@@ -35,7 +34,7 @@ const ContactButton: React.FC<ContactButtonProps> = ({
         if (paymentDone) {
             window.location.href = `/Videocall/${landlordId}`;
         } else {
-            window.location.href = `/Payment`;
+            router.push(`/Payment`);
             
         }
     }

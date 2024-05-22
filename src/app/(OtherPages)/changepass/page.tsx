@@ -45,7 +45,7 @@ const ChangePassword: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex justify-center items-center mt-3">
       <Box
         className="p-4 border rounded-lg shadow xs:w-3/4 sm:w-3/4 lg:w-3/6 md:3/6 bg-white"
         style={{ height: "500px" }}

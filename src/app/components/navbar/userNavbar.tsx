@@ -120,7 +120,7 @@ const UserNav: React.FC<UserNavProps> = ({ userId }) => {
                   }}
                 />
               ) : (
-                console.log("..")
+                console.log()
               )}
               {userDataAfterLogin.role === 3 ? (
                 <MenuLink
@@ -130,7 +130,7 @@ const UserNav: React.FC<UserNavProps> = ({ userId }) => {
                   }}
                 />
               ) : (
-                console.log("myreservation")
+                console.log()
               )}
               {userDataAfterLogin.role === 1 ? (
                 <MenuLink
@@ -140,7 +140,7 @@ const UserNav: React.FC<UserNavProps> = ({ userId }) => {
                   }}
                 />
               ) : (
-                console.log("dashboard")
+                console.log()
               )}
 
               <LogoutButton />

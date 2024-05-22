@@ -12,6 +12,7 @@ import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
 import DeleteButton from "../models/Deletebtn";
 import Permenentdeletebtn from "../models/Permenentdeletebtn";
+import RestoreButton from "../models/RestoreButton";
 
 interface PropertyProps {
   property: PropertyType;
@@ -26,10 +27,10 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite }) => {
   const isMyListingPage = pathname.includes("/mylisting/");
   const isTrashPage = pathname.includes("/Trash");
   const handleClick = () => {
-    window.location.href = `/DetailHome/${property.id}`;
+    router.push(`/DetailHome/${property.id}`);
   };
   const sendtoseller = () => {
-    window.location.href = `/sellerdetail/${property.user}`;
+    router.push(`/sellerdetail/${property.user}`);
   };
 
   const handleViewMap = () => {
@@ -219,6 +220,7 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite }) => {
             </div>
           )}
           </div>
+          <div className="flex justify-center">
           {isTrashPage && (
             <div className="flex justify-center items-center h-full">
               <Permenentdeletebtn
@@ -228,6 +230,16 @@ const ListingItems: React.FC<PropertyProps> = ({ property, markFavorite }) => {
               />
             </div>
           )}
+                    {isTrashPage && (
+            <div className="flex justify-center items-center h-full">
+              <RestoreButton
+                listingId={property.id}
+                onSuccess={handleDeleteSuccess}
+                onError={handleDeleteError}
+              />
+            </div>
+          )}
+          </div>
         </div>
       </div>
     </div>

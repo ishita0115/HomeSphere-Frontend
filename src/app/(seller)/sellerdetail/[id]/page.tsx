@@ -13,6 +13,7 @@ const SellerDetail = ({ params }: { params: { id: string } }) => {
   const [sellerData, setSellerData] = useState<any>(null);
   const token = useSelector((state: any) => state.auth.token.access);
   const uid = useSelector((state: any) => state.auth.token.uid);
+  const Userrole = useSelector((state: any) => state.auth.users.role);
   useEffect(() => {
     const fetchLandlordData = async () => {
       try {
@@ -87,7 +88,7 @@ const SellerDetail = ({ params }: { params: { id: string } }) => {
               <FaPhone className="mr-2" /> {sellerData.mobileno}
             </div>
 
-            {params.id && (
+            {Userrole == 3 && (
               <ContactButton landlordId={sellerData.uid} useremail={sellerData.email} uid={uid}/>
             )}
           </div>

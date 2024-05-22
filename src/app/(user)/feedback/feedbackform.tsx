@@ -5,10 +5,13 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Usermiddleware from "../usermiddleware";
+import { useRouter } from "next/navigation";
+
 function FeedbackForm({ listingId }: { listingId: string }) {
   const [rating, setRating] = useState<number>(0);
   const [message, setMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter()
   const userId = useSelector((state: any) => state.auth.token.uid);
   const token = useSelector((state: any) => state.auth.token.access);
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -33,6 +36,7 @@ function FeedbackForm({ listingId }: { listingId: string }) {
 
       if (response) {
         toast.success("Feedback submitted successfully");
+        router.push('/DetailHome')
       }
     } catch (error: any) {
       toast.error("Failed to submit feedback", error);

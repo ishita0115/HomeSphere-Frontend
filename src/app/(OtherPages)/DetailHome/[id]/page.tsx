@@ -159,7 +159,7 @@ const PropertyDetailPage = ({ params }: { params: Params }) => {
             </span>
           </div>
 
-          <p className="mb-6 text-lg text-black mt-2 ml-2">
+          <div className="mb-6 text-lg text-black mt-2 ml-2">
             <FaBed className="inline-block mr-2" size={20} />
             <span className="font-bold text-xl">{property?.bedrooms}</span>{" "}
             bedrooms -
@@ -168,7 +168,7 @@ const PropertyDetailPage = ({ params }: { params: Params }) => {
               {property?.bathrooms}
             </span>{" "}
             bathrooms
-          </p>
+          </div>
 
           <div className="flex items-center gap-2">
             <MdLocationPin className="text-black" size={35} />
@@ -180,13 +180,13 @@ const PropertyDetailPage = ({ params }: { params: Params }) => {
           </div>
 
           <div className="mt-4 text-lg text-black flex items-center">
-            <p className="font-bold mr-2">Extra Facility:</p>
-            <p>{property?.extrafacility}</p>
+            <div className="font-bold mr-2">Extra Facility:</div>
+            <div>{property?.extrafacility}</div>
           </div>
 
           <hr className="my-6 border-white" />
-          <p className="font-bold mr-2 text-lg">Description :</p>
-          <p className="mt-6 text-lg text-black">{property?.description}</p>
+          <div className="font-bold mr-2 text-lg">Description :</div>
+          <div className="mt-6 text-lg text-black">{property?.description}</div>
         </div>
       </div>
       <div className="col-span-6 lg:col-span-5">
@@ -204,7 +204,7 @@ const PropertyDetailPage = ({ params }: { params: Params }) => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <div className="mt-3 pr-6 col-span-3">
-          <p className="mt-2 text-lg">
+          <div className="mt-2 text-lg">
             <Link
               href={`/sellerdetail/${property?.user}`}
               className="py-6 flex items-center space-x-4 bg-slate-100 p-2 rounded-xl mb-5"
@@ -220,12 +220,12 @@ const PropertyDetailPage = ({ params }: { params: Params }) => {
                 className="rounded-full"
                 alt="The user name"
               />
-              <p>
+              <div>
                 <strong>{property?.user_name}</strong> is This House Owner
-              </p>
+              </div>
             </Link>
             {userRole == 3 ? <FeedbackForm listingId={property?.id} /> : ''}
-          </p>
+          </div>
         </div>
         {userRole == 3 ? <ReservationSidebar property={property} /> : ''}
       </div>
@@ -249,11 +249,11 @@ const PropertyDetailPage = ({ params }: { params: Params }) => {
                   className="rounded-full flex"
                   alt="User profile"
                 />
-                <p>
+                <div>
                   <strong>
                     {feedback.user_fname} {feedback.user_lname}
                   </strong>
-                </p>
+                </div>
               </div>
               <div>
                 <div className="flex items-center space-x-2">
@@ -267,7 +267,7 @@ const PropertyDetailPage = ({ params }: { params: Params }) => {
                     />
                   </Stack>
                 </div>
-                <p>{feedback.message}</p>
+                <div>{feedback.message}</div>
               </div>
             </div>
           ))}

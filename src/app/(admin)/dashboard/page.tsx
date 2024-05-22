@@ -13,7 +13,7 @@ function DashboardLayout() {
   const uid = useSelector((state: any) => state.auth.token.uid);
   const [fetchedProperties, setFetchedProperties] = useState<any[]>([]);
   const [deletehome, setDeleteHome] = useState<any[]>([]);
-
+  const [subscibeuser,setsubscibeuser] = useState<any[]>([]);
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -69,7 +69,20 @@ function DashboardLayout() {
 
     fetchDeletedListings();
   }, [uid]);
+  useEffect(() => {
+    const fetchDeletedListings = async () => {
+      try {
+        let url = "/razorpayapp/usersallsubscibe/";
+        const response = await profileApiservive.get(url, token);
+        console.log(response)
+        setsubscibeuser(response);
+      } catch (error) {
+        console.error("Error fetching deleted listings:", error);
+      }
+    };
 
+    fetchDeletedListings();
+  }, [uid]);
   return (
     <div className="p-8">
       <div className="grid grid-cols-4 gap-4">
@@ -133,12 +146,12 @@ function DashboardLayout() {
           <UserTable title="All Buyers" role={3} data={allVisitors} />
         </div>
       </div>
-      <Horizontalchart/>
+      
       <div>
       <h2 className="text-lg font-semibold mb-4">Home List</h2>
       <div className="max-h-80 overflow-y-auto rounded-lg">
         <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50 sticky top-0">
+          <thead className="bg-blue-100 sticky top-0">
             <tr>
               <th
                 scope="col"
@@ -211,6 +224,52 @@ function DashboardLayout() {
           </tbody>
         </table>
       </div>
+      <div>
+      <h2 className="text-lg font-semibold mb-4 mt-5">Subscribed User Data</h2>
+      <div className="max-h-80 overflow-y-auto rounded-lg">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-orange-300 sticky top-0">
+            <tr>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider"
+              >
+                index
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider"
+              >
+                First Name
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider"
+              >
+                Last Name
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider"
+              >
+                Email
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {subscibeuser.map((user, index) => (
+              <tr key={index}>
+                <td className="px-6 py-4 whitespace-nowrap">{index +1}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{user.Firstname}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{user.lastname}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <Horizontalchart/>
+    </div>
     </div>
     </div>
   );
@@ -244,23 +303,23 @@ function UserTable({ title, role, data }: UserTableProps) {
       <h2 className="text-lg font-semibold mb-4">{title}</h2>
       <div className="max-h-80 overflow-y-auto rounded-lg">
         <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50 sticky top-0">
+          <thead className="bg-blue-100 sticky top-0">
             <tr>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
               >
                 Profile
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
               >
                 Name
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
               >
                 Email
               </th>

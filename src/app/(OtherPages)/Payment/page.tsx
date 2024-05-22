@@ -1,6 +1,7 @@
 'use client'
 import authMiddleware from "@/app/authMiddelware";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import useRazorpay from "react-razorpay";
 import { useSelector } from "react-redux";
@@ -9,6 +10,7 @@ import { toast } from "react-toastify";
 
 const Payment = ()=>{
     const [Razorpay] = useRazorpay();
+    const router = useRouter()
     const [amount, setAmount] = useState(100);
     const username = useSelector((state: any) => state.auth.users.first_name);
     const email = useSelector((state: any) => state.auth.users.email);
@@ -31,7 +33,7 @@ const Payment = ()=>{
         })
         .then((response)=>{
             toast.success(response.data.message);
-            window.location.href = `/`;
+            router.push('/');
         })
         .catch((error)=>{
             toast.error(error.response.data);

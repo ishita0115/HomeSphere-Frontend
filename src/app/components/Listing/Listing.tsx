@@ -96,13 +96,11 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
             url += urlQuery;
           }
         }
-        console.log('how page is....')
         const response = await paginationdatafetch.get(url, token, {
           ...Object.fromEntries(params),
           page,
           limit: cardsPerPage,
         });
-        console.log(response)
         const count = response.count
         const next = response.next
         const fetchedProperties = response.results.data;
@@ -148,7 +146,6 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
 
         setProperties(updatedProperties);
         setTotalPages(Math.ceil(count / cardsPerPage));
-        console.log(Math.ceil(count / cardsPerPage))
         setLoading(false);
       } catch (error) {
         console.error("Error fetching properties:", error);
@@ -197,23 +194,28 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
 
   return (
     <>
-      {loading ? (
-        <CircularIndeterminate />
-      ) : (
-        <>
-         <main className="max-w-[1500px] mx-auto px-6 pt-10">
-         <div className="mt-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {renderPropertiesForPage()}
-          </div>
-          </main>
-        </>
-      )}
+     <div  className="mt-5 flex justify-center">
       <Pagination
             count={totalPages}
             shape="rounded"
             page={page}
             onChange={handleChange}
+           
           />
+      </div>
+      {loading ? (
+        <CircularIndeterminate />
+      ) : (
+        <>
+         <main className="max-w-[1500px] mx-auto px-6 pt-10">
+         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {renderPropertiesForPage()}
+          </div>
+          </main>
+        </>
+      )}
+     
+      
     </>
   );
 };

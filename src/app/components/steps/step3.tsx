@@ -1,3 +1,4 @@
+"use client"
 import React, { useRef, useState, useEffect, ChangeEvent } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { useMapEvent } from "react-leaflet";

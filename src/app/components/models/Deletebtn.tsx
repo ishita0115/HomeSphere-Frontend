@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 interface DeleteButtonProps {
   listingId: number;
   onSuccess: () => void;
@@ -26,7 +27,7 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
         `http://localhost:8000/app2/listings/${listingId}/delete/`,
         config
       );
-      console.log("successfuly deleted");
+      toast.dark("successfuly deleted");
       onSuccess();
     } catch (error) {
       console.error("Error deleting listing:", error);
