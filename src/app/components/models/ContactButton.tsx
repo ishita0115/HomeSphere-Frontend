@@ -8,21 +8,35 @@ import { useSelector } from "react-redux";
 interface ContactButtonProps {
     useremail: string;
     landlordId: string;
+    uid:string;
 }
 
 const ContactButton: React.FC<ContactButtonProps> = ({
     useremail,
-    landlordId
+    landlordId,
+    uid
 }) => {
     const token = useSelector((state: any) => state.auth.token.access);
     const loginModal = useLoginModal();
     const router = useRouter();
-    console.log()
+    console.log(useremail)
+    const fetchPaymentStatus = async () => {
+        try {
+            const response = await fetch(`http://localhost:8000/razorpayapp/payment-status/${uid}/`); 
+            const data = await response.json();
+            return data.payment_done;
+        } catch (error) {
+            console.error('Error fetching payment status:', error);
+            return false;
+        }
+    };
     const startConversation = async () => {
-        if (useremail) {
-                window.location.href = `/Videocall/${landlordId}`;
+        const paymentDone = await fetchPaymentStatus();
+        if (paymentDone) {
+            window.location.href = `/Videocall/${landlordId}`;
         } else {
-            router.push('/')
+            window.location.href = `/Payment`;
+            
         }
     }
 

@@ -88,7 +88,7 @@ const SellerDetail = ({ params }: { params: { id: string } }) => {
             </div>
 
             {params.id && (
-              <ContactButton landlordId={sellerData.uid} useremail={sellerData.email} />
+              <ContactButton landlordId={sellerData.uid} useremail={sellerData.email} uid={uid}/>
             )}
           </div>
         </aside>

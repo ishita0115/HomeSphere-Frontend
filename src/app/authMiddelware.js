@@ -1,4 +1,3 @@
-// authMiddleware.js
 
 import { useSelector } from 'react-redux';
 
