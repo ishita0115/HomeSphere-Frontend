@@ -64,7 +64,7 @@ function Videocall({ params }: { params: { id: number } }) {
     event.preventDefault();
     try {
       
-      const response = await fetch(`http://localhost:8000/app2/submit-link/${params.id}/${buyerid}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/app2/submit-link/${params.id}/${buyerid}/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

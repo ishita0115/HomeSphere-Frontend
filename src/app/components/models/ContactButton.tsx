@@ -21,7 +21,7 @@ const ContactButton: React.FC<ContactButtonProps> = ({
     console.log(useremail)
     const fetchPaymentStatus = async () => {
         try {
-            const response = await fetch(`http://localhost:8000/razorpayapp/payment-status/${uid}/`); 
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/razorpayapp/payment-status/${uid}/`); 
             const data = await response.json();
             return data.payment_done;
         } catch (error) {

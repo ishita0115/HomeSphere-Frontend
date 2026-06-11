@@ -31,7 +31,7 @@ const ResetPassword = ( { params }: { params: { slug: string[] } }) => {
     };
 
     try {
-      const response = await axios.post(`http://localhost:8000/api/reset-password/${id}/${token}/`, actualData, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_HOST}/api/reset-password/${id}/${token}/`, actualData, {
         headers: {
           'Content-type': 'application/json',
         },

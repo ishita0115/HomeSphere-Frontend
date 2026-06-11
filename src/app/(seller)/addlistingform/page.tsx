@@ -1,268 +1,265 @@
 "use client";
 import React, { useState, ChangeEvent } from "react";
-import Box from "@mui/material/Box";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepButton from "@mui/material/StepButton";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import StepOne from "../../components/steps/step1";
 import StepTwo from "../../components/steps/step2";
 import StepThree from "../../components/steps/step3";
 import { profileApiservive } from "@/app/apiService";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import sellermiddleware from "../sellermiddleware";
 import { toast } from "react-toastify";
-const steps = ["Listing detail", "Images Upload", "Location Add"];
+
+const STEPS = [
+  {
+    label: "Listing Details",
+    desc: "Basic info about your property",
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+      </svg>
+    ),
+  },
+  {
+    label: "Photos",
+    desc: "Upload property images",
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+      </svg>
+    ),
+  },
+  {
+    label: "Location",
+    desc: "Pin your property on the map",
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+    ),
+  },
+];
 
 const HorizontalNonLinearStepper = () => {
   const token = useSelector((state: any) => state.auth.token.access);
   const [activeStep, setActiveStep] = useState(0);
-  const dispatch = useDispatch();
   const [completed, setCompleted] = useState<{ [k: number]: boolean }>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
   const [formData, setFormData] = useState<any>({
-    title: "",
-    address: "",
-    city: "",
-    description: "",
-    extrafacility: "",
-    rental_choice: "",
-    price: 0,
-    bedrooms: 0,
-    bathrooms: 0,
-    sale_type: "",
-    home_type: "",
-    country: "",
-    image1: null,
-    image2: null,
-    image3: null,
-    image4: null,
-    latitude: 0,
-    longitude: 0,
+    title: "", address: "", city: "", description: "", extrafacility: "",
+    rental_choice: "", price: 0, bedrooms: 0, bathrooms: 0,
+    sale_type: "", home_type: "", country: "",
+    image1: null, image2: null, image3: null, image4: null,
+    latitude: 0, longitude: 0,
   });
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    let newValue: string | number = value; 
-
+    let newValue: string | number = value;
     if (name === "bedrooms" || name === "bathrooms") {
-      const parsedValue = parseFloat(value);
-      if (parsedValue < 1 || parsedValue > 10) {
-        toast.error(
-          `${
-            name.charAt(0).toUpperCase() + name.slice(1)
-          } must be between 1 and 10`
-        );
-        return; 
-      }
-      newValue = parsedValue; 
+      const v = parseFloat(value);
+      if (v < 1 || v > 10) { toast.error(`${name} must be between 1–10`); return; }
+      newValue = v;
     }
-
-    setFormData((prevData: any) => ({
-      ...prevData,
-      [name]: newValue,
-    }));
     if (name === "price") {
-      const parsedValue = parseFloat(value);
-      if (parsedValue < 1000 || parsedValue > 1000000000) {
-        toast.error("Price must be between 1000 and 1000000000");
-        return;
-      }
-      newValue = parsedValue;
+      const v = parseFloat(value);
+      if (v < 1000 || v > 1000000000) { toast.error("Price must be ₹1,000 – ₹1,00,00,00,000"); return; }
+      newValue = v;
     }
+    setFormData((p: any) => ({ ...p, [name]: newValue }));
   };
 
-  const handleImageChange = (
-    e: ChangeEvent<HTMLInputElement>,
-    fieldName: keyof FormData
-  ) => {
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>, fieldName: keyof FormData) => {
     const files = e.target.files;
-    if (files && files.length > 0) {
-      const file = files[0];
-      setFormData((prevData: any) => ({
-        ...prevData,
-        [fieldName]: file,
-      }));
-    }
+    if (files?.[0]) setFormData((p: any) => ({ ...p, [fieldName]: files[0] }));
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev: any) => {
-      const newFormData = {
-        ...prev,
-      };
-      newFormData[name] = value;
-      return newFormData;
-    });
-  };
-  const totalSteps = () => steps.length;
-
-  const completedSteps = () => Object.keys(completed).length;
-
-  const isLastStep = () => activeStep === totalSteps() - 1;
-
-  const allStepsCompleted = () =>
-    Object.keys(completed).length === totalSteps();
-
-  const handleNext = () => {
-    const newActiveStep =
-      isLastStep() && !allStepsCompleted()
-        ? steps.findIndex((step, i) => !(i in completed))
-        : activeStep + 1;
-    setActiveStep(newActiveStep);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleStep = (step: number) => () => {
-    setActiveStep(step);
-  };
-
-  const handleComplete = () => {
-    const newCompleted = { ...completed };
-    newCompleted[activeStep] = true;
-    setCompleted(newCompleted);
-
-    if (isLastStep()) {
-      sendDataToBackend();
-    } else {
-      handleNext();
-    }
+    setFormData((p: any) => ({ ...p, [name]: value }));
   };
 
   const sendDataToBackend = async () => {
-    const formDataToSend = new FormData();
+    setSubmitting(true);
+    const fd = new FormData();
     for (const key in formData) {
-      if (formData.hasOwnProperty(key)) {
-        if (formData[key] !== null && formData[key] !== undefined) {
-          formDataToSend.append(key, formData[key]);
-        }
-      }
+      if (formData[key] !== null && formData[key] !== undefined) fd.append(key, formData[key]);
     }
-
     try {
-      const response = await profileApiservive.post(
-        "/app2/ManageListingView/",
-        formDataToSend,
-        token
-      );
-      if (response.data) {
-        toast.success("successfully created");
-      }
-    }catch (error: any) {
-      if (error?.response?.data) {
-        const responseData: Record<string, string[]> = error.response.data.error;
-        const errorMessages = Object.entries(responseData)
-          .map(([key, value]: [string, string[] | string]) => {
-            if (Array.isArray(value)) {
-              return `${key}: ${value.join(", ")}`;
-            } else {
-              return `${key}: ${value}`;
-            }
-          })
-          .join("\n");
-        toast.error(errorMessages);
+      const res = await profileApiservive.post("/app2/ManageListingView/", fd, token);
+      if (res) { toast.success("Listing created successfully!"); setSubmitted(true); }
+    } catch (error: any) {
+      const data = error?.response?.data?.error;
+      if (data) {
+        const msgs = Object.entries(data).map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(", ") : v}`).join("\n");
+        toast.error(msgs);
       } else {
-        toast.error("An error occurred while processing your request.");
+        toast.error("Something went wrong. Please try again.");
       }
+    } finally {
+      setSubmitting(false);
     }
-    
-    
+  };
+
+  const handleComplete = () => {
+    const newCompleted = { ...completed, [activeStep]: true };
+    setCompleted(newCompleted);
+    if (activeStep === STEPS.length - 1) {
+      sendDataToBackend();
+    } else {
+      setActiveStep(activeStep + 1);
+    }
   };
 
   const handleReset = () => {
     setActiveStep(0);
     setCompleted({});
+    setSubmitted(false);
+    setFormData({
+      title: "", address: "", city: "", description: "", extrafacility: "",
+      rental_choice: "", price: 0, bedrooms: 0, bathrooms: 0,
+      sale_type: "", home_type: "", country: "",
+      image1: null, image2: null, image3: null, image4: null,
+      latitude: 0, longitude: 0,
+    });
   };
 
-  return (
-    <Box sx={{ width: "100%" }}>
-      <Stepper
-        nonLinear
-        activeStep={activeStep}
-        className="shadow-md shadow-[#7ab7da] bg-white w-full h-10"
-      >
-        {steps.map((label, index) => (
-          <Step key={label} completed={completed[index]}>
-            <StepButton color="inherit" onClick={handleStep(index)}>
-              {label}
-            </StepButton>
-          </Step>
-        ))}
-      </Stepper>
-      <div>
-        {allStepsCompleted() ? (
-          <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1 }}></Typography>
-
-            <div className="flex items-center justify-center h-full mt-13">
-              <Button
-                onClick={handleReset}
-                className="bg-sky-800 text-white p-2 "
-              >
-                Reset
-              </Button>
-            </div>
-          </React.Fragment>
-        ) : (
-          <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1, py: 1 }}>
-              {activeStep === 0 && (
-                <StepOne formData={formData} handleChange={handleChange} />
-              )}
-              {activeStep === 1 && (
-                <StepTwo handleImageChange={handleImageChange} />
-              )}
-              {activeStep === 2 && (
-                <StepThree
-                  formData={formData}
-                  handleInputChange={handleInputChange}
-                />
-              )}
-            </Typography>
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-              <Button
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-                variant="outlined"
-              >
-                Back
-              </Button>
-              <Box sx={{ flex: "1 1 auto" }} />
-              <Button onClick={handleNext} sx={{ mr: 1 }} variant="outlined">
-                Next
-              </Button>
-              {activeStep !== steps.length &&
-                (completed[activeStep] ? (
-                  <Typography
-                    variant="caption"
-                    sx={{ display: "inline-block" }}
-                  >
-                    Step {activeStep + 1} already completed
-                  </Typography>
-                ) : (
-                  <Button
-                    onClick={handleComplete}
-                    variant="outlined"
-                    color="success"
-                  >
-                    {completedSteps() === totalSteps() - 1
-                      ? "Finish"
-                      : "Complete Step"}
-                  </Button>
-                ))}
-            </Box>
-          </React.Fragment>
-        )}
+  if (submitted) {
+    return (
+      <div className="min-h-screen bg-surface-secondary flex items-center justify-center px-4">
+        <div className="bg-white rounded-3xl shadow-card p-12 max-w-md w-full text-center">
+          <div className="w-20 h-20 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-6">
+            <svg className="w-10 h-10 text-emerald-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h2 className="font-heading font-bold text-2xl text-primary mb-2">Listing Published!</h2>
+          <p className="text-navy-400 text-sm mb-8">Your property has been successfully listed on HomeSphere.</p>
+          <div className="flex gap-3 justify-center">
+            <button onClick={handleReset} className="btn btn-outline px-6 py-3 text-sm cursor-pointer">
+              Add Another
+            </button>
+            <a href="/DetailHome" className="btn btn-primary px-6 py-3 text-sm cursor-pointer">
+              View Listings
+            </a>
+          </div>
+        </div>
       </div>
-    </Box>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-surface-secondary">
+      {/* Page hero */}
+      <div className="bg-white border-b border-navy-100">
+        <div className="max-w-4xl mx-auto px-6 py-8">
+          <p className="section-label mb-2">Sell or Rent</p>
+          <h1 className="font-heading font-bold text-3xl text-primary">List Your Property</h1>
+          <p className="text-navy-400 mt-1 text-sm">Complete 3 simple steps to publish your listing</p>
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-6 py-8">
+        {/* Custom stepper */}
+        <div className="flex items-start gap-0 mb-10">
+          {STEPS.map((step, i) => {
+            const isDone = completed[i];
+            const isActive = activeStep === i;
+            return (
+              <React.Fragment key={i}>
+                <button
+                  onClick={() => setActiveStep(i)}
+                  className="flex flex-col items-center flex-1 cursor-pointer group"
+                >
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 mb-2 ${
+                    isDone
+                      ? "bg-emerald-500 text-white shadow-md"
+                      : isActive
+                      ? "bg-primary text-white shadow-gold"
+                      : "bg-white text-navy-300 border-2 border-navy-100 group-hover:border-primary group-hover:text-primary"
+                  }`}>
+                    {isDone ? (
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
+                      </svg>
+                    ) : step.icon}
+                  </div>
+                  <span className={`text-xs font-semibold hidden sm:block ${isActive ? "text-primary" : isDone ? "text-emerald-600" : "text-navy-400"}`}>
+                    {step.label}
+                  </span>
+                  <span className="text-[10px] text-navy-400 hidden sm:block">{step.desc}</span>
+                </button>
+                {i < STEPS.length - 1 && (
+                  <div className="flex-1 flex items-center mt-5">
+                    <div className={`h-0.5 w-full transition-all duration-500 ${completed[i] ? "bg-emerald-400" : "bg-navy-100"}`} />
+                  </div>
+                )}
+              </React.Fragment>
+            );
+          })}
+        </div>
+
+        {/* Step content */}
+        <div>
+          {activeStep === 0 && <StepOne formData={formData} handleChange={handleChange} />}
+          {activeStep === 1 && <StepTwo handleImageChange={handleImageChange} />}
+          {activeStep === 2 && <StepThree formData={formData} handleInputChange={handleInputChange} />}
+        </div>
+
+        {/* Navigation */}
+        <div className="flex items-center justify-between mt-8 pt-6 border-t border-navy-100">
+          <button
+            disabled={activeStep === 0}
+            onClick={() => setActiveStep(activeStep - 1)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold border border-navy-200 text-navy-600 hover:border-primary hover:text-primary transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Back
+          </button>
+
+          <div className="flex items-center gap-1.5">
+            {STEPS.map((_, i) => (
+              <div key={i} className={`rounded-full transition-all duration-300 ${
+                i === activeStep ? "w-6 h-2 bg-primary" : completed[i] ? "w-2 h-2 bg-emerald-400" : "w-2 h-2 bg-navy-200"
+              }`} />
+            ))}
+          </div>
+
+          <button
+            onClick={handleComplete}
+            disabled={submitting}
+            className="btn btn-primary flex items-center gap-2 px-6 py-2.5 text-sm cursor-pointer disabled:opacity-60"
+          >
+            {submitting ? (
+              <>
+                <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                </svg>
+                Publishing…
+              </>
+            ) : activeStep === STEPS.length - 1 ? (
+              <>
+                Publish Listing
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+              </>
+            ) : (
+              <>
+                Continue
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 

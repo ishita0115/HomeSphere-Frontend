@@ -20,7 +20,7 @@ function FeedbackForm({ listingId }: { listingId: string }) {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/app2/submitfeedback/",
+        "${process.env.NEXT_PUBLIC_API_HOST}/app2/submitfeedback/",
         {
           listing_id: listingId,
           rating,

@@ -24,7 +24,7 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
         },
       };
       await axios.delete(
-        `http://localhost:8000/app2/listings/${listingId}/delete/`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/app2/listings/${listingId}/delete/`,
         config
       );
       toast.dark("successfuly deleted");

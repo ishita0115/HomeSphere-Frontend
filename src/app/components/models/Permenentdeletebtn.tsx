@@ -24,7 +24,7 @@ const Permenentdeletebtn: React.FC<DeleteButtonProps> = ({
         },
       };
       await axios.delete(
-        `http://localhost:8000/app2/HomePermenent/${listingId}/delete/`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/app2/HomePermenent/${listingId}/delete/`,
         config
       );
       toast.success("successfuly deleted");

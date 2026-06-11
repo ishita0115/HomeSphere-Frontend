@@ -15,7 +15,7 @@ const SendPasswordResetEmail = () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:8000/api/send-reset-password-email/', actualData, {
+      const response = await axios.post('${process.env.NEXT_PUBLIC_API_HOST}/api/send-reset-password-email/', actualData, {
         headers: {
           'Content-type': 'application/json',
         },

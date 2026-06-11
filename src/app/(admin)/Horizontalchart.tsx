@@ -40,7 +40,7 @@ const HorizontalChart: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      let url = "http://localhost:8000/app2/ManageListingView/";
+      let url = "${process.env.NEXT_PUBLIC_API_HOST}/app2/ManageListingView/";
       try {
         const response = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
         const counts: Record<string, number> = {

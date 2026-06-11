@@ -26,7 +26,7 @@ const BookingTable: React.FC = () => {
   const fetchBookings = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/app2/seller-bookings/",
+        "${process.env.NEXT_PUBLIC_API_HOST}/app2/seller-bookings/",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -56,7 +56,7 @@ const BookingTable: React.FC = () => {
 
   const handleAction = async (bookingId: any, action: string) => {
     try {
-      let url = `http://localhost:8000/app2/seller-bookings/${bookingId}/${action}/`;
+      let url = `${process.env.NEXT_PUBLIC_API_HOST}/app2/seller-bookings/${bookingId}/${action}/`;
       if (action === "reject") {
         const message = prompt("Enter rejection message:");
         if (message === null) return;

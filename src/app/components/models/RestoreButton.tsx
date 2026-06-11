@@ -26,7 +26,7 @@ const RestoreButton: React.FC<RestoreButtonProps> = ({
         }
       };
       await axios.put(
-        `http://localhost:8000/app2/HomePermenent/${listingId}/restore/`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/app2/HomePermenent/${listingId}/restore/`,
         {},
         config
       );

@@ -40,7 +40,7 @@ const AdminMessages = () => {
   const handleAcknowledgeMessage = async (id: number) => {
     try {
       await axios.put(
-        `http://localhost:8000/api/contact/${id}/`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/contact/${id}/`,
         {},
         {
           headers: {

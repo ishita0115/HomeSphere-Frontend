@@ -10,7 +10,7 @@ const Categories = () => {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:8000/app2/listinglist/",
+          "${process.env.NEXT_PUBLIC_API_HOST}/app2/listinglist/",
           {
             sort_by: getSortByValue(selectedCategory),
           }

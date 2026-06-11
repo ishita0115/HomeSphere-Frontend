@@ -18,7 +18,7 @@ const ChangePassword: React.FC = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/changepassword/",
+        "${process.env.NEXT_PUBLIC_API_HOST}/api/changepassword/",
         actualData,
         {
           headers: {

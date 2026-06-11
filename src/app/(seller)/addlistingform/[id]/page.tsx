@@ -149,7 +149,7 @@ const MyForm = ({ params }: { params: { id: number } }) => {
     try {
       const formDataToSend = new FormData();
       for (const key in formData) {
-        formDataToSend.append(key, formData[key]);
+        formDataToSend.append(key, (formData as Record<string, any>)[key]);
       }
       const config = {
         headers: {
@@ -158,7 +158,7 @@ const MyForm = ({ params }: { params: { id: number } }) => {
         },
       };
       const response = await axios.put(
-        `http://localhost:8000/app2/ManageListingupdatedeleteView/${params.id}/`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/app2/ManageListingupdatedeleteView/${params.id}/`,
         formDataToSend,
         config
       );
