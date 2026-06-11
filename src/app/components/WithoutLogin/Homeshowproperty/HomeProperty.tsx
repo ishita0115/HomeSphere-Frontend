@@ -1,55 +1,87 @@
 import React from "react";
 import data from "@/app/utils/slider.json";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
-// Import Swiper styles
 import "swiper/css";
 import "./Residencies.css";
 import { sliderSettings } from "@/app/utils/common";
+
 const HomeProperty = () => {
   return (
-    <div id="residencies" className="r-wrapper m-5">
-    <div className="paddings innerWidth r-container">
-      <div className="flexColStart r-head">
-        <span className="orangeText text-xl flex justify-center text-center ">Find Your Dream Home</span>
-      </div>
-      <Swiper {...sliderSettings}>
-        <SlideNextButton />
-        {/* slider */}
-        {data.map((card, i) => (
-          <SwiperSlide key={i}>
-            <div className="flexColStart r-card rounded">
-              <img src={card.image} alt="home" className="rounded-lg" />
+    <section id="residencies" className="py-20 bg-surface-secondary">
+      <div className="max-w-[1400px] mx-auto px-6">
+        {/* Section header */}
+        <div className="flex items-end justify-between mb-10">
+          <div>
+            <span className="text-sm font-semibold text-accent uppercase tracking-widest">Featured</span>
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mt-2 leading-tight">
+              Find Your Dream Home
+            </h2>
+            <p className="text-slate-500 mt-2 text-base max-w-md">
+              Hand-picked properties from across India — browse and find the one that feels right.
+            </p>
+          </div>
+          {/* Slider controls positioned here */}
+          <div className="hidden sm:flex items-center gap-3 relative" style={{ minWidth: 100 }}>
+            <SwiperButtons />
+          </div>
+        </div>
 
-              <span className=" r-price">
-                <span style={{ color: "orange" }}></span>
-                <span>{card.sale_type}</span>
-              </span>
-              <div> <div className="text-lg">{card.name}</div>
-              <span className="text-sm">{card.detail}</span></div>
-             
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+        <Swiper {...sliderSettings}>
+          <MobileSwiperButtons />
+          {data.map((card, i) => (
+            <SwiperSlide key={i}>
+              <div className="r-card">
+                <img src={card.image} alt={card.name} />
+                <div className="flex items-center justify-between mt-1">
+                  <span className="r-price">{card.sale_type}</span>
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-800 text-base leading-snug">{card.name}</p>
+                  <p className="text-sm text-slate-500 mt-0.5">{card.detail}</p>
+                </div>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+    </section>
+  );
+};
+
+const SwiperButtons = () => {
+  const swiper = useSwiper();
+  return (
+    <>
+      <button onClick={() => swiper.slidePrev()} className="r-prevButton" aria-label="Previous">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
+      <button onClick={() => swiper.slideNext()} className="r-nextButton" aria-label="Next">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
+    </>
+  );
+};
+
+const MobileSwiperButtons = () => {
+  const swiper = useSwiper();
+  return (
+    <div className="sm:hidden flex justify-end gap-3 mb-4">
+      <button onClick={() => swiper.slidePrev()} className="r-prevButton" aria-label="Previous">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
+      <button onClick={() => swiper.slideNext()} className="r-nextButton" aria-label="Next">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
     </div>
-  </div>
   );
 };
 
 export default HomeProperty;
-
-const SlideNextButton = () => {
-  const swiper = useSwiper();
-  return (
-    <div className="flex justify-center ">
-    <div className="flexCenter r-buttons  ">
-      <button onClick={() => swiper.slidePrev()} className="r-prevButton">
-        &lt;
-      </button>
-      <button onClick={() => swiper.slideNext()} className="r-nextButton">
-        &gt;
-      </button>
-    </div>
-    </div>
-  );
-};
