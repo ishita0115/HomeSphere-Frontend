@@ -1,11 +1,7 @@
-import * as React from 'react';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
-
 export default function CircularIndeterminate() {
   return (
-    <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-      <CircularProgress />
-    </Box>
+    <div className="flex items-center justify-center" style={{ height: "50vh" }}>
+      <div className="w-10 h-10 rounded-full border-4 border-navy-100 border-t-primary animate-spin" />
+    </div>
   );
 }

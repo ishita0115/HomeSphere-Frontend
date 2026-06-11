@@ -1,11 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useRef, useState, useEffect, ChangeEvent } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import apiService, { fetchListingDetail } from "@/app/apiService";
-import Mapcompo from "@/app/components/map/map";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+
+const Mapcompo = dynamic(() => import("@/app/components/map/map"), { ssr: false });
 import "leaflet/dist/leaflet.css";
 import { Icon } from "leaflet";
 import { useMapEvent } from "react-leaflet";

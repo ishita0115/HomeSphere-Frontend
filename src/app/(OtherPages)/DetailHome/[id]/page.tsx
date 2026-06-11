@@ -2,17 +2,21 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { SetStateAction, useEffect, useState } from "react"; 
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 import { fetchListingDetail } from "@/app/apiService";
 import ReservationSidebar from "@/app/components/Listing/reservationbar";
-import { MdLocationPin } from "react-icons/md";
-import Mapcompo from "@/app/components/map/map";
 import { useSelector } from "react-redux";
 import FeedbackForm from "@/app/(user)/feedback/feedbackform";
-import { FaBed } from "react-icons/fa";
-import { FaBath } from "react-icons/fa";
-import { Stack } from "@mui/material";
-import { Rating } from "@mui/material";
+
+const Mapcompo = dynamic(() => import("@/app/components/map/map"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-full bg-navy-50">
+      <div className="w-8 h-8 rounded-full border-4 border-navy-100 border-t-primary animate-spin" />
+    </div>
+  ),
+});
 
 interface Property {
   rental_choice: any;
@@ -25,7 +29,6 @@ interface Property {
   price: string;
   sale_type: string;
   home_type: string;
-  guests: number;
   bedrooms: number;
   bathrooms: number;
   address: string;
@@ -40,9 +43,6 @@ interface Property {
   extrafacility: string;
 }
 
-interface Params {
-  id: string;
-}
 interface Feedback {
   rating: number;
   message: string;
@@ -51,229 +51,288 @@ interface Feedback {
   user_fname: string;
   user_lname: string;
 }
-const PropertyDetailPage = ({ params }: { params: Params }) => {
-  
+
+function StarDisplay({ value }: { value: number }) {
+  return (
+    <div className="flex items-center gap-1">
+      {[1, 2, 3, 4, 5].map((s) => (
+        <svg key={s} className="w-4 h-4" viewBox="0 0 20 20" fill={s <= Math.round(value) ? "#E5B03A" : "#D1D5DB"}>
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+        </svg>
+      ))}
+      <span className="text-sm font-medium text-navy-600 ml-1">{value.toFixed(1)}</span>
+    </div>
+  );
+}
+
+const PropertyDetailPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<any>(null);
   const token = useSelector((state: any) => state.auth.token.access);
-  const userRole = useSelector((state:any) => state.auth.users.role);
+  const userRole = useSelector((state: any) => state.auth.users.role);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
-  const [activeStep, setActiveStep] = useState<number>(0);
-  useEffect(() => {
-    const fetchFeedback = async () => {
-      try {
-        const response = await fetchListingDetail(
-          `app2/listingfeedback/${id}`,
-          token
-        );
-        setFeedbacks(response);
-      } catch (error) {
-        console.error("Error fetching feedback:", error);
-      }
-    };
+  const [activeImage, setActiveImage] = useState(0);
 
-    fetchFeedback();
+  useEffect(() => {
+    fetchListingDetail(`app2/listingfeedback/${id}`, token)
+      .then(setFeedbacks)
+      .catch(() => {});
   }, [id]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch property data using the id
-        const propertyData = await fetchListingDetail(
-          `app2/detailisting/${id}`,
-          token
-        );
-        setProperty(propertyData);
-        setLoading(false);
-      } catch (error) {
-        setError(error);
-        setLoading(false);
-      }
-    };
-    fetchData();
+    fetchListingDetail(`app2/detailisting/${id}`, token)
+      .then((data) => { setProperty(data); setLoading(false); })
+      .catch((err) => { setError(err); setLoading(false); });
   }, [id, token]);
 
-  const handleStepChange = (step: SetStateAction<number>) => {
-    setActiveStep(step);
-  };
   if (loading) {
-    return <div>Loading...</div>;
-  }
-  if (error) {
-    return <div>Error fetching data</div>;
+    return (
+      <div className="min-h-screen bg-surface-secondary flex items-center justify-center">
+        <div className="w-10 h-10 rounded-full border-4 border-navy-100 border-t-primary animate-spin" />
+      </div>
+    );
   }
 
-  const cloudinaryUrl1 = `https://res.cloudinary.com/daajyumzx/${property?.profilephoto}`;
+  if (error || !property) {
+    return (
+      <div className="min-h-screen bg-surface-secondary flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-primary font-semibold text-lg mb-2">Property not found</p>
+          <Link href="/DetailHome" className="btn btn-primary px-5 py-2.5 text-sm">
+            Browse Listings
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
-  const steps = [
-    property?.image1 ?? "",
-    property?.image2 ?? "",
-    property?.image3 ?? "",
-    property?.image4 ?? "",
-  ];
+  const cloudinaryUrl = property.profilephoto
+    ? `https://res.cloudinary.com/daajyumzx/${property.profilephoto}`
+    : "/images/sellerdefaultimg.jpg";
+  const images = [property.image1, property.image2, property.image3, property.image4].filter(Boolean);
+  const isForSale = property.sale_type === "For Sale";
 
   return (
-    <main className="max-w-[1500px] mx-auto px-6 pb-6">
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <div className="py-6 pr-6 col-span-3">
-          <div className="w-full h-[64vh] mb-4 overflow-hidden rounded relative border-white border-2">
-            <Image
-              src={steps[activeStep]}
-              alt=""
-              layout="fill"
-              objectFit="cover"
-            />
-          </div>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            {steps.map((image, index) => (
-              <div
-                key={index}
-                onClick={() => handleStepChange(index)}
-                style={{
-                  width: 50,
-                  height: 50,
-                  backgroundImage: `url(${image})`,
-                  backgroundSize: "cover",
-                  cursor: "pointer",
-                  marginRight: 10,
-                  borderRadius: 5,
-                }}
-              />
-            ))}
-          </div>
+    <div className="min-h-screen bg-surface-secondary pb-16">
+      <div className="max-w-[1300px] mx-auto px-6 pt-6">
+
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-2 text-xs text-navy-400 mb-6">
+          <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+          <span>/</span>
+          <Link href="/DetailHome" className="hover:text-primary transition-colors">Listings</Link>
+          <span>/</span>
+          <span className="text-primary truncate max-w-[200px]">{property.title}</span>
         </div>
-        <div className="py-6 pr-6 col-span-2 mt-4">
-          <h1 className="mb-4 text-4xl font-bold text-gray-800 uppercase">
-            {property?.title} - {property?.home_type}
-          </h1>
-          <hr className="border-white" />
 
-          <div className="text-lg text-black flex items-center mt-2">
-            <h2 className="text-xl font-semibold mr-2">Total</h2>
-            <span className="bg-orange-300 p-1">
-              ₹ {property?.price} {property?.sale_type}
-              {property?.sale_type === "For Rent" &&
-                property?.rental_choice && <> - {property?.rental_choice}</>}
-            </span>
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-          <div className="mb-6 text-lg text-black mt-2 ml-2">
-            <FaBed className="inline-block mr-2" size={20} />
-            <span className="font-bold text-xl">{property?.bedrooms}</span>{" "}
-            bedrooms -
-            <FaBath className="inline-block ml-2 mr-2" size={20} />
-            <span className="font-bold text-xl">
-              {property?.bathrooms}
-            </span>{" "}
-            bathrooms
-          </div>
+          {/* Left: Images + details */}
+          <div className="lg:col-span-2 space-y-6">
 
-          <div className="flex items-center gap-2">
-            <MdLocationPin className="text-black" size={35} />
-            <span className="text-lg text-black">
-              {property?.address} ,
-              <span className="font-bold"> {property?.city}</span> ,
-              <span className="font-bold"> {property?.country}</span>
-            </span>
-          </div>
+            {/* Main image */}
+            <div className="relative rounded-2xl overflow-hidden bg-navy-100" style={{ height: "420px" }}>
+              <Image src={images[activeImage]} alt={property.title} fill className="object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+              <span className={`absolute top-4 left-4 badge ${isForSale ? "badge-sale" : "badge-rent"} text-sm px-3 py-1`}>
+                {property.sale_type}
+              </span>
+            </div>
 
-          <div className="mt-4 text-lg text-black flex items-center">
-            <div className="font-bold mr-2">Extra Facility:</div>
-            <div>{property?.extrafacility}</div>
-          </div>
+            {/* Thumbnails */}
+            {images.length > 1 && (
+              <div className="flex gap-3">
+                {images.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveImage(i)}
+                    className={`relative w-20 h-16 rounded-xl overflow-hidden flex-shrink-0 border-2 cursor-pointer transition-all ${
+                      i === activeImage ? "border-primary shadow-card" : "border-transparent opacity-60 hover:opacity-100"
+                    }`}
+                  >
+                    <Image src={img} alt={`View ${i + 1}`} fill className="object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
 
-          <hr className="my-6 border-white" />
-          <div className="font-bold mr-2 text-lg">Description :</div>
-          <div className="mt-6 text-lg text-black">{property?.description}</div>
-        </div>
-      </div>
-      <div className="col-span-6 lg:col-span-5">
-        <div className="py-6 w-full">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white text-center mb-3">
-            This is Home Location
-          </h2>
-          <Mapcompo 
-            latitude={property?.latitude}
-            longitude={property?.longitude}
-            address={property?.address}
-            zoomdata={13}
-          />
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <div className="mt-3 pr-6 col-span-3">
-          <div className="mt-2 text-lg">
+            {/* Info card */}
+            <div className="bg-white rounded-2xl shadow-card p-6">
+              <div className="flex items-start justify-between gap-4 mb-4">
+                <div>
+                  <h1 className="font-heading font-bold text-2xl text-primary leading-snug">
+                    {property.title}
+                  </h1>
+                  <p className="text-navy-400 text-sm mt-1 flex items-center gap-1">
+                    <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/>
+                    </svg>
+                    {property.address}, {property.city}, {property.country}
+                  </p>
+                </div>
+                <div className="text-right flex-shrink-0">
+                  <p className="font-heading font-bold text-2xl text-primary">
+                    ₹{Number(property.price).toLocaleString("en-IN")}
+                  </p>
+                  {property.sale_type === "For Rent" && property.rental_choice && (
+                    <p className="text-xs text-navy-400 mt-0.5">{property.rental_choice}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Stats row */}
+              <div className="flex items-center gap-6 py-4 border-y border-navy-50 mb-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-9 h-9 rounded-xl bg-navy-50 flex items-center justify-center">
+                    <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 12V9a2 2 0 012-2h14a2 2 0 012 2v3M3 12v5h18v-5M3 12h18"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-xs text-navy-400">Bedrooms</p>
+                    <p className="font-bold text-primary">{property.bedrooms}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-9 h-9 rounded-xl bg-navy-50 flex items-center justify-center">
+                    <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3a1 1 0 00-1-1h-2a1 1 0 00-1 1v6H4v6zm0 0v3"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-xs text-navy-400">Bathrooms</p>
+                    <p className="font-bold text-primary">{property.bathrooms}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-9 h-9 rounded-xl bg-navy-50 flex items-center justify-center">
+                    <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-xs text-navy-400">Type</p>
+                    <p className="font-bold text-primary capitalize">{property.home_type}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Description */}
+              {property.description && (
+                <div className="mb-4">
+                  <h3 className="font-semibold text-primary mb-2">About this property</h3>
+                  <p className="text-navy-500 text-sm leading-relaxed">{property.description}</p>
+                </div>
+              )}
+
+              {/* Extra facility */}
+              {property.extrafacility && (
+                <div>
+                  <h3 className="font-semibold text-primary mb-2">Amenities & Facilities</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {property.extrafacility.split(",").map((f, i) => (
+                      <span key={i} className="px-3 py-1.5 bg-navy-50 text-navy-600 text-xs font-medium rounded-xl">
+                        {f.trim()}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Owner card */}
             <Link
-              href={`/sellerdetail/${property?.user}`}
-              className="py-6 flex items-center space-x-4 bg-slate-100 p-2 rounded-xl mb-5"
+              href={`/sellerdetail/${property.user}`}
+              className="bg-white rounded-2xl shadow-card p-5 flex items-center gap-4 hover:shadow-card-hover transition-all group"
             >
               <Image
-                src={
-                  property?.profilephoto
-                    ? cloudinaryUrl1
-                    : "/images/sellerdefaultimg.jpg"
-                }
-                width={50}
-                height={50}
-                className="rounded-full"
-                alt="The user name"
+                src={cloudinaryUrl}
+                width={56} height={56}
+                className="rounded-full ring-2 ring-navy-100 object-cover flex-shrink-0"
+                alt={property.user_name}
               />
-              <div>
-                <strong>{property?.user_name}</strong> is This House Owner
+              <div className="flex-1 min-w-0">
+                <p className="font-heading font-semibold text-primary">{property.user_name}</p>
+                <p className="text-xs text-navy-400">Property Owner · Click to view profile</p>
               </div>
+              <svg className="w-5 h-5 text-navy-300 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
+              </svg>
             </Link>
-            {userRole == 3 ? <FeedbackForm listingId={property?.id} /> : ''}
-          </div>
-        </div>
-        {userRole == 3 ? <ReservationSidebar property={property} /> : ''}
-      </div>
-      {feedbacks.length > 0 && (
-        <div className="py-6">
-          <h2 className="text-2xl font-bold mb-4">Feedbacks</h2>
-          {feedbacks.map((feedback, index) => (
-            <div
-              key={index}
-              className="mb-4 flex items-center space-x-4 bg-slate-100 p-2 rounded"
-            >
-              <div className="flex items-center space-x-4">
-                <Image
-                  src={
-                    feedback?.profilephoto
-                      ? `https://res.cloudinary.com/daajyumzx/${feedback?.profilephoto}`
-                      : "/images/sellerdefaultimg.jpg"
-                  }
-                  width={50}
-                  height={50}
-                  className="rounded-full flex"
-                  alt="User profile"
-                />
-                <div>
-                  <strong>
-                    {feedback.user_fname} {feedback.user_lname}
-                  </strong>
-                </div>
+
+            {/* Map */}
+            <div className="bg-white rounded-2xl shadow-card overflow-hidden">
+              <div className="px-6 py-4 border-b border-navy-50">
+                <h3 className="font-heading font-semibold text-primary">Location</h3>
               </div>
-              <div>
-                <div className="flex items-center space-x-2">
-                  <Stack spacing={1}>
-                    <Rating
-                      name="size-large"
-                      defaultValue={2}
-                      size="large"
-                      value={feedback.rating}
-                      readOnly
-                    />
-                  </Stack>
-                </div>
-                <div>{feedback.message}</div>
+              <div style={{ height: "300px" }}>
+                <Mapcompo
+                  latitude={property.latitude}
+                  longitude={property.longitude}
+                  address={property.address}
+                  zoomdata={13}
+                />
               </div>
             </div>
-          ))}
+
+            {/* Feedback section */}
+            {userRole == 3 && <FeedbackForm listingId={property.id} />}
+
+            {/* Reviews */}
+            {feedbacks.length > 0 && (
+              <div className="bg-white rounded-2xl shadow-card p-6">
+                <h3 className="font-heading font-semibold text-primary mb-5">
+                  Reviews
+                  <span className="ml-2 text-sm text-navy-400 font-normal">({feedbacks.length})</span>
+                </h3>
+                <div className="space-y-5">
+                  {feedbacks.map((fb, i) => (
+                    <div key={i} className="flex items-start gap-4 pb-5 border-b border-navy-50 last:border-0 last:pb-0">
+                      <Image
+                        src={fb.profilephoto ? `https://res.cloudinary.com/daajyumzx/${fb.profilephoto}` : "/images/sellerdefaultimg.jpg"}
+                        width={40} height={40}
+                        className="rounded-full ring-2 ring-navy-100 object-cover flex-shrink-0"
+                        alt={fb.user_fname}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-1">
+                          <p className="font-semibold text-sm text-primary">
+                            {fb.user_fname} {fb.user_lname}
+                          </p>
+                          <StarDisplay value={fb.rating} />
+                        </div>
+                        <p className="text-sm text-navy-500 leading-relaxed">{fb.message}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Right: Reservation sidebar */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-24">
+              {userRole == 3 ? (
+                <ReservationSidebar property={property} />
+              ) : (
+                <div className="bg-white rounded-2xl shadow-card p-6 text-center">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+                    <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+                    </svg>
+                  </div>
+                  <p className="text-primary font-semibold text-sm mb-1">Sign in to Book</p>
+                  <p className="text-navy-400 text-xs">Log in as a buyer to schedule a visit</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-      )}
-    </main>
+      </div>
+    </div>
   );
 };
 

@@ -1,39 +1,88 @@
 "use client";
-import Pagination from "@mui/material/Pagination";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import ListingItems from "./Listingcard";
 import { paginationdatafetch } from "@/app/apiService";
 import { useSelector } from "react-redux";
 import useSearchModal from "@/app/redux/hooks/useSearchModel";
 import { toast } from "react-toastify";
+import type { PropertyType } from "@/app/types/listing";
 
-export type PropertyType = {
-  bedrooms: number;
-  home_type: string;
-  id: number;
-  title: string;
-  image1: string;
-  address: string;
-  sale_type: string;
-  is_favorite: boolean;
-  country: string;
-  bathrooms: number;
-  city: string;
-  profilephoto: string;
-  user_name: string;
-  user: number;
-  latitude: number;
-  longitude: number;
-  price: number;
-};
+export type { PropertyType };
 
 interface ListingProps {
   landlord_id?: string | null;
   favorites?: boolean | null;
 }
 
-const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
+function CustomPagination({
+  page,
+  totalPages,
+  onChange,
+}: {
+  page: number;
+  totalPages: number;
+  onChange: (p: number) => void;
+}) {
+  if (totalPages <= 1) return null;
+
+  const pages: (number | "...")[] = [];
+  if (totalPages <= 7) {
+    for (let i = 1; i <= totalPages; i++) pages.push(i);
+  } else {
+    pages.push(1);
+    if (page > 3) pages.push("...");
+    for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) pages.push(i);
+    if (page < totalPages - 2) pages.push("...");
+    pages.push(totalPages);
+  }
+
+  const btn = "w-9 h-9 rounded-xl text-sm font-medium flex items-center justify-center transition-all duration-200 cursor-pointer border";
+
+  return (
+    <div className="flex items-center gap-1.5">
+      <button
+        onClick={() => onChange(page - 1)}
+        disabled={page === 1}
+        className={`${btn} border-navy-200 text-navy-600 hover:border-primary hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed`}
+      >
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
+      {pages.map((p, i) =>
+        p === "..." ? (
+          <span key={`dots-${i}`} className="w-9 h-9 flex items-center justify-center text-navy-400 text-sm">…</span>
+        ) : (
+          <button
+            key={p}
+            onClick={() => onChange(p as number)}
+            className={`${btn} ${
+              p === page
+                ? "bg-primary text-white border-primary shadow-card"
+                : "border-navy-200 text-navy-600 hover:border-primary hover:text-primary bg-white"
+            }`}
+          >
+            {p}
+          </button>
+        )
+      )}
+
+      <button
+        onClick={() => onChange(page + 1)}
+        disabled={page === totalPages}
+        className={`${btn} border-navy-200 text-navy-600 hover:border-primary hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed`}
+      >
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </div>
+  );
+}
+
+function ListingInner({ landlord_id, favorites }: ListingProps) {
   const params = useSearchParams();
   const searchModal = useSearchModal();
   const { country, city, sale_type, bedrooms, home_type, address, min_price, max_price } = searchModal.query;
@@ -98,8 +147,7 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
         setProperties(fetchedProperties);
         setTotalCount(response.count);
         setTotalPages(Math.ceil(response.count / cardsPerPage));
-      } catch (err) {
-        console.error("Error fetching properties:", err);
+      } catch {
         setError("Failed to load properties. Please try again.");
       } finally {
         setLoading(false);
@@ -110,12 +158,10 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
   }, [favorites, searchModal.query, params, page]);
 
   const markFavorite = (propId: number, is_favorite: boolean) => {
-    setProperties(prev =>
-      prev.map(p => {
+    setProperties((prev) =>
+      prev.map((p) => {
         if (p.id === propId) {
-          is_favorite
-            ? toast.success("Added to favourites")
-            : toast.info("Removed from favourites");
+          is_favorite ? toast.success("Added to favourites") : toast.info("Removed from favourites");
           return { ...p, is_favorite };
         }
         return p;
@@ -128,7 +174,7 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
       <div className="max-w-[1400px] mx-auto px-6 py-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="property-card overflow-hidden animate-pulse">
+            <div key={i} className="rounded-2xl overflow-hidden bg-white shadow-card animate-pulse">
               <div className="h-52 bg-navy-100" />
               <div className="p-4 space-y-3">
                 <div className="h-4 bg-navy-100 rounded w-3/4" />
@@ -147,27 +193,24 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
       <div className="max-w-[1400px] mx-auto px-6 py-20 text-center">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-50 mb-4">
           <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
         </div>
         <p className="text-primary font-semibold text-lg mb-2">Something went wrong</p>
         <p className="text-navy-400 text-sm mb-6">{error}</p>
-        <button
-          onClick={() => setPage(1)}
-          className="btn btn-primary px-6 py-2.5 text-sm"
-        >
+        <button onClick={() => setPage(1)} className="btn btn-primary px-6 py-2.5 text-sm cursor-pointer">
           Try Again
         </button>
       </div>
     );
   }
 
-  if (!loading && properties.length === 0) {
+  if (properties.length === 0) {
     return (
       <div className="max-w-[1400px] mx-auto px-6 py-20 text-center">
         <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-navy-50 mb-6">
           <svg className="w-10 h-10 text-navy-300" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
           </svg>
         </div>
         <h3 className="font-heading font-bold text-xl text-primary mb-2">No Properties Found</h3>
@@ -180,12 +223,14 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
 
   return (
     <div className="max-w-[1400px] mx-auto px-6 py-8">
-      {/* Result count */}
       <p className="text-sm text-navy-400 mb-6">
-        Showing <span className="font-semibold text-primary">{(page - 1) * cardsPerPage + 1}–{Math.min(page * cardsPerPage, totalCount)}</span> of <span className="font-semibold text-primary">{totalCount}</span> properties
+        Showing{" "}
+        <span className="font-semibold text-primary">
+          {(page - 1) * cardsPerPage + 1}–{Math.min(page * cardsPerPage, totalCount)}
+        </span>{" "}
+        of <span className="font-semibold text-primary">{totalCount}</span> properties
       </p>
 
-      {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {properties.map((property) => (
           <ListingItems
@@ -196,36 +241,42 @@ const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => {
         ))}
       </div>
 
-      {/* Pagination at bottom */}
       {totalPages > 1 && (
         <div className="flex justify-center mt-12">
-          <Pagination
-            count={totalPages}
-            shape="rounded"
+          <CustomPagination
             page={page}
-            onChange={(_, value) => { setPage(value); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-            sx={{
-              "& .MuiPaginationItem-root": {
-                fontFamily: "inherit",
-                fontWeight: 500,
-                color: "#0B2D55",
-                border: "1px solid #E2E8F0",
-                borderRadius: "10px",
-              },
-              "& .MuiPaginationItem-root.Mui-selected": {
-                background: "#0B2D55",
-                color: "white",
-                border: "1px solid #0B2D55",
-              },
-              "& .MuiPaginationItem-root:hover": {
-                background: "#F0F4FA",
-              },
+            totalPages={totalPages}
+            onChange={(p) => {
+              setPage(p);
+              window.scrollTo({ top: 0, behavior: "smooth" });
             }}
           />
         </div>
       )}
     </div>
   );
-};
+}
+
+const Listing: React.FC<ListingProps> = ({ landlord_id, favorites }) => (
+  <Suspense
+    fallback={
+      <div className="max-w-[1400px] mx-auto px-6 py-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="rounded-2xl overflow-hidden bg-white shadow-card animate-pulse">
+              <div className="h-52 bg-navy-100" />
+              <div className="p-4 space-y-3">
+                <div className="h-4 bg-navy-100 rounded w-3/4" />
+                <div className="h-3 bg-navy-100 rounded w-1/2" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    }
+  >
+    <ListingInner landlord_id={landlord_id} favorites={favorites} />
+  </Suspense>
+);
 
 export default Listing;
